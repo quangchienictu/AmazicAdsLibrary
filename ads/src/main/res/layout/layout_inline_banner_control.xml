@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_ads"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/banner_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        />
+    <FrameLayout
+        android:id="@+id/fl_shimemr"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <include layout="@layout/load_fb_inline_banner" />
+    </FrameLayout>
+</RelativeLayout>

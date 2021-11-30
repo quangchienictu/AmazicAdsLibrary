@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorindicator">#068abf</color>
+    <color name="whiteBlur">#bf9c9c9c</color>
+
+    <color name="colorPrimary">#00FF00</color>
+    <color name="colorPrimaryDark">#000</color>
+    <color name="colorAccent">#00FF00</color>
+
+    <color name="textColor">#ff666666</color>
+    <color name="colorAds">#068abf</color>
+    <color name="colorWhite">#ffffffff</color>
+    <color name="colorGrayAds">#fff8f8f8</color>
+    <color name="stockeCard">#5E58595A</color>
+
+    <color name="lightTransparent">#16000000</color>
+
+    <color name="gntTestBackgroundColor">#00F4F4F4</color>
+    <color name="gntTestBackgroundColor2">#00A3A3A3</color>
+    <color name="gntBlack">#000000</color>
+    <color name="gntWhite">#FFFFFF</color>
+    <color name="gntRed">#FF0000</color>
+    <color name="gntGreen">#00FF00</color>
+    <color name="gntBlue">#4285f4</color>
+    <color name="gntAdGreen">#3A6728</color>
+    <color name="gntGray">#808080</color>
+    <color name="gntOutline">#E0E0E0</color>
+    <color name="text_exit">#2152FF</color>
+
+</resources>

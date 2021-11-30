@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_open_test">ca-app-pub-3940256099942544/3419835294</string>
+    <string name="cancel">Cancel</string>
+    <string name="exit">EXIT</string>
+    <string name="close">CLOSE</string>
+    <string name="are_you_sure_you_want_to_exit">Are you sure want to exit?</string>
+    <string name="remove_ads">REMOVE ADS</string>
+    <string name="remove_all_anoying_ads_forever_by_just">Remove all anoying ads forever by just:</string>
+    <string name="buy_now">Buy now</string>
+    <string name="loading_ads">Loading Ads…</string>
+
+    <string-array name="list_id_test">
+        <!--        app open-->
+        <item>ca-app-pub-3940256099942544/3419835294</item>
+        <!--        banner-->
+        <item>ca-app-pub-3940256099942544/6300978111</item>
+        <!--        interstitial-->
+        <item>ca-app-pub-3940256099942544/1033173712</item>
+        <!--        interstitial video-->
+        <item>ca-app-pub-3940256099942544/8691691433</item>
+        <!--        rewarded-->
+        <item>ca-app-pub-3940256099942544/5224354917</item>
+        <!--        rewarded-->
+        <item>ca-app-pub-3940256099942544/5354046379</item>
+        <!--        native-->
+        <item>ca-app-pub-3940256099942544/2247696110</item>
+        <!--        native video-->
+        <item>ca-app-pub-3940256099942544/1044960115</item>
+    </string-array>
+
+</resources>

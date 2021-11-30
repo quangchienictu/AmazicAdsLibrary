@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AmazicAdsLibrary</string>
+    <string name="admod_app_id">ca-app-pub-4973559944609228~1107567880</string>
+    <string name="admod_banner_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="admod_native_id">ca-app-pub-3940256099942544/2247696110</string>
+    <string name="admod_interstitial_id">ca-app-pub-4973559944609228/8602914526</string>
+    <string name="admod_app_open_ad_id">ca-app-pub-3940256099942544/3419835294</string>
+    <string name="admod_app_reward_id">ca-app-pub-3940256099942544/5224354917</string>
+</resources>

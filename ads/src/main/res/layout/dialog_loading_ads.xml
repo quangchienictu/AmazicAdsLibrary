@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FCFAF8">
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:layout_centerInParent="true"
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Wave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:SpinKit_Color="#515151" />
+
+    <com.hanks.htextview.rainbow.RainbowTextView
+        android:gravity="right"
+        app:colorSpace="150dp"
+        app:colorSpeed="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spin_kit"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:text="@string/loading_ads"
+        android:textSize="@dimen/_13sdp" />
+</RelativeLayout>
