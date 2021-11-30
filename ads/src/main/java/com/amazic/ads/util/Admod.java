@@ -20,12 +20,12 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
+import com.amazic.ads.BuildConfig;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.R;
 import com.amazic.ads.dialog.LoadingAdsDialog;
-import com.applovin.mediation.BuildConfig;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
@@ -66,8 +66,9 @@ public class Admod {
     private boolean isTimeLimited;
     private boolean isShowLoadingSplash;
     boolean checkTimeDelay = false;
-    private boolean openActivityAfterShowInterAds = false;
+    private boolean openActivityAfterShowInterAds = true;
     private Context context;
+
     private RewardedAd rewardedAd;
     private String rewardedId;
     InterstitialAd mInterstitialSplash;
@@ -177,7 +178,7 @@ public class Admod {
     /* ==========================  Inter Splash============================================== */
 
     /**
-     * Load quảng cáo tại màn SplashActivity
+     * Load ads in Splash
      */
     public void loadSplashInterAds(final Context context, String id, long timeOut, long timeDelay, final InterCallback adListener) {
         checkTimeDelay = false;
@@ -340,7 +341,10 @@ public class Admod {
 
     /* =============================   Inter ==========================================*/
 
-
+    /**
+     Load ads inter
+     Return 1 inter ads
+     */
     public void loadInterAds(Context context, String id, InterCallback adCallback) {
         InterstitialAd.load(context, id, getAdRequest(),
                 new InterstitialAdLoadCallback() {
@@ -434,9 +438,7 @@ public class Admod {
             callback.onAdClosed();
         }
     }
-    /**
-     * Kiểm tra và hiện thị ads
-     */
+
     private void showInterstitialAd(Context context, InterstitialAd mInterstitialAd, InterCallback callback) {
         currentClicked++;
         if (currentClicked >= numShowAds && mInterstitialAd != null) {

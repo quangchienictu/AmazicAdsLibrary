@@ -13,15 +13,12 @@ public class InterCallback {
     }
     public void onAdLeftApplication() {
     }
-
     public void onAdLoaded() {
     }
-
     public void onInterstitialLoad(InterstitialAd interstitialAd) {
     }
     public void onAdClicked() {
     }
-
     public void onAdImpression() {
     }
 

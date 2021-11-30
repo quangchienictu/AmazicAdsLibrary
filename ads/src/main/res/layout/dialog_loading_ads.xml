@@ -8,11 +8,11 @@
     <com.github.ybq.android.spinkit.SpinKitView
         android:layout_centerInParent="true"
         android:id="@+id/spin_kit"
-        style="@style/SpinKitView.Wave"
+        style="@style/SpinKitView.Circle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:SpinKit_Color="#515151" />
+        app:SpinKit_Color="#0055FF" />
 
     <com.hanks.htextview.rainbow.RainbowTextView
         android:gravity="right"

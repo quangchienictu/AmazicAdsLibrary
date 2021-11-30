@@ -5,7 +5,6 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:background="@color/purple_200"
         android:id="@+id/ad_unit_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

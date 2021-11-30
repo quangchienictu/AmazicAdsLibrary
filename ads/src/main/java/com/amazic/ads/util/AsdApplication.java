@@ -13,12 +13,12 @@ public abstract class AsdApplication extends Application{
         super.onCreate();
         Admod.getInstance().initAdmod(this, getListTestDeviceId());
         if(enableAdsResume()) {
-            AppOpenManager.getInstance().initAdmod(this, getOpenAppAdId());
+            AppOpenManager.getInstance().initAdmod(this, getResumeAdId());
         }
     }
     public abstract boolean enableAdsResume();
 
     public abstract List<String> getListTestDeviceId();
 
-    public abstract String getOpenAppAdId();
+    public abstract String getResumeAdId();
 }

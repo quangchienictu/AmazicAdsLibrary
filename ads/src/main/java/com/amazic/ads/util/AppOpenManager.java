@@ -36,7 +36,6 @@ import java.util.List;
 
 public class AppOpenManager implements Application.ActivityLifecycleCallbacks, LifecycleObserver {
     private static final String TAG = "AppOpenManager";
-    public static final String AD_UNIT_ID_TEST = "ca-app-pub-3940256099942544/3419835294";
 
     private static volatile AppOpenManager INSTANCE;
     private AppOpenAd appResumeAd = null;
@@ -91,12 +90,12 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
      *
      * @param application
      */
-    public void initAdmod(Application application, String appOpenAdId) {
+    public void initAdmod(Application application, String appResumeAdId) {
         isInitialized = true;
         this.myApplication = application;
         this.myApplication.registerActivityLifecycleCallbacks(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
-        this.appResumeAdId = appOpenAdId;
+        this.appResumeAdId = appResumeAdId;
     }
 
     public boolean isInitialized() {

@@ -53,7 +53,7 @@
   </RelativeLayout>
     <include
         android:id="@+id/include"
-        layout="@layout/layout_banner_control"
+        layout="@layout/layout_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

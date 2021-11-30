@@ -12,10 +12,7 @@ public class MyApplication extends AsdApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        //        AppOpenManager.getInstance().setSplashActivity(SplashActivity.class, AppOpenManager.AD_UNIT_ID_TEST, 10000);
         AppOpenManager.getInstance().disableAppResumeWithActivity(Splash.class);
-        Admod.getInstance().setOpenActivityAfterShowInterAds(true);
-//        Admod.getInstance().setNumToShowAds(3,3);
     }
 
     @Override
@@ -29,7 +26,7 @@ public class MyApplication extends AsdApplication {
     }
 
     @Override
-    public String getOpenAppAdId() {
-        return AppOpenManager.AD_UNIT_ID_TEST;
+    public String getResumeAdId() {
+        return getString(R.string.admod_app_open_ad_id);
     }
 }

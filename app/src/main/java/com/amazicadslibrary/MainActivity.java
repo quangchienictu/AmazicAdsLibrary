@@ -52,11 +52,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAdClosed() {
                         startActivity(new Intent(MainActivity.this,MainActivity3.class));
+                        loadAdInter();
                     }
 
                     @Override
                     public void onAdFailedToLoad(LoadAdError i) {
                         startActivity(new Intent(MainActivity.this,MainActivity3.class));
+                        loadAdInter();
                     }
 
                 });
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         Admod.getInstance().loadNativeAd(this, getString(R.string.admod_native_id), new NativeCallback() {
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {
-                NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.custom_native, null);
+                NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_native, null);
                 native_ads.addView(adView);
                 Admod.getInstance().loadNativeAdViewCustom(nativeAd, adView);
             }
