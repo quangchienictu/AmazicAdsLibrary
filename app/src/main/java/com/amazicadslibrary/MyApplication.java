@@ -1,14 +1,11 @@
 package com.amazicadslibrary;
 
-import android.app.Application;
-
-import com.amazic.ads.util.Admod;
 import com.amazic.ads.util.AppOpenManager;
-import com.amazic.ads.util.AsdApplication;
+import com.amazic.ads.util.AdsApplication;
 
 import java.util.List;
 
-public class MyApplication extends AsdApplication {
+public class MyApplication extends AdsApplication {
     @Override
     public void onCreate() {
         super.onCreate();

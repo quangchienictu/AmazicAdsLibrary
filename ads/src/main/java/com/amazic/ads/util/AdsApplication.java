@@ -7,7 +7,7 @@ import android.util.Log;
 
 import java.util.List;
 
-public abstract class AsdApplication extends Application{
+public abstract class AdsApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
