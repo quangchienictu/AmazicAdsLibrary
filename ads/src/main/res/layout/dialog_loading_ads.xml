@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         app:SpinKit_Color="#0055FF" />
 
-    <com.hanks.htextview.rainbow.RainbowTextView
+    <com.hanks.htextview.typer.TyperTextView
         android:gravity="right"
         app:colorSpace="150dp"
         app:colorSpeed="4dp"
@@ -23,6 +23,8 @@
         android:layout_below="@+id/spin_kit"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_20sdp"
+        app:charIncrease="3"
+        app:typerSpeed="80"
         android:text="@string/loading_ads"
         android:textSize="@dimen/_13sdp" />
 </RelativeLayout>

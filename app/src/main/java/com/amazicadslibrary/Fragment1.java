@@ -64,15 +64,6 @@ public class Fragment1 extends Fragment {
             }
         });
 
-
-        Admod.getInstance().loadNativeAd(getContext(), getString(R.string.admod_native_id), new NativeCallback() {
-            @Override
-            public void onNativeAdLoaded(NativeAd nativeAd) {
-                NativeAdView adView = ( NativeAdView) LayoutInflater.from(getActivity()).inflate(R.layout.layout_native_custom, null);
-                native_ads.addView(adView);
-                Admod.getInstance().pushAdsToViewCustom(nativeAd, adView);
-            }
-        });
         super.onViewCreated(view, savedInstanceState);
     }
 }
