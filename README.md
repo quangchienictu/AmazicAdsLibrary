@@ -8,7 +8,7 @@ implementation 'com.github.quangchienictu:AmazicAdsLibrary:Tag'
 <h2>- BannerAds</h2>
 <div class="content">
   <h4>View xml</h4>
-<pre><code>< include
+<pre>< include
         android:id="@+id/include"
         layout="@layout/layout_banner"
         android:layout_width="match_parent"
@@ -16,25 +16,25 @@ implementation 'com.github.quangchienictu:AmazicAdsLibrary:Tag'
         android:layout_alignParentBottom="true"
         app:layout_constraintBottom_toBottomOf="parent" /> 
    
- </code></pre>
+ </pre>
 <h4>Load in ativity</h4>
 <pre>
-  <code>
+  
     Admod.getInstance().loadBanner(this,"bannerID");
-  </code>
+  
 </pre>
 <h4>Load in fragment</h4>
 <pre>
-  <code>
+  
    Admod.getInstance().loadBannerFragment( mActivity, "bannerID",  rootView)
-  </code>
+  
 </pre>
 </div>
 <h2>IntertitialAds</h2>
 <div class="content">
   <h3>- Inter Splash</h3>
   <pre>
-    <code>
+    
       Admod.getInstance().loadSplashInterAds(this,"interstitial_id",25000,5000, new InterCallback(){
             @Override
             public void onAdClosed() {
@@ -49,11 +49,11 @@ implementation 'com.github.quangchienictu:AmazicAdsLibrary:Tag'
                 finish();
             }
         });
-    </code>
+    
   </pre>
 <h3>- InterstitialAds</h3>
   <h4>Create and load interstitialAds</h4>
-<pre><code>
+<pre>
   private InterstitialAd mInterstitialAd;
 
    Admod.getInstance().loadInterAds(this, "interstitial_id" new InterCallback() {
@@ -63,9 +63,9 @@ implementation 'com.github.quangchienictu:AmazicAdsLibrary:Tag'
                 mInterstitialAd = interstitialAd;
             }
         });
-</code></pre>
+</pre>
 <h4>Show interstitialAds</h4>
-<pre><code>
+<pre>
    Admod.getInstance().showInterAds(MainActivity.this, mInterstitialAd, new InterCallback() {
                     @Override
                     public void onAdClosed() {
@@ -80,15 +80,15 @@ implementation 'com.github.quangchienictu:AmazicAdsLibrary:Tag'
                     }
 
                 });
-</code></pre>
+</pre>
 </div>
 
 <h2>- RewardAds</h2>
 <div class="content">
   <h4>Init RewardAds</h4>
-<pre><code>  Admod.getInstance().initRewardAds(this,reward_id);</code></pre>
+<pre>  Admod.getInstance().initRewardAds(this,reward_id);</pre>
 <h4>Show RewardAds</h4>
-<pre><code>
+<pre>
   Admod.getInstance().showRewardAds(MainActivity.this,new RewardCallback(){
                     @Override
                     public void onEarnedReward(RewardItem rewardItem) {
@@ -105,25 +105,25 @@ implementation 'com.github.quangchienictu:AmazicAdsLibrary:Tag'
                        // code here
                     }
                 });
-</code></pre>
+</pre>
 </div>
 
 <h2>- NativeAds</h2>
 <div class="content">
   <h4>View xml</h4>
 <pre>
-  <code>
+  
     < FrameLayout
         android:id="@+id/native_ads"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-  </code>
+  
 </pre>
 <h4>Create and show nativeAds</h4>
 <pre>
-  <code>
+  
      private FrameLayout native_ads;
      
      native_ads = findViewById(R.id.native_ads);
@@ -136,7 +136,7 @@ implementation 'com.github.quangchienictu:AmazicAdsLibrary:Tag'
                 Admod.getInstance().pushAdsToViewCustom(nativeAd, adView);
             }
         });
-  </code>
+  
 </pre>
 
 </div>
