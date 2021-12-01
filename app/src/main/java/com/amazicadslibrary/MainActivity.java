@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -13,6 +14,7 @@ import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admod;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -21,7 +23,6 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 
 public class MainActivity extends AppCompatActivity {
     private InterstitialAd mInterstitialAd;
-    private NativeAd nativeAdExit;
     private FrameLayout native_ads;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
         loadAdInter();
         loadAdsNative();
-
-
-
 
         findViewById(R.id.clickFGM).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
     }
 
     private void loadAdsNative(){
@@ -102,10 +102,11 @@ public class MainActivity extends AppCompatActivity {
             public void onNativeAdLoaded(NativeAd nativeAd) {
                 NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_native, null);
                 native_ads.addView(adView);
-                Admod.getInstance().loadNativeAdViewCustom(nativeAd, adView);
+                Admod.getInstance().pushAdsToViewCustom(nativeAd, adView);
             }
         });
     }
+
     private void loadAdInter() {
         Admod.getInstance().loadInterAds(this, getString(R.string.admod_interstitial_id), new InterCallback() {
             @Override

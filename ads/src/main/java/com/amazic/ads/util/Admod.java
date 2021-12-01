@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -176,6 +177,10 @@ public class Admod {
 
 
     /* ==========================  Inter Splash============================================== */
+
+
+
+
 
     /**
      * Load ads in Splash
@@ -487,8 +492,11 @@ public class Admod {
         }
     }
 
-    /* ============================= End  Inter  ==========================================*/
 
+    public void loadAndShowInter(Context context, String idInter,long timeOut, InterCallback callback){
+
+    }
+    /* ============================= End  Inter  ==========================================*/
 
 
     /* =============================  Rewarded Ads ==========================================*/
@@ -583,9 +591,8 @@ public class Admod {
         adLoader.loadAd(getAdRequest());
     }
 
-    public void loadNativeAdViewCustom(NativeAd nativeAd, NativeAdView adView) {
+    public void pushAdsToViewCustom(NativeAd nativeAd, NativeAdView adView) {
         adView.setMediaView(adView.findViewById(R.id.ad_media));
-
         if (adView.getMediaView() != null) {
             adView.getMediaView().postDelayed(new Runnable() {
                 @Override
@@ -706,6 +713,61 @@ public class Admod {
         // with the media content from this native ad.
         adView.setNativeAd(nativeAd);
 
+    }
+
+
+    public void loadNativeFragment(final Activity mActivity, String id, View parent) {
+        final FrameLayout frameLayout = parent.findViewById(R.id.fl_load_native);
+        final ShimmerFrameLayout containerShimmer = parent.findViewById(R.id.shimmer_container_native);
+        loadNative(mActivity, containerShimmer, frameLayout, id, R.layout.native_admob_ad);
+    }
+    private void loadNative(final Context context, final ShimmerFrameLayout containerShimmer, final FrameLayout frameLayout, final String id, final int layout) {
+        frameLayout.removeAllViews();
+        frameLayout.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
+        containerShimmer.startShimmer();
+
+        VideoOptions videoOptions = new VideoOptions.Builder()
+                .setStartMuted(true)
+                .build();
+
+        NativeAdOptions adOptions = new NativeAdOptions.Builder()
+                .setVideoOptions(videoOptions)
+                .build();
+
+
+        AdLoader adLoader = new AdLoader.Builder(context, id)
+                .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+
+                    @Override
+                    public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+                        containerShimmer.stopShimmer();
+                        containerShimmer.setVisibility(View.GONE);
+                        frameLayout.setVisibility(View.VISIBLE);
+                        @SuppressLint("InflateParams") NativeAdView adView = (NativeAdView) LayoutInflater.from(context)
+                                .inflate(layout, null);
+                        pushAdsToViewCustom(nativeAd, adView);
+                        frameLayout.removeAllViews();
+                        frameLayout.addView(adView);
+                    }
+
+
+                })
+                .withAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError error) {
+                        Log.e(TAG, "onAdFailedToLoad: " + error.getMessage());
+                        containerShimmer.stopShimmer();
+                        containerShimmer.setVisibility(View.GONE);
+                        frameLayout.setVisibility(View.GONE);
+                    }
+
+
+                })
+                .withNativeAdOptions(adOptions)
+                .build();
+
+        adLoader.loadAd(getAdRequest());
     }
     /* =============================  End Native Ads ==========================================*/
 

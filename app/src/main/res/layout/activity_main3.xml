@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EF3939"
     tools:context=".MainActivity3">
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <FrameLayout
+        android:layout_marginBottom="40dp"
+        android:id="@+id/fr_ads"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:padding="4dp" >
+    <include layout="@layout/load_fb_native" />
+    </FrameLayout>
+</RelativeLayout>

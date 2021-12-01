@@ -39,6 +39,7 @@
           app:layout_constraintRight_toRightOf="parent"
           app:layout_constraintTop_toTopOf="parent" />
 
+
       <Button
           android:id="@+id/btnClickReward"
           android:layout_below="@+id/btnClickInter"

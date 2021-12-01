@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fl_load_native"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_native_ads"
+        android:background="@drawable/bg_card_ads"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
+    <include layout="@layout/load_fb_native" />
+</LinearLayout>
