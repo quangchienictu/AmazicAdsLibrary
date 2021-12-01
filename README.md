@@ -1,10 +1,58 @@
 <h1>AmazicAdsLibraty</h1>
 <h3><li>Adding the library to your project: Add the following in your root build.gradle at the end of repositories:</br></h3>
 
-maven { url 'https://jitpack.io' } </br>
-implementation 'com.github.quangchienictu:AmazicAdsLibrary:Tag'
+<pre>
+  allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }	    
+    }
+}
+</pre>
+<h5>Implement library in your app level build.gradle:</h5>
+<pre>
+ dependencies {
+    implementation 'com.github.quangchienictu:AmazicAdsLibrary:{version}'
+    implementation 'com.google.android.gms:play-services-ads:20.4.0'
+    //multidex
+    implementation "androidx.multidex:multidex:2.0.1"
+  }
 
+  defaultConfig {
+    multiDexEnabled true
+  }
+</pre>
+<h3><li>Add app id in Manifest:</br></h3>
+<pre>
+     < meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-4973559944609228~2346710863" />
+</pre>
+<h3><li>Init aplication</br></h3>
+<pre> < application
+   android:name=".MyApplication"
+   .
+   .
+   .../></pre>
+<pre>
+    public class MyApplication extends AsdApplication {
+    @Override
+    public boolean enableAdsResume() {
+        return true;
+    }
 
+    @Override
+    public List<String> getListTestDeviceId() {
+        return null;
+    }
+
+    @Override
+    public String getResumeAdId() {
+        return "resume_id";
+    }
+}
+
+</pre>
 <h2>- BannerAds</h2>
 <div class="content">
   <h4>View xml</h4>
