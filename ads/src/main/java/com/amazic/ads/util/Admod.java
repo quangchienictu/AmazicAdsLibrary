@@ -242,7 +242,9 @@ public class Admod {
                     }
                     if (adListener != null) {
                         adListener.onAdClosed();
+                        return;
                     }
+                    adListener.onAdClosed();
                 }
             };
             handler.postDelayed(rd, timeOut);
