@@ -52,6 +52,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -187,12 +188,14 @@ public class Admod {
      */
     public void loadSplashInterAds(final Context context, String id, long timeOut, long timeDelay, final InterCallback adListener) {
         checkTimeDelay = false;
+        isTimeLimited = false;
         if (isShowLoadingSplash)
             return;
         isShowLoadingSplash = true;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 //check delay show ad splash
                 if (mInterstitialSplash != null) {
                     Log.d(TAG, "loadSplashInterAds:show ad on delay ");
@@ -204,10 +207,34 @@ public class Admod {
             }
         }, timeDelay);
 
+        if (timeOut > 0) {
+            handler = new Handler();
+            rd = new Runnable() {
+                @Override
+                public void run() {
+                    Log.d(TAG, "loadSplashInterstitalAds: on timeout");
+                    isTimeLimited = true;
+                    if (mInterstitialSplash != null) {
+                        Log.d(TAG, "loadSplashInterAds:show ad on timeout ");
+                        onShowSplash((Activity) context, adListener);
+                        return;
+                    }
+                    if (adListener != null) {
+                        adListener.onAdClosed();
+                        isShowLoadingSplash = false;
+                    }
+                }
+            };
+            handler.postDelayed(rd, timeOut);
+        }
+
         loadInterAds(context, id, new InterCallback() {
             @Override
             public void onInterstitialLoad(InterstitialAd interstitialAd) {
                 super.onInterstitialLoad(interstitialAd);
+                Log.d(TAG, "loadSplashInterstitalAds  end time loading success:" + Calendar.getInstance().getTimeInMillis() +"     time limit:"+isTimeLimited);
+                if (isTimeLimited)
+                    return;
                 if (interstitialAd != null) {
                     mInterstitialSplash = interstitialAd;
                     if (checkTimeDelay) {
@@ -220,6 +247,9 @@ public class Admod {
             @Override
             public void onAdFailedToLoad(LoadAdError i) {
                 super.onAdFailedToLoad(i);
+                Log.e(TAG, "loadSplashInterstitalAds  end time loading error:" + Calendar.getInstance().getTimeInMillis() +"     time limit:"+isTimeLimited);
+                if (isTimeLimited)
+                    return;
                 if (adListener != null) {
                     if (handler != null && rd != null) {
                         handler.removeCallbacks(rd);
@@ -229,26 +259,7 @@ public class Admod {
             }
         });
 
-        if (timeOut > 0) {
-            handler = new Handler();
-            rd = new Runnable() {
-                @Override
-                public void run() {
-                    isTimeLimited = true;
-                    if (mInterstitialSplash != null) {
-                        Log.d(TAG, "loadSplashInterAds:show ad on timeout ");
-                        onShowSplash((Activity) context, adListener);
-                        return;
-                    }
-                    if (adListener != null) {
-                        adListener.onAdClosed();
-                        return;
-                    }
-                    adListener.onAdClosed();
-                }
-            };
-            handler.postDelayed(rd, timeOut);
-        }
+
     }
 
 
@@ -269,7 +280,7 @@ public class Admod {
             @Override
             public void onAdShowedFullScreenContent() {
                 isShowLoadingSplash = false;
-                mInterstitialSplash = null;
+
             }
 
             @Override
@@ -287,6 +298,7 @@ public class Admod {
                     }
 
                 }
+                mInterstitialSplash = null;
             }
 
             @Override
