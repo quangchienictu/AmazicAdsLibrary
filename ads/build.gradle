@@ -60,5 +60,5 @@ dependencies {
 
     def htextview_version = "0.1.6"
     implementation "com.hanks:htextview-base:$htextview_version"
-    compile "com.hanks:htextview-rainbow:$htextview_version"
+    implementation "com.hanks:htextview-rainbow:$htextview_version"
 }
