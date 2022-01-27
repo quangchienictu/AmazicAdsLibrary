@@ -189,8 +189,16 @@ public class Admod {
     public void loadSplashInterAds(final Context context, String id, long timeOut, long timeDelay, final InterCallback adListener) {
         checkTimeDelay = false;
         isTimeLimited = false;
-        if (isShowLoadingSplash)
+        if (isShowLoadingSplash){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adListener.onLoadFailLiMit();
+                }
+            },timeDelay);
+
             return;
+        }
         isShowLoadingSplash = true;
         new Handler().postDelayed(new Runnable() {
             @Override
