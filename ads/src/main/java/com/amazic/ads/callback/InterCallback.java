@@ -21,6 +21,4 @@ public class InterCallback {
     }
     public void onAdImpression() {
     }
-    public void onLoadFailLiMit() {
-    }
 }

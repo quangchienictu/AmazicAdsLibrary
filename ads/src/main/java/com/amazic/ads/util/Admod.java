@@ -193,10 +193,9 @@ public class Admod {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    adListener.onLoadFailLiMit();
+                    adListener.onAdClosed();
                 }
             },timeDelay);
-
             return;
         }
         isShowLoadingSplash = true;
