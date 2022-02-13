@@ -14,6 +14,7 @@ import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admod;
+import com.amazic.ads.util.AppIronSource;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
@@ -29,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         native_ads   = findViewById(R.id.native_ads);
-
 
         Admod.getInstance().loadBanner(this, getString(R.string.admod_banner_id));
         Admod.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
@@ -91,6 +91,28 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+        findViewById(R.id.btnClickIroSource).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AppIronSource.getInstance().isInterstitialReady()) {
+                    AppIronSource.getInstance().loadInterstitial(MainActivity.this,new InterCallback());//loadInterstitial(FileManagerActivity.this, new AdCallback());
+                    AppIronSource.getInstance().showInterstitial(MainActivity.this, new InterCallback() {
+                        @Override
+                        public void onAdClosed() {
+                            super.onAdClosed();
+                            AppIronSource.getInstance().destroyBanner();
+                            startActivity(new Intent(MainActivity.this,MainIronSource.class));
+                            loadAdInter();
+                        }
+                    });
+                } else {
+                    AppIronSource.getInstance().destroyBanner();
+                    startActivity(new Intent(MainActivity.this,MainIronSource.class));
+                    loadAdInter();
+                }
+            }
+        });
 
 
 
