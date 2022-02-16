@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+    </FrameLayout>
   <RelativeLayout
       android:layout_centerInParent="true"
       android:layout_width="wrap_content"
@@ -42,16 +43,17 @@
 
       <Button
           android:id="@+id/btnClickReward"
-          android:layout_below="@+id/btnClickInter"
-          android:layout_centerHorizontal="true"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_below="@+id/btnClickInter"
+          android:layout_centerHorizontal="true"
           android:text="Click show  reward"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintLeft_toLeftOf="parent"
           app:layout_constraintRight_toRightOf="parent"
           app:layout_constraintTop_toTopOf="parent" />
   </RelativeLayout>
+
     <include
         android:id="@+id/include"
         layout="@layout/layout_banner"

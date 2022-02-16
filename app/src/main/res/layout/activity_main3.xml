@@ -5,13 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity3">
-    <FrameLayout
-        android:layout_marginBottom="40dp"
-        android:id="@+id/fr_ads"
+    <LinearLayout
+        android:layout_margin="5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        android:padding="4dp" >
-    <include layout="@layout/load_fb_native" />
-    </FrameLayout>
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/fr_ads"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/ads_native_shimer" />
+        </FrameLayout>
+    </LinearLayout>
 </RelativeLayout>

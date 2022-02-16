@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.gms.ads.nativead.NativeAdView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:id="@+id/shimmer_container_native"
     android:layout_height="wrap_content">
-
     <RelativeLayout
-        android:background="@drawable/border_dialog"
+
         android:id="@+id/ad_unit_content"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
                     android:layout_width="40dip"
                     android:layout_height="40dip"
                     android:adjustViewBounds="true"
-                    android:src="@color/colorPrimary" />
+                    android:src="@color/lightTransparent" />
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -40,7 +40,8 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:text="hellop .this ius dsa dsadsa "
+                        android:background="@color/lightTransparent"
+                        android:textColor="@android:color/white"
                         android:textSize="11sp" />
 
                     <LinearLayout
@@ -55,7 +56,8 @@
                             android:layout_weight="1"
                             android:gravity="bottom"
                             android:lines="1"
-                            android:text=" dá dsa dsa ds a dsads ad sad sa"
+                            android:background="@color/lightTransparent"
+                            android:textColor="@android:color/white"
                             android:textSize="11sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -69,13 +71,14 @@
                 android:layout_marginLeft="10dip"
                 android:layout_marginRight="10dip"
                 android:maxLines="3"
-                android:text="@string/appbar_scrolling_view_behavior"
+                android:background="@color/lightTransparent"
                 android:textSize="11sp" />
 
             <com.google.android.gms.ads.nativead.MediaView
                 android:id="@+id/ad_media"
                 android:layout_width="fill_parent"
                 android:layout_height="120dp"
+                android:background="@color/lightTransparent"
                 android:layout_gravity="center_horizontal"
                 android:layout_weight="1"
                 android:minWidth="120dp"
@@ -86,9 +89,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:background="@color/colorAds"
                 android:gravity="center"
-                android:text="Cài Đặt"
+                android:background="@color/lightTransparent"
                 android:textColor="@color/colorWhite"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -97,4 +99,4 @@
         <TextView style="@style/AppTheme.Ads" />
 
     </RelativeLayout>
-</com.google.android.gms.ads.nativead.NativeAdView>
+</com.facebook.shimmer.ShimmerFrameLayout>

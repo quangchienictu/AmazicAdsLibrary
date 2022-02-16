@@ -1,5 +1,4 @@
 package com.amazicadslibrary;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,6 +13,7 @@ import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admod;
+import com.amazic.ads.util.AppIronSource;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
@@ -28,12 +28,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         native_ads   = findViewById(R.id.native_ads);
-
-
         Admod.getInstance().loadBanner(this, getString(R.string.admod_banner_id));
         Admod.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
-
 
         loadAdInter();
         loadAdsNative();
@@ -89,11 +87,6 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
-
-
-
-
-
     }
 
     private void loadAdsNative(){
@@ -103,6 +96,11 @@ public class MainActivity extends AppCompatActivity {
                 NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_native, null);
                 native_ads.addView(adView);
                 Admod.getInstance().pushAdsToViewCustom(nativeAd, adView);
+            }
+
+            @Override
+            public void onAdFailedToLoad() {
+
             }
         });
     }

@@ -15,8 +15,11 @@ buildscript {
 allprojects {
     repositories {
         google()
-        mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
+        jcenter()
+        maven {
+            //IronSource
+            url "https://android-sdk.is.com/"
+        }
     }
 }
 

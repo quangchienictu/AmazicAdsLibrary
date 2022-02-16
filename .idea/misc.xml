@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/drawable/border_dialog.xml" value="0.35104166666666664" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/ads_native_shimer.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/ads_native_shimer_small.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/layout_banner.xml" value="0.2109375" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/layout_inline_banner_control.xml" value="0.2109375" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/layout_native.xml" value="0.33" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/layout_native_control.xml" value="0.33" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/load_fb_banner.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/load_fb_native.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/native_admob_ad.xml" value="0.2109375" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main3.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main_iron_source.xml" value="0.22083333333333333" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main_iron_source2.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/layout_native_control.xml" value="0.18" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/layout_native_custom.xml" value="0.33489583333333334" />
+        <entry key="..\:/LIB/AmazicAdsLibrary/app/src/main/res/layout/activity_main.xml" value="0.35104166666666664" />
+        <entry key="..\:/LIB/AmazicAdsLibrary/app/src/main/res/layout/activity_main3.xml" value="0.35104166666666664" />
+        <entry key="..\:/LIB/AmazicAdsLibrary/app/src/main/res/layout/activity_main_iro_source.xml" value="0.35104166666666664" />
+        <entry key="..\:/LIB/AmazicAdsLibrary/app/src/main/res/layout/layout_banner_control.xml" value="0.35104166666666664" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
