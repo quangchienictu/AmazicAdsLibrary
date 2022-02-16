@@ -1,5 +1,4 @@
 package com.amazicadslibrary;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -29,11 +28,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        native_ads   = findViewById(R.id.native_ads);
 
+        native_ads   = findViewById(R.id.native_ads);
         Admod.getInstance().loadBanner(this, getString(R.string.admod_banner_id));
         Admod.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
-
 
         loadAdInter();
         loadAdsNative();
@@ -89,33 +87,6 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
-
-
-
-        findViewById(R.id.btnClickIroSource).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (AppIronSource.getInstance().isInterstitialReady()) {
-                    AppIronSource.getInstance().loadInterstitial(MainActivity.this,new InterCallback());//loadInterstitial(FileManagerActivity.this, new AdCallback());
-                    AppIronSource.getInstance().showInterstitial(MainActivity.this, new InterCallback() {
-                        @Override
-                        public void onAdClosed() {
-                            super.onAdClosed();
-                            AppIronSource.getInstance().destroyBanner();
-                            startActivity(new Intent(MainActivity.this,MainIronSource.class));
-                            loadAdInter();
-                        }
-                    });
-                } else {
-                    AppIronSource.getInstance().destroyBanner();
-                    startActivity(new Intent(MainActivity.this,MainIronSource.class));
-                    loadAdInter();
-                }
-            }
-        });
-
-
-
     }
 
     private void loadAdsNative(){
@@ -125,6 +96,11 @@ public class MainActivity extends AppCompatActivity {
                 NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_native, null);
                 native_ads.addView(adView);
                 Admod.getInstance().pushAdsToViewCustom(nativeAd, adView);
+            }
+
+            @Override
+            public void onAdFailedToLoad() {
+
             }
         });
     }

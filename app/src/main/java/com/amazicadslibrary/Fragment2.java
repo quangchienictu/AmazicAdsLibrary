@@ -22,6 +22,6 @@ public class Fragment2 extends Fragment {
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Admod.getInstance().loadNativeFragment(getActivity(),getString(R.string.admod_native_id),view);
+        //Admod.getInstance().loadNativeFragment(getActivity(),getString(R.string.admod_native_id),view);
     }
 }

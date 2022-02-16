@@ -382,7 +382,6 @@ public class AppIronSource {
                     if (openActivityAfterShowInterAds && adListener != null) {
                         adListener.onAdClosed();
                     }
-
                     IronSource.showInterstitial();
                 }, 800);
 
