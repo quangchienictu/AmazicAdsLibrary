@@ -2,5 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include  layout="@layout/layout_native_control" />
+    <FrameLayout
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginVertical="10dp"
+        android:id="@+id/fr_ads1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/ads_native_shimer"  />
+    </FrameLayout>
 </RelativeLayout>

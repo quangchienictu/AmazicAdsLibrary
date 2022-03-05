@@ -4,12 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admod;
-import com.amazic.ads.util.AppIronSource;
-import com.amazic.ads.util.AppOpenManager;
 import com.google.android.gms.ads.LoadAdError;
 
 public class Splash extends AppCompatActivity {

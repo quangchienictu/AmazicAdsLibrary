@@ -10,17 +10,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AmazicAdsLibrary">
-        <activity
-            android:name=".MainIronSource2"
-            android:exported="false" />
-        <activity
-            android:name=".SplashIS"
-            android:exported="true">
-
-        </activity>
-        <activity
-            android:name=".MainIronSource"
-            android:exported="false" />
         <activity android:name=".MainActivity3" />
         <activity android:name=".Splash">
             <intent-filter>

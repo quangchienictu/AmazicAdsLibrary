@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
@@ -32,6 +33,8 @@ import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.R;
 import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.ads.mediation.facebook.FacebookAdapter;
+import com.google.ads.mediation.facebook.FacebookExtras;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
@@ -82,6 +85,8 @@ public class Admod {
     InterstitialAd mInterstitialSplash;
     InterstitialAd interstitialAd;
 
+    private boolean isFan = false;
+
     public static Admod getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Admod();
@@ -120,6 +125,10 @@ public class Admod {
         }
 
         this.context = context;
+    }
+
+    public void setFan(boolean fan) {
+        isFan = fan;
     }
 
     /* =======================   Banner ================================= */
@@ -198,6 +207,13 @@ public class Admod {
 
 
 
+    public boolean interstialSplashLoead() {
+        return mInterstitialSplash != null;
+    }
+
+    public InterstitialAd getmInterstitialSplash() {
+        return mInterstitialSplash;
+    }
 
 
     /* ==========================  Inter Splash============================================== */
@@ -247,8 +263,6 @@ public class Admod {
             handlerTimeout.postDelayed(rdTimeout, timeOut);
         }
 
-//        if (isShowLoadingSplash)
-//            return;
         isShowLoadingSplash = true;
         loadInterAds(context, id, new InterCallback() {
             @Override
@@ -302,7 +316,6 @@ public class Admod {
             @Override
             public void onAdShowedFullScreenContent() {
                 isShowLoadingSplash = false;
-                mInterstitialSplash = null;
             }
 
             @Override
@@ -371,7 +384,9 @@ public class Admod {
                     }, 1500);
                 }
 
-                mInterstitialSplash.show(activity);
+                if(activity!=null){
+                    mInterstitialSplash.show(activity);
+                }
                 isShowLoadingSplash = false;
             }, 800);
 
@@ -391,13 +406,16 @@ public class Admod {
                 new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                        adCallback.onInterstitialLoad(interstitialAd);
+                        if(adCallback!=null){
+                            adCallback.onInterstitialLoad(interstitialAd);
+                        }
                     }
 
                     @Override
                     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                         // Handle the error
                         Log.i(TAG, loadAdError.getMessage());
+                        if(adCallback!=null)
                         adCallback.onAdFailedToLoad(loadAdError);
                     }
 
@@ -816,6 +834,14 @@ public class Admod {
 
     public AdRequest getAdRequest() {
         AdRequest.Builder builder = new AdRequest.Builder();
+        if (isFan) {
+            Bundle extras = new FacebookExtras()
+                    .setNativeBanner(true)
+                    .build();
+
+            builder.addNetworkExtrasBundle(FacebookAdapter.class, extras);
+        }
+
         return builder.build();
     }
 

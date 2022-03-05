@@ -16,11 +16,12 @@
       android:layout_centerInParent="true"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content">
+
       <Button
-          android:layout_centerHorizontal="true"
           android:id="@+id/clickFGM"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_centerHorizontal="true"
           android:text="Open fragment"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintLeft_toLeftOf="parent"

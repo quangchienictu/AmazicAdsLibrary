@@ -47,18 +47,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:19.8.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
-    //mediation iron source -  admob
-    implementation 'com.ironsource.adapters:admobadapter:4.3.24'
-    //mediation FAN
-    implementation 'com.ironsource.adapters:facebookadapter:4.3.30'
-    implementation 'com.facebook.android:audience-network-sdk:6.7.0'
 
-    //mediation iron source -  inmobi
-    implementation 'com.ironsource.adapters:inmobiadapter:4.3.13'
-    implementation 'com.inmobi.monetization:inmobi-ads:9.2.0'
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
-    //mediation  iron source -  unity
-    implementation 'com.ironsource.adapters:unityadsadapter:4.3.16'
-    implementation 'com.unity3d.ads:unity-ads:3.7.5'
-    implementation "androidx.core:core-ktx:1.6.0"
 }
