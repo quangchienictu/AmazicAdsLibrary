@@ -84,6 +84,28 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
+
+
+
+        findViewById(R.id.btnClickLoadAndShow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Admod.getInstance().loadAndShowInter(MainActivity.this,getString(R.string.admod_interstitial_id),0,10000, new InterCallback(){
+                    @Override
+                    public void onAdClosed() {
+                        super.onAdClosed();
+                        Toast.makeText(MainActivity.this,"Close ads",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError i) {
+                        super.onAdFailedToLoad(i);
+                        Toast.makeText(MainActivity.this,"Loa ads err",Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
     private void loadAdsNative(){

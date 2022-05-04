@@ -13,7 +13,7 @@ public abstract class AdsApplication extends Application{
         super.onCreate();
         Admod.getInstance().initAdmod(this, getListTestDeviceId());
         if(enableAdsResume()) {
-            AppOpenManager.getInstance().initAdmod(this, getResumeAdId());
+            AppOpenManager.getInstance().init(this, getResumeAdId());
         }
     }
     public abstract boolean enableAdsResume();

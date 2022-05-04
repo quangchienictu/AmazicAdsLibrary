@@ -14,7 +14,7 @@ public abstract class AdsMultiDexApplication extends MultiDexApplication {
         super.onCreate();
         Admod.getInstance().initAdmod(this, getListTestDeviceId());
         if (enableAdsResume()) {
-            AppOpenManager.getInstance().initAdmod(this, getOpenAppAdId());
+            AppOpenManager.getInstance().init(this, getOpenAppAdId());
         }
     }
 

@@ -30,11 +30,11 @@
 
 
       <Button
-          android:layout_below="@+id/clickFGM"
-          android:layout_centerHorizontal="true"
           android:id="@+id/btnClickInter"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_below="@+id/clickFGM"
+          android:layout_centerHorizontal="true"
           android:text="Click show  inter"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintLeft_toLeftOf="parent"
@@ -49,6 +49,17 @@
           android:layout_below="@+id/btnClickInter"
           android:layout_centerHorizontal="true"
           android:text="Click show  reward"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toRightOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+      <Button
+          android:id="@+id/btnClickLoadAndShow"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/btnClickReward"
+          android:layout_centerHorizontal="true"
+          android:text="Click load and show inter"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintLeft_toLeftOf="parent"
           app:layout_constraintRight_toRightOf="parent"

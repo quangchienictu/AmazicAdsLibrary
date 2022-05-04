@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AmazicAdsLibrary">
         <activity android:name=".MainActivity3" />
-        <activity android:name=".Splash">
+        <activity android:name=".Splash" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
