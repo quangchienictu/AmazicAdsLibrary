@@ -3,9 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/drawable/ads_bg_lib.xml" value="0.25104166666666666" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/drawable/ads_icon.xml" value="0.25104166666666666" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/drawable/bg_card_ads.xml" value="0.25104166666666666" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/drawable/border_dialog.xml" value="0.35104166666666664" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/ads_native_shimer.xml" value="0.33489583333333334" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/ads_native_shimer_small.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/dialog_prepair_loading_ads.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/dialog_resume_loading.xml" value="0.16" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/layout_banner.xml" value="0.2109375" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/layout_inline_banner_control.xml" value="0.2109375" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/layout_native.xml" value="0.33" />
@@ -17,6 +22,10 @@
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main3.xml" value="0.33489583333333334" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main_iron_source.xml" value="0.22083333333333333" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main_iron_source2.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_splash.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_splash_is.xml" value="0.225" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/ads_native.xml" value="0.3072916666666667" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/fragment2.xml" value="0.3072916666666667" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/layout_native_control.xml" value="0.18" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/layout_native_custom.xml" value="0.33489583333333334" />
         <entry key="..\:/LIB/AmazicAdsLibrary/app/src/main/res/layout/activity_main.xml" value="0.35104166666666664" />

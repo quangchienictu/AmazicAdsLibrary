@@ -9,6 +9,6 @@
     <string name="ads_test_inter">ca-app-pub-3940256099942544/1033173712</string>
     <string name="ads_test_banner">ca-app-pub-3940256099942544/6300978111</string>
     <string name="ads_test_reward">ca-app-pub-3940256099942544/5224354917</string>
-
+    <string name="well_comeback">Welcome back</string>
 
 </resources>

@@ -13,13 +13,14 @@ import com.amazic.ads.util.AppIronSource;
 import com.google.android.gms.ads.LoadAdError;
 
 public class MainIronSource extends AppCompatActivity {
-    Button btnShow;
+    Button btnShow,btnLoadAndShow;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_iron_source);
 
         btnShow = findViewById(R.id.btnShow);
+        btnLoadAndShow = findViewById(R.id.btnLoadAndShow);
 
         loadInter();
 
@@ -31,6 +32,25 @@ public class MainIronSource extends AppCompatActivity {
                 }else{
                     Toast.makeText(MainIronSource.this, "Ad not loaded", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        btnLoadAndShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppIronSource.getInstance().loadAndShowInter(MainIronSource.this,15000, new InterCallback(){
+                    @Override
+                    public void onAdClosed() {
+                        super.onAdClosed();
+                        startActivity(new Intent(MainIronSource.this,MainIronSource2.class));
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError i) {
+                        super.onAdFailedToLoad(i);
+                        startActivity(new Intent(MainIronSource.this,MainIronSource2.class));
+                    }
+                });
             }
         });
     }
@@ -56,6 +76,7 @@ public class MainIronSource extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        AppIronSource.getInstance().destroyBanner();
         AppIronSource.getInstance().loadBanner(this);
     }
 }

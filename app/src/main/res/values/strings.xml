@@ -6,4 +6,5 @@
     <string name="admod_interstitial_id">ca-app-pub-4973559944609228/8602914526</string>
     <string name="admod_app_open_ad_id">ca-app-pub-3940256099942544/3419835294</string>
     <string name="admod_app_reward_id">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="well_comeback">Welcome back</string>
 </resources>

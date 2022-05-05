@@ -17,6 +17,11 @@
             android:text="Show Inter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btnLoadAndShow"
+            android:text="Load and show inter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/layout_banner"
