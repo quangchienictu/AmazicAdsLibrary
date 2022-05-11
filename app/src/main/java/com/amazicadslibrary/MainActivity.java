@@ -3,12 +3,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.NativeCallback;
+import com.amazic.ads.callback.PurchaseListioner;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admod;
@@ -21,6 +24,11 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 public class MainActivity extends AppCompatActivity {
     private InterstitialAd mInterstitialAd;
     private FrameLayout native_ads;
+
+    public static String PRODUCT_ID_YEAR = "android.test.purchased";
+    public static String PRODUCT_ID_MONTH = "android.test.purchased";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +114,52 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
+
+
+        findViewById(R.id.btnBilding).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 AppPurchase.getInstance().purchase(MainActivity.this, PRODUCT_ID_MONTH);
+                //real
+               // AppPurchase.getInstance().subscribe(MainActivity.this, SubID);
+            }
+        });
+        AppPurchase.getInstance().setPurchaseListioner(new PurchaseListioner() {
+            @Override
+            public void onProductPurchased(String productId,String transactionDetails) {
+               Toast.makeText(MainActivity.this,"Purchase success",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void displayErrorMessage(String errorMsg) {
+                Toast.makeText(MainActivity.this,"Purchase fall",Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onUserCancelBilling() {
+
+                Toast.makeText(MainActivity.this,"Purchase cancel",Toast.LENGTH_SHORT).show();
+            }
+        });
+        // reset pay Purchase
+       /*AppPurchase.getInstance().consumePurchase(Constants.PRODUCT_ID_MONTH);
+        AppPurchase.getInstance().consumePurchase(Constants.PRODUCT_ID_YEAR);
+        AppPurchase.getInstance().setPurchaseListioner(new PurchaseListioner() {
+            @Override
+            public void onProductPurchased(String productId,String transactionDetails) {
+
+            }
+
+            @Override
+            public void displayErrorMessage(String errorMsg) {
+                Log.e("PurchaseListioner","displayErrorMessage:"+ errorMsg);
+            }
+
+            @Override
+            public void onUserCancelBilling() {
+
+            }
+        });*/
     }
 
     private void loadAdsNative(){
