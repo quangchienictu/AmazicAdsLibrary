@@ -13,8 +13,12 @@ import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admod;
 import com.google.android.gms.ads.LoadAdError;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Splash extends AppCompatActivity {
     private static final String TAG = "SplashActivity";
+    public static String PRODUCT_ID_MONTH = "android.test.purchased";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,5 +51,15 @@ public class Splash extends AppCompatActivity {
                 });
             }
         }, 5000);
+
+        initBilling();
+    }
+
+    private void initBilling() {
+        List<String> listINAPId = new ArrayList<>();
+        listINAPId.add(PRODUCT_ID_MONTH);
+        List<String> listSubsId = new ArrayList<>();
+        AppPurchase.getInstance().initBilling(getApplication(),listINAPId,listSubsId);
+
     }
 }

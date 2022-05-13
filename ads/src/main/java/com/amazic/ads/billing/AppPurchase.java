@@ -596,7 +596,6 @@ public class AppPurchase {
         //tracking adjust
         double price = getPriceWithoutCurrency(idPurchaseCurrent, typeIap);
         String currentcy = getCurrency(idPurchaseCurrent, typeIap);
-
         if (purchaseListioner != null)
             isPurchase = true;
         purchaseListioner.onProductPurchased(purchase.getOrderId(), purchase.getOriginalJson());

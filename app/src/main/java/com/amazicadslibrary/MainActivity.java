@@ -120,11 +120,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnBilding).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                AppPurchase.getInstance().consumePurchase(PRODUCT_ID_MONTH);
                  AppPurchase.getInstance().purchase(MainActivity.this, PRODUCT_ID_MONTH);
                 //real
                // AppPurchase.getInstance().subscribe(MainActivity.this, SubID);
             }
         });
+
+
         AppPurchase.getInstance().setPurchaseListioner(new PurchaseListioner() {
             @Override
             public void onProductPurchased(String productId,String transactionDetails) {
