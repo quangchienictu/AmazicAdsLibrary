@@ -89,6 +89,7 @@ public class AppIronSource {
      * @param mActivity
      */
     public void loadBanner(final Activity mActivity) {
+        destroyBanner();
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         loadBanner(mActivity, adContainer, containerShimmer);
@@ -202,7 +203,7 @@ public class AppIronSource {
                     handlerTimeout.removeCallbacks(rdTimeout);
                 }
                 Log.e(TAG, "onInterstitialAdLoadFailed: " + ironSourceError.getErrorMessage());
-                adListener.onAdFailedToLoad(null);
+                adListener.onAdFailedToLoad();
             }
 
             @Override
@@ -250,7 +251,7 @@ public class AppIronSource {
             }
             @Override
             public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-                adListener.onAdFailedToLoad(null);
+                adListener.onAdFailedToLoad();
                 Log.d(TAG, "onInterstitialAdLoadFailed: " + ironSourceError.getErrorMessage());
             }
 
@@ -308,7 +309,7 @@ public class AppIronSource {
 
                 @Override
                 public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-                    adListener.onAdFailedToLoad(null);
+                    adListener.onAdFailedToLoad();
                     Log.d(TAG, "onInterstitialAdLoadFailed: " + ironSourceError.getErrorMessage());
                 }
 
@@ -443,7 +444,7 @@ public class AppIronSource {
                 }
                 dialog.dismiss();
                 Log.e(TAG, "onInterstitialAdLoadFailed xxx: " + ironSourceError.getErrorMessage());
-                adListener.onAdFailedToLoad(null);
+                adListener.onAdFailedToLoad();
             }
 
             @Override
@@ -503,7 +504,7 @@ public class AppIronSource {
                 @Override
                 public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
                     dialog.dismiss();
-                    adListener.onAdFailedToLoad(null);
+                    adListener.onAdFailedToLoad();
                 }
 
                 @Override
