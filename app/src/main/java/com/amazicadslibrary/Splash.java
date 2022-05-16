@@ -27,8 +27,8 @@ public class Splash extends AppCompatActivity {
             }
 
             @Override
-            public void onAdFailedToLoad(LoadAdError i) {
-                super.onAdFailedToLoad(i);
+            public void onAdFailedToLoadIs() {
+                super.onAdFailedToLoadIs();
                 startActivity(new Intent(Splash.this,MainActivity.class));
                 finish();
             }

@@ -7,7 +7,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd;
 public class InterCallback {
     public void onAdClosed() {
     }
-    public void onAdFailedToLoad() {
+    public void onAdFailedToLoad(LoadAdError i) {
     }
     public void onAdFailedToShow(AdError adError) {
     }
@@ -21,5 +21,6 @@ public class InterCallback {
     }
     public void onAdImpression() {
     }
-
+    public void onAdFailedToLoadIs() {
+    }
 }
