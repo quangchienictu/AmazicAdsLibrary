@@ -609,13 +609,13 @@ public class Admod {
                             }
                         });
                         if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && interstitialAd != null) {
-                            dialog.dismiss();
+                           // dialog.dismiss();
                             interstitialAd.show(activity);
                         } else {
                             if (AppOpenManager.getInstance().isInitialized()) {
                                 AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                             }
-                            dialog.dismiss();
+                           // dialog.dismiss();
                         }
                     },timeDelay);
                 }

@@ -103,13 +103,13 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAdClosed() {
                         super.onAdClosed();
-                        Toast.makeText(MainActivity.this,"Close ads",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this,MainActivity2.class));
                     }
 
                     @Override
                     public void onAdFailedToLoad(LoadAdError i) {
                         super.onAdFailedToLoad(i);
-                        Toast.makeText(MainActivity.this,"Loa ads err",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this,MainActivity2.class));
                     }
                 });
             }
