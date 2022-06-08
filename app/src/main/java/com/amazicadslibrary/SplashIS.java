@@ -10,7 +10,7 @@ import com.amazic.ads.util.AppIronSource;
 import com.google.android.gms.ads.LoadAdError;
 
 public class SplashIS extends AppCompatActivity {
-    public String IRON_SOURCE_APP_KEY = "85460dcd";
+    public String IRON_SOURCE_APP_KEY = "152581b29";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

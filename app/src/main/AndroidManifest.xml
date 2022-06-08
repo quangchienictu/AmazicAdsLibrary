@@ -25,6 +25,7 @@
         <activity
             android:name=".MainIronSource"
             android:exported="false" />
+
         <activity android:name=".MainActivity3" />
         <activity android:name=".Splash">
 
