@@ -556,7 +556,7 @@ public class AppIronSource {
                     if (openActivityAfterShowInterAds && adListener != null) {
                         adListener.onAdClosed();
                     }
-                    IronSource.showInterstitial();
+                    IronSource.showInterstitial(placementName);
                 }, 800);
 
             }
