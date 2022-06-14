@@ -14,6 +14,11 @@
         android:layout_height="match_parent">
         <Button
             android:id="@+id/btnShow"
+            android:text="Show Inter ForPlacements"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/btnShowIS"
             android:text="Show Inter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

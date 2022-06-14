@@ -13,7 +13,7 @@ import com.amazic.ads.util.AppIronSource;
 import com.google.android.gms.ads.LoadAdError;
 
 public class MainIronSource extends AppCompatActivity {
-    Button btnShow, btnLoadAndShow;
+    Button btnShow, btnLoadAndShow,btnShowIS;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +22,9 @@ public class MainIronSource extends AppCompatActivity {
 
         btnShow = findViewById(R.id.btnShow);
         btnLoadAndShow = findViewById(R.id.btnLoadAndShow);
+        btnShowIS = findViewById(R.id.btnShowIS);
 
-        AppIronSource.getInstance().loadBanner(this);
+
 
         loadInter();
 
@@ -38,6 +39,27 @@ public class MainIronSource extends AppCompatActivity {
             }
         });
 
+
+        btnShowIS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    AppIronSource.getInstance().showInterstitial(MainIronSource.this, new InterCallback(){
+                        @Override
+                        public void onAdClosed() {
+                            super.onAdClosed();
+                            startActivity(new Intent(MainIronSource.this, MainIronSource2.class));
+                            loadInter();
+                        }
+
+                        @Override
+                        public void onAdFailedToLoad(LoadAdError i) {
+                            super.onAdFailedToLoad(i);
+                            startActivity(new Intent(MainIronSource.this, MainIronSource2.class));
+                            loadInter();
+                        }
+                    });
+            }
+        });
         btnLoadAndShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,12 +81,10 @@ public class MainIronSource extends AppCompatActivity {
     }
 
     public void loadInter() {
-        if (!AppIronSource.getInstance().isInterstitialReady()) {
-            AppIronSource.getInstance().loadInterstitial(MainIronSource.this, new InterCallback() {
+        AppIronSource.getInstance().loadInterstitial(MainIronSource.this, new InterCallback() {
                 @Override
                 public void onAdClosed() {
                     super.onAdClosed();
-                    AppIronSource.getInstance().destroyBanner(); // destroy banner nếu xử dụng banner trong 1 activity khác
                     startActivity(new Intent(MainIronSource.this, MainIronSource2.class));
                     loadInter();  // load lại nếu sử dụng tiếp mà k finish activity
                 }
@@ -74,11 +94,11 @@ public class MainIronSource extends AppCompatActivity {
                     super.onAdFailedToLoad(i);
                 }
             });
-        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        AppIronSource.getInstance().loadBanner(this);
     }
 }
