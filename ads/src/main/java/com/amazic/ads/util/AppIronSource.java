@@ -135,6 +135,7 @@ public class AppIronSource {
                 @Override
                 public void onBannerAdClicked() {
                     Log.d(TAG, "onBannerAdClicked");
+                    FirebaseAnalyticsUtil.logClickAdsEventIS(activity,"Banner");
                 }
 
                 @Override
@@ -431,6 +432,7 @@ public class AppIronSource {
                 public void onInterstitialAdClicked() {
                     adListener.onAdClicked();
                     Log.d(TAG, "onInterstitialAdClicked: ");
+                    FirebaseAnalyticsUtil.logClickAdsEventIS(context,"Interstitial");
                 }
             });
             if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
@@ -659,6 +661,7 @@ public class AppIronSource {
                 dialog.dismiss();
                 adListener.onAdClicked();
                 Log.i(TAG, "onInterstitialAdClicked xxx: ");
+                FirebaseAnalyticsUtil.logClickAdsEventIS(activity,"Interstitial");
             }
         });
         IronSource.loadInterstitial();
