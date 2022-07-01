@@ -542,7 +542,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                             enableScreenContentCallback = false;
                         }
                     }
-
                 };
         AdRequest request = getAdRequest();
         AppOpenAd.load(

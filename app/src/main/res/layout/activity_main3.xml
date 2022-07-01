@@ -17,4 +17,12 @@
             <include layout="@layout/ads_native_shimer" />
         </FrameLayout>
     </LinearLayout>
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/layout_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </RelativeLayout>

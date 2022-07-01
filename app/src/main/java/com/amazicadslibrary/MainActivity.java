@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Admod.getInstance().timeLimitAds = 60000;
         native_ads   = findViewById(R.id.native_ads);
         Admod.getInstance().loadBanner(this, getString(R.string.admod_banner_id));
         Admod.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
