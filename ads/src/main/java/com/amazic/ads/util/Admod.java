@@ -89,6 +89,10 @@ public class Admod {
     private String rewardedId;
     InterstitialAd mInterstitialSplash;
     InterstitialAd interstitialAd;
+    private boolean isShowInter = true;
+    private boolean isShowBanner = true;
+    private boolean isShowNative = true;
+    public long timeLimitAds = 0; // Set > 1000 nếu cần limit ads click
 
     private boolean isFan = false;
 
@@ -144,42 +148,60 @@ public class Admod {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         loadBanner(mActivity, id, adContainer, containerShimmer, false);
     }
+
     private void loadBanner(final Activity mActivity, String id, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, Boolean useInlineAdaptive) {
-        containerShimmer.setVisibility(View.VISIBLE);
-        containerShimmer.startShimmer();
-        try {
-            AdView adView = new AdView(mActivity);
-            adView.setAdUnitId(id);
-            adContainer.addView(adView);
-            AdSize adSize = getAdSize(mActivity, useInlineAdaptive);
-            adView.setAdSize(adSize);
-            adView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            adView.loadAd(getAdRequest());
-            adView.setAdListener(new AdListener() {
+        if (isShowBanner) {
+            containerShimmer.setVisibility(View.VISIBLE);
+            containerShimmer.startShimmer();
+            try {
+                AdView adView = new AdView(mActivity);
+                adView.setAdUnitId(id);
+                adContainer.addView(adView);
+                AdSize adSize = getAdSize(mActivity, useInlineAdaptive);
+                adView.setAdSize(adSize);
+                adView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                adView.loadAd(getAdRequest());
+                adView.setAdListener(new AdListener() {
 
-                @Override
-                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                    super.onAdFailedToLoad(loadAdError);
-                    containerShimmer.stopShimmer();
-                    adContainer.setVisibility(View.GONE);
-                    containerShimmer.setVisibility(View.GONE);
-                }
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        super.onAdFailedToLoad(loadAdError);
+                        containerShimmer.stopShimmer();
+                        adContainer.setVisibility(View.GONE);
+                        containerShimmer.setVisibility(View.GONE);
+                    }
 
-                @Override
-                public void onAdLoaded() {
-                    Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
-                    containerShimmer.stopShimmer();
-                    containerShimmer.setVisibility(View.GONE);
-                    adContainer.setVisibility(View.VISIBLE);
-                }
+                    @Override
+                    public void onAdLoaded() {
+                        Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
+                        containerShimmer.stopShimmer();
+                        containerShimmer.setVisibility(View.GONE);
+                        adContainer.setVisibility(View.VISIBLE);
+                    }
 
-            });
+                    @Override
+                    public void onAdClicked() {
+                        super.onAdClicked();
+                        if (timeLimitAds > 1000) {
+                            setTimeLimitBanner();
+                            containerShimmer.stopShimmer();
+                            adContainer.setVisibility(View.GONE);
+                            containerShimmer.setVisibility(View.GONE);
+                        }
+                    }
+                });
 
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            containerShimmer.stopShimmer();
+            adContainer.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
         }
     }
+
     private AdSize getAdSize(Activity mActivity, Boolean useInlineAdaptive) {
         // Step 2 - Determine the screen width (less decorations) to use for the ad width.
         Display display = mActivity.getWindowManager().getDefaultDisplay();
@@ -198,6 +220,7 @@ public class Admod {
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(mActivity, adWidth);
 
     }
+
     /**
      * Load ads Banner in Fragment
      */
@@ -210,8 +233,6 @@ public class Admod {
     /*===========================  end Banner ========================================= */
 
 
-
-
     public boolean interstialSplashLoead() {
         return mInterstitialSplash != null;
     }
@@ -222,9 +243,6 @@ public class Admod {
 
 
     /* ==========================  Inter Splash============================================== */
-
-
-
 
 
     /**
@@ -300,11 +318,16 @@ public class Admod {
                     adListener.onAdFailedToLoad(i);
                 }
             }
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+                if(timeLimitAds>1000)
+                    setTimeLimitInter();
+            }
         });
 
 
     }
-
 
 
     private void onShowSplash(Activity activity, InterCallback adListener) {
@@ -356,6 +379,12 @@ public class Admod {
                 }
 
             }
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+                if(timeLimitAds>1000)
+                    setTimeLimitInter();
+            }
         });
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
             try {
@@ -389,7 +418,7 @@ public class Admod {
                     }, 1500);
                 }
 
-                if(activity!=null){
+                if (activity != null) {
                     mInterstitialSplash.show(activity);
                 }
                 isShowLoadingSplash = false;
@@ -403,32 +432,35 @@ public class Admod {
     /* =============================   Inter ==========================================*/
 
     /**
-     Load ads inter
-     Return 1 inter ads
+     * Load ads inter
+     * Return 1 inter ads
      */
     public void loadInterAds(Context context, String id, InterCallback adCallback) {
-        InterstitialAd.load(context, id, getAdRequest(),
-                new InterstitialAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                        if(adCallback!=null){
-                            adCallback.onInterstitialLoad(interstitialAd);
+        if (isShowInter) {
+            InterstitialAd.load(context, id, getAdRequest(),
+                    new InterstitialAdLoadCallback() {
+                        @Override
+                        public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                            if (adCallback != null) {
+                                adCallback.onInterstitialLoad(interstitialAd);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        // Handle the error
-                        Log.i(TAG, loadAdError.getMessage());
-                        if(adCallback!=null)
-                            adCallback.onAdFailedToLoad(loadAdError);
-                    }
+                        @Override
+                        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                            // Handle the error
+                            Log.i(TAG, loadAdError.getMessage());
+                            if (adCallback != null)
+                                adCallback.onAdFailedToLoad(loadAdError);
+                        }
 
-                });
+                    });
+        }
 
     }
+
     /**
-     Show ads inter
+     * Show ads inter
      */
     public void showInterAds(Context context, InterstitialAd mInterstitialAd, final InterCallback callback) {
         showInterAds(context, mInterstitialAd, callback, true);
@@ -492,6 +524,12 @@ public class Admod {
                 super.onAdShowedFullScreenContent();
                 // Called when fullscreen content is shown.
             }
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+                if(timeLimitAds>1000)
+                    setTimeLimitInter();
+            }
         });
 
         if (Helper.getNumClickAdsPerDay(context, mInterstitialAd.getAdUnitId()) < maxClickAds) {
@@ -504,6 +542,10 @@ public class Admod {
     }
 
     private void showInterstitialAd(Context context, InterstitialAd mInterstitialAd, InterCallback callback) {
+        if (!isShowInter) {
+            callback.onAdClosed();
+            return;
+        }
         currentClicked++;
         if (currentClicked >= numShowAds && mInterstitialAd != null) {
             if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
@@ -553,10 +595,14 @@ public class Admod {
 
 
     /**
-     load and show ads inter
+     * load and show ads inter
      */
-    public void loadAndShowInter(AppCompatActivity activity, String idInter, int timeDelay, int timeOut, InterCallback callback){
+    public void loadAndShowInter(AppCompatActivity activity, String idInter, int timeDelay, int timeOut, InterCallback callback) {
         if (!isNetworkConnected()) {
+            callback.onAdClosed();
+            return;
+        }
+        if (!isShowInter) {
             callback.onAdClosed();
             return;
         }
@@ -579,9 +625,9 @@ public class Admod {
             @Override
             public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
                 super.onAdLoaded(interstitialAd);
-                if(interstitialAd!=null){
+                if (interstitialAd != null) {
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                        interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                        interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                             @Override
                             public void onAdDismissedFullScreenContent() {
                                 dialog.dismiss();
@@ -617,7 +663,7 @@ public class Admod {
                             }
                             dialog.dismiss();
                         }
-                    },timeDelay);
+                    }, timeDelay);
                 }
             }
         });
@@ -681,6 +727,7 @@ public class Admod {
             });
         }
     }
+
     public void initRewardAds(Context context, String id) {
         this.rewardedId = id;
         RewardedAd.load(context, id, getAdRequest(), new RewardedAdLoadCallback() {
@@ -688,6 +735,7 @@ public class Admod {
             public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
                 Admod.this.rewardedAd = rewardedAd;
             }
+
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
@@ -704,41 +752,48 @@ public class Admod {
     /* =============================  Native Ads ==========================================*/
 
     public void loadNativeAd(Context context, String id, final NativeCallback callback) {
-        if(isNetworkConnected()){
-            VideoOptions videoOptions = new VideoOptions.Builder()
-                    .setStartMuted(true)
-                    .build();
+        if (isShowNative) {
+            if (isNetworkConnected()) {
+                VideoOptions videoOptions = new VideoOptions.Builder()
+                        .setStartMuted(true)
+                        .build();
 
-            NativeAdOptions adOptions = new NativeAdOptions.Builder()
-                    .setVideoOptions(videoOptions)
-                    .build();
-            AdLoader adLoader = new AdLoader.Builder(context, id)
-                    .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+                NativeAdOptions adOptions = new NativeAdOptions.Builder()
+                        .setVideoOptions(videoOptions)
+                        .build();
+                AdLoader adLoader = new AdLoader.Builder(context, id)
+                        .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
 
-                        @Override
-                        public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
-                            callback.onNativeAdLoaded(nativeAd);
-                        }
-                    })
-                    .withAdListener(new AdListener() {
-                        @Override
-                        public void onAdFailedToLoad(LoadAdError error) {
-                            Log.e(TAG, "NativeAd onAdFailedToLoad: " + error.getMessage());
-                            callback.onAdFailedToLoad();
-                        }
-
-                        @Override
-                        public void onAdClicked() {
-                            super.onAdClicked();
-                            if (callback != null) {
-                                Log.d(TAG, "onAdClicked");
+                            @Override
+                            public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+                                callback.onNativeAdLoaded(nativeAd);
                             }
-                        }
-                    })
-                    .withNativeAdOptions(adOptions)
-                    .build();
-            adLoader.loadAd(getAdRequest());
-        }else{
+                        })
+                        .withAdListener(new AdListener() {
+                            @Override
+                            public void onAdFailedToLoad(LoadAdError error) {
+                                Log.e(TAG, "NativeAd onAdFailedToLoad: " + error.getMessage());
+                                callback.onAdFailedToLoad();
+                            }
+
+                            @Override
+                            public void onAdClicked() {
+                                super.onAdClicked();
+                                if (timeLimitAds > 1000) {
+                                    setTimeLimitNative();
+                                    if (callback != null) {
+                                        callback.onAdFailedToLoad();
+                                    }
+                                }
+                            }
+                        })
+                        .withNativeAdOptions(adOptions)
+                        .build();
+                adLoader.loadAd(getAdRequest());
+            } else {
+                callback.onAdFailedToLoad();
+            }
+        } else {
             callback.onAdFailedToLoad();
         }
 
@@ -874,6 +929,7 @@ public class Admod {
         final ShimmerFrameLayout containerShimmer = parent.findViewById(R.id.shimmer_container_native);
         loadNative(mActivity, containerShimmer, frameLayout, id, R.layout.native_admob_ad);
     }
+
     private void loadNative(final Context context, final ShimmerFrameLayout containerShimmer, final FrameLayout frameLayout, final String id, final int layout) {
         frameLayout.removeAllViews();
         frameLayout.setVisibility(View.GONE);
@@ -929,15 +985,15 @@ public class Admod {
         AdRequest.Builder builder = new AdRequest.Builder();
         return builder.build();
     }
+
     private AdRequest getAdRequestTimeOut(int timeOut) {
-        if(timeOut<5000) timeOut = 5000;
+        if (timeOut < 5000) timeOut = 5000;
         return (AdRequest) new AdRequest.Builder().setHttpTimeoutMillis(timeOut).build();
     }
 
     public void setOpenActivityAfterShowInterAds(boolean openActivityAfterShowInterAds) {
         this.openActivityAfterShowInterAds = openActivityAfterShowInterAds;
     }
-
 
 
     /* =============================  GET  INFO DEVICE  ==========================================*/
@@ -947,6 +1003,7 @@ public class Admod {
                 Settings.Secure.ANDROID_ID);
         return md5(android_id).toUpperCase();
     }
+
     private String md5(final String s) {
         try {
             // Create MD5 Hash
@@ -969,9 +1026,55 @@ public class Admod {
         }
         return "";
     }
+
     /* ============================= END GET  INFO DEVICE  ==========================================*/
     private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
+
+    private void setTimeLimitInter() {
+        if (timeLimitAds > 1000) {
+            isShowInter = false;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    isShowInter = true;
+                }
+            }, timeLimitAds);
+        }
+    }
+
+    private void setTimeLimitBanner() {
+        if (timeLimitAds > 1000) {
+            isShowBanner = false;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    isShowBanner = true;
+                }
+            }, timeLimitAds);
+        }
+
+    }
+
+    private void setTimeLimitNative() {
+        if (timeLimitAds > 1000) {
+            isShowNative = false;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    isShowNative = true;
+                }
+            }, timeLimitAds);
+        }
+
+    }
+
+    public void setTimeLimit(long timeLimit) {
+        this.timeLimitAds = timeLimit;
+    }
+    public long getTimeLimit() {
+       return this.timeLimitAds;
     }
 }

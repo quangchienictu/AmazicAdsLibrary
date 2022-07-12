@@ -31,7 +31,7 @@ public class AppIronSource {
     private boolean openActivityAfterShowInterAds = false;
     public boolean isShowInter = true;
     public boolean isShowBanner = true;
-    public int timeLimit = 60000;
+    public long timeLimit = 0;
 
     public static AppIronSource getInstance() {
         if (instance == null) {
@@ -102,7 +102,7 @@ public class AppIronSource {
 
     public void loadBanner(Activity activity, FrameLayout mBannerParentLayout, final ShimmerFrameLayout containerShimmer) {
 
-        if(isShowBanner){
+        if (isShowBanner) {
             //show shimmer loading
             containerShimmer.setVisibility(View.VISIBLE);
             containerShimmer.startShimmer();
@@ -170,7 +170,7 @@ public class AppIronSource {
                 mBannerParentLayout.setVisibility(View.GONE);
                 containerShimmer.setVisibility(View.GONE);
             }
-        }else{
+        } else {
             containerShimmer.stopShimmer();
             mBannerParentLayout.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -410,8 +410,8 @@ public class AppIronSource {
     }
 
     public void loadInterstitial(Activity activity, InterCallback adListener) {
-        if(isShowInter){
-            if(!isInterstitialReady()){
+        if (isShowInter) {
+            if (!isInterstitialReady()) {
                 IronSource.setInterstitialListener(new InterstitialListener() {
                     @Override
                     public void onInterstitialAdReady() {
@@ -459,13 +459,12 @@ public class AppIronSource {
                     }
                 });
                 IronSource.loadInterstitial();
-            }else{
+            } else {
                 adListener.onAdLoaded();
             }
-        }else{
+        } else {
             adListener.onAdLoaded();
         }
-
 
 
     }
@@ -478,7 +477,7 @@ public class AppIronSource {
     }
 
     public void showInterstitial(Context context, InterCallback adListener) {
-        if(isInterstitialReady()){
+        if (isInterstitialReady()) {
             if (handlerTimeout != null && rdTimeout != null) { // cancel check timeout
                 handlerTimeout.removeCallbacks(rdTimeout);
             }
@@ -570,7 +569,7 @@ public class AppIronSource {
                 }
 
             }
-        }else{
+        } else {
             adListener.onAdClosed();
         }
 
@@ -681,7 +680,7 @@ public class AppIronSource {
     }
 
     public void loadAndShowInter(Activity activity, int timeOut, InterCallback adListener) {
-        if(isShowInter){
+        if (isShowInter) {
             try {
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
@@ -777,7 +776,7 @@ public class AppIronSource {
                 }
             });
             IronSource.loadInterstitial();
-        }else{
+        } else {
             dialog.dismiss();
             adListener.onAdClosed();
         }
@@ -957,21 +956,34 @@ public class AppIronSource {
     }
 
     private void setTimeLimitInter() {
-       isShowInter = false;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-             isShowInter = true;
-            }
-        }, timeLimit);
+        if (timeLimit > 1000) {
+            isShowInter = false;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    isShowInter = true;
+                }
+            }, timeLimit);
+        }
     }
+
     private void setTimeLimitBanner() {
-         isShowBanner = false;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                isShowBanner = true;
-            }
-        }, timeLimit);
+        if (timeLimit > 1000) {
+            isShowBanner = false;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    isShowBanner = true;
+                }
+            }, timeLimit);
+        }
+    }
+
+    public void setTimeLimit(long timeLimit) {
+        this.timeLimit = timeLimit;
+    }
+
+    public long getTimeLimit() {
+        return this.timeLimit;
     }
 }

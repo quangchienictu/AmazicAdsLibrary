@@ -10,12 +10,13 @@ import com.amazic.ads.util.AppIronSource;
 import com.google.android.gms.ads.LoadAdError;
 
 public class SplashIS extends AppCompatActivity {
-    public String IRON_SOURCE_APP_KEY = "152581b29";
+    public String IRON_SOURCE_APP_KEY = "85460dcd";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_is);
         AppIronSource.getInstance().init(this, IRON_SOURCE_APP_KEY, true);
+        AppIronSource.getInstance().setTimeLimit(60000);
         loadAndShowInterAds();
     }
 

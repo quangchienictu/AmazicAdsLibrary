@@ -23,15 +23,39 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 
 public class MainActivity extends AppCompatActivity {
     private InterstitialAd mInterstitialAd;
-    private FrameLayout native_ads;
+    private FrameLayout native_ads,fr_ads;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         native_ads   = findViewById(R.id.native_ads);
+        fr_ads   = findViewById(R.id.fr_ads);
+
+
+
         Admod.getInstance().loadBanner(this, getString(R.string.admod_banner_id));
         Admod.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
+
+        try {
+            Admod.getInstance().loadNativeAd(this, getString(R.string.admod_native_id), new NativeCallback() {
+
+                @Override
+                public void onNativeAdLoaded(NativeAd nativeAd) {
+                    NativeAdView adView = (NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.native_admod_language, null);
+                    fr_ads.removeAllViews();
+                    fr_ads.addView(adView);
+                    Admod.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                }
+
+                @Override
+                public void onAdFailedToLoad() {
+                    fr_ads.setVisibility(View.GONE);
+                }
+            });
+        }catch (Exception e){
+            fr_ads.setVisibility(View.GONE);
+        }
 
         loadAdInter();
         loadAdsNative();

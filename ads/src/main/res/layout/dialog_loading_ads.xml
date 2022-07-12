@@ -6,23 +6,21 @@
     android:background="#FCFAF8">
 
     <com.github.ybq.android.spinkit.SpinKitView
-        android:layout_centerInParent="true"
         android:id="@+id/spin_kit"
         style="@style/SpinKitView.Circle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_gravity="center"
-        app:SpinKit_Color="#0055FF" />
+        app:SpinKit_Color="#515151" />
 
-    <com.hanks.htextview.rainbow.RainbowTextView
-        android:gravity="right"
-        app:colorSpace="150dp"
-        app:colorSpeed="4dp"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/spin_kit"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_20sdp"
+        android:gravity="right"
         android:text="@string/loading_ads"
         android:textSize="@dimen/_13sdp" />
 </RelativeLayout>

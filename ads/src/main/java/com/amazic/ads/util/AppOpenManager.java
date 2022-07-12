@@ -61,7 +61,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     private final List<Class> disabledAppOpenList;
     private Class splashActivity;
-
+    private boolean isShowResume = true;
     private boolean isTimeout = false;
     private static final int TIMEOUT_MSG = 11;
 
@@ -477,7 +477,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                         @Override
                         public void onAdClicked() {
                             super.onAdClicked();
-
+                            if(Admod.getInstance().getTimeLimit()>1000){
+                                setTimeLimitResume();
+                            }
                         }
                     });
                     appResumeAd.show(currentActivity);
@@ -542,7 +544,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                             enableScreenContentCallback = false;
                         }
                     }
-
                 };
         AdRequest request = getAdRequest();
         AppOpenAd.load(
@@ -571,6 +572,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     public void onResume() {
         if (!isAppResumeEnabled) {
             Log.d(TAG, "onResume: app resume is disabled");
+            return;
+        }
+        if(!isShowResume){
             return;
         }
         for (Class activity : disabledAppOpenList) {
@@ -608,6 +612,19 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                 e.printStackTrace();
             }
         }
+    }
+
+    private void setTimeLimitResume() {
+        if (Admod.getInstance().getTimeLimit() > 1000) {
+            isShowResume = false;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    isShowResume = true;
+                }
+            }, Admod.getInstance().getTimeLimit());
+        }
+
     }
 }
 
