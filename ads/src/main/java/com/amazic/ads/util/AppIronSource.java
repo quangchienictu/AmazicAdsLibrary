@@ -326,7 +326,7 @@ public class AppIronSource {
             @Override
             public void onInterstitialAdClicked() {
                 adListener.onAdClicked();
-                Log.i(TAG, "onInterstitialAdClicked: ");
+                Log.i(TAG, "inter splash click ");
             }
         });
         IronSource.loadInterstitial();
@@ -404,6 +404,8 @@ public class AppIronSource {
             public void onInterstitialAdClicked() {
                 adListener.onAdClicked();
                 Log.i(TAG, "onInterstitialAdClicked: ");
+                FirebaseAnalyticsUtil.logClickAdsEventIS(activity, placement);
+                setTimeLimitInter();
             }
         });
         IronSource.loadInterstitial();
@@ -455,7 +457,7 @@ public class AppIronSource {
                         FirebaseAnalyticsUtil.logClickAdsEventIS(activity, "Interstitial");
                         Log.d(TAG, "onInterstitialAdClicked: loadInterstitiale");
                         adListener.onAdClicked();
-
+                        setTimeLimitInter();
                     }
                 });
                 IronSource.loadInterstitial();
@@ -641,7 +643,8 @@ public class AppIronSource {
                 @Override
                 public void onInterstitialAdClicked() {
                     adListener.onAdClicked();
-                    Log.d(TAG, "onInterstitialAdClicked: ");
+                    FirebaseAnalyticsUtil.logClickAdsEventIS(context, placementName);
+                    setTimeLimitInter();
                 }
             });
             if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
