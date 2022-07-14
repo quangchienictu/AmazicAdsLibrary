@@ -189,5 +189,8 @@
 
 </div>
 
-Ver 1.2.3 : Ironsouce
-
+<h3><li>Set limit time when click ads</br></h3>
+<pre>
+ AppIronSource.getInstance().setTimeLimit(60000);
+ Admod.getInstance().setTimeLimit(60000);
+</pe>
