@@ -29,6 +29,7 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.amazic.ads.BuildConfig;
 import com.amazic.ads.R;
+import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.RewardCallback;
@@ -145,8 +146,13 @@ public class Admod {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         loadBanner(mActivity, id, adContainer, containerShimmer, false);
     }
+
     private void loadBanner(final Activity mActivity, String id, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, Boolean useInlineAdaptive) {
         if(isShowBanner){
+            if (AppPurchase.getInstance().isPurchased(mActivity)) {
+                containerShimmer.setVisibility(View.GONE);
+                return;
+            }
             containerShimmer.setVisibility(View.VISIBLE);
             containerShimmer.startShimmer();
             try {
@@ -178,6 +184,7 @@ public class Admod {
                     @Override
                     public void onAdClicked() {
                         super.onAdClicked();
+                        FirebaseUtil.logClickAdsEvent(context, id);
                         if(timeLimitAds>1000){
                             setTimeLimitBanner();
                             containerShimmer.stopShimmer();
@@ -251,7 +258,12 @@ public class Admod {
     public void loadSplashInterAds(final Context context, String id, long timeOut, long timeDelay, final InterCallback adListener) {
         isTimeDelay = false;
         isTimeout = false;
-
+        if (AppPurchase.getInstance().isPurchased(context)) {
+            if (adListener != null) {
+                adListener.onAdClosed();
+            }
+            return;
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -334,6 +346,10 @@ public class Admod {
 
     private void onShowSplash(Activity activity, InterCallback adListener) {
         isShowLoadingSplash = true;
+        if (mInterstitialSplash == null) {
+            adListener.onAdClosed();
+            return;
+        }
         if (handlerTimeout != null && rdTimeout != null) {
             handlerTimeout.removeCallbacks(rdTimeout);
         }
@@ -356,6 +372,8 @@ public class Admod {
                 if (adListener != null) {
                     if (!openActivityAfterShowInterAds) {
                         adListener.onAdClosed();
+                    }else {
+                        adListener.onAdClosedByUser();
                     }
 
                     if (dialog != null) {
@@ -364,6 +382,7 @@ public class Admod {
 
                 }
                 mInterstitialSplash = null;
+                isShowLoadingSplash = false;
             }
 
             @Override
@@ -384,8 +403,8 @@ public class Admod {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
-                if(timeLimitAds>1000)
-                setTimeLimitInter();
+                if(timeLimitAds>1000){setTimeLimitInter();}
+                FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
             }
         });
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
@@ -413,7 +432,6 @@ public class Admod {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-
                             if (dialog != null && dialog.isShowing() && !activity.isDestroyed())
                                 dialog.dismiss();
                         }
@@ -422,10 +440,18 @@ public class Admod {
 
                 if(activity!=null){
                     mInterstitialSplash.show(activity);
+                    isShowLoadingSplash = false;
+                }else if (adListener != null) {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                    adListener.onAdClosed();
+                    isShowLoadingSplash = false;
                 }
-                isShowLoadingSplash = false;
             }, 800);
-
+        }else{
+            isShowLoadingSplash = false;
+            Log.e(TAG, "onShowSplash: fail on background");
         }
     }
 
@@ -437,8 +463,16 @@ public class Admod {
      Load ads inter
      Return 1 inter ads
      */
+
     public void loadInterAds(Context context, String id, InterCallback adCallback) {
+        if (AppPurchase.getInstance().isPurchased(context) ) {
+            adCallback.onInterstitialLoad(null);
+            return;
+        }
+
         if(isShowInter){
+            isTimeout = false;
+            interstitialAd = null;
             InterstitialAd.load(context, id, getAdRequest(),
                     new InterstitialAdLoadCallback() {
                         @Override
@@ -474,6 +508,10 @@ public class Admod {
 
     private void showInterAdByTimes(final Context context, InterstitialAd mInterstitialAd, final InterCallback callback, final boolean shouldReloadAds) {
         Helper.setupAdmodData(context);
+        if (AppPurchase.getInstance().isPurchased(context)) {
+            callback.onAdClosed();
+            return;
+        }
         if (mInterstitialAd == null) {
             if (callback != null) {
                 callback.onAdClosed();
@@ -493,6 +531,8 @@ public class Admod {
                 if (callback != null) {
                     if (!openActivityAfterShowInterAds) {
                         callback.onAdClosed();
+                    }else {
+                        callback.onAdClosedByUser();
                     }
 
                     if (dialog != null) {
@@ -530,6 +570,7 @@ public class Admod {
                 super.onAdClicked();
                 if(timeLimitAds>1000)
                 setTimeLimitInter();
+                FirebaseUtil.logClickAdsEvent(context, mInterstitialAd.getAdUnitId());
             }
         });
 
@@ -603,6 +644,10 @@ public class Admod {
             callback.onAdClosed();
             return;
         }
+        if (AppPurchase.getInstance().isPurchased(context)) {
+            callback.onAdClosed();
+            return;
+        }
         if(!isShowInter){
             callback.onAdClosed();
             return;
@@ -653,6 +698,13 @@ public class Admod {
                                 // Make sure to set your reference to null so you don't
                                 // show it a second time.
                                 Log.d("TAG", "The ad was shown.");
+                            }
+
+                            @Override
+                            public void onAdClicked() {
+                                super.onAdClicked();
+                                if(timeLimitAds>1000){setTimeLimitInter();}
+                                FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
                             }
                         });
                         if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && interstitialAd != null) {
@@ -715,6 +767,7 @@ public class Admod {
 
                 public void onAdClicked() {
                     super.onAdClicked();
+                    FirebaseUtil.logClickAdsEvent(context, rewardedAd.getAdUnitId());
                 }
             });
             rewardedAd.show(context, new OnUserEarnedRewardListener() {
@@ -729,6 +782,9 @@ public class Admod {
         }
     }
     public void initRewardAds(Context context, String id) {
+        if (AppPurchase.getInstance().isPurchased(context)) {
+            return;
+        }
         this.rewardedId = id;
         RewardedAd.load(context, id, getAdRequest(), new RewardedAdLoadCallback() {
             @Override
@@ -751,6 +807,10 @@ public class Admod {
     /* =============================  Native Ads ==========================================*/
 
     public void loadNativeAd(Context context, String id, final NativeCallback callback) {
+        if (AppPurchase.getInstance().isPurchased(context)) {
+            callback.onAdFailedToLoad();
+            return;
+        }
         if(isShowNative){
             if(isNetworkConnected()){
                 VideoOptions videoOptions = new VideoOptions.Builder()
@@ -778,6 +838,7 @@ public class Admod {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
+                                FirebaseUtil.logClickAdsEvent(context, id);
                                 if(timeLimitAds>1000){
                                     setTimeLimitNative();
                                     if (callback != null) {
@@ -930,6 +991,10 @@ public class Admod {
         loadNative(mActivity, containerShimmer, frameLayout, id, R.layout.native_admob_ad);
     }
     private void loadNative(final Context context, final ShimmerFrameLayout containerShimmer, final FrameLayout frameLayout, final String id, final int layout) {
+        if (AppPurchase.getInstance().isPurchased(context)) {
+            containerShimmer.setVisibility(View.GONE);
+            return;
+        }
         frameLayout.removeAllViews();
         frameLayout.setVisibility(View.GONE);
         containerShimmer.setVisibility(View.VISIBLE);
@@ -969,7 +1034,11 @@ public class Admod {
                         containerShimmer.setVisibility(View.GONE);
                         frameLayout.setVisibility(View.GONE);
                     }
-
+                    @Override
+                    public void onAdClicked() {
+                        super.onAdClicked();
+                        FirebaseUtil.logClickAdsEvent(context, id);
+                    }
 
                 })
                 .withNativeAdOptions(adOptions)

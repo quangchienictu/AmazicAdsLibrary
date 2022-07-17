@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAdFailedToLoad() {
-
+                native_ads.setVisibility(View.GONE);
             }
         });
     }
