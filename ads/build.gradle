@@ -78,5 +78,7 @@ dependencies {
 
 
     implementation 'com.airbnb.android:lottie:5.0.2'
+    // applovin
+    implementation 'com.applovin:applovin-sdk:11.4.2'
 
 }

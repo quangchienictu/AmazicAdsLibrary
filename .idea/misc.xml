@@ -9,6 +9,7 @@
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/drawable/border_dialog.xml" value="0.35104166666666664" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/ads_native_shimer.xml" value="0.33489583333333334" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/ads_native_shimer_small.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/dialog_loading_ads.xml" value="0.25833333333333336" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/dialog_prepair_loading_ads.xml" value="0.33489583333333334" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/dialog_resume_loading.xml" value="0.16" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/layout_banner.xml" value="0.2109375" />
@@ -17,16 +18,26 @@
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/layout_native_control.xml" value="0.33" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/load_fb_banner.xml" value="0.33489583333333334" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/load_fb_native.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/load_fb_small_native.xml" value="0.23802083333333332" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/max_native_custom_ad_small.xml" value="0.23802083333333332" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/ads/src/main/res/layout/native_admob_ad.xml" value="0.2109375" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/drawable/border_ads_lang.xml" value="0.2615" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main2.xml" value="0.25104166666666666" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main3.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main_applovin.xml" value="0.33229166666666665" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main_iron_source.xml" value="0.22083333333333333" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_main_iron_source2.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_simple_list.xml" value="0.2526041666666667" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/activity_splash.xml" value="0.33489583333333334" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/ads_native.xml" value="0.3072916666666667" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/ads_native_shimmer_language.xml" value="0.321875" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/fragment2.xml" value="0.3072916666666667" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/item_simple_list.xml" value="0.33229166666666665" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/layout_native_control.xml" value="0.18" />
         <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/layout_native_custom.xml" value="0.33489583333333334" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/load_native_fan.xml" value="0.2526041666666667" />
+        <entry key="..\:/AmazicLib/AmazicAdsLibrary/app/src/main/res/layout/native_admod_language.xml" value="0.25" />
         <entry key="..\:/LIB/AmazicAdsLibrary/app/src/main/res/layout/activity_main.xml" value="0.35104166666666664" />
         <entry key="..\:/LIB/AmazicAdsLibrary/app/src/main/res/layout/activity_main3.xml" value="0.35104166666666664" />
         <entry key="..\:/LIB/AmazicAdsLibrary/app/src/main/res/layout/activity_main_iro_source.xml" value="0.35104166666666664" />

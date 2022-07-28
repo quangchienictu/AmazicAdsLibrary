@@ -11,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AmazicAdsLibrary">
         <activity android:name=".MainActivity3" />
+        <activity
+            android:name=".applovin.MainApplovinActivity"
+            android:exported="false" />
         <activity android:name=".Splash" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,10 +23,16 @@
         </activity>
         <activity android:name=".MainActivity2" />
         <activity android:name=".MainActivity" />
-
+        <activity
+            android:name=".applovin.SimpleListActivity"
+            android:exported="false" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-4973559944609228~2346710863" />
+        <meta-data
+            android:name="applovin.sdk.key"
+            android:value="3N4Mt8SNhOzkQnGb9oHsRRG1ItybcZDpJWN1fVAHLdRagxP-_k_ZXVaMAdMe5Otsmp6qJSXskfsrtakfRmPAGW" />
+
     </application>
 
 </manifest>

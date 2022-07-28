@@ -48,4 +48,9 @@ dependencies {
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
 
+    implementation 'com.applovin:applovin-sdk:11.4.2'
+
+//    implementation 'com.applovin.mediation:adcolony-adapter:+'
+    implementation 'com.applovin.mediation:google-adapter:20.4.0.0'
+
 }

@@ -6,4 +6,15 @@
     <string name="admod_interstitial_id">ca-app-pub-4973559944609228/8602914526</string>
     <string name="admod_app_open_ad_id">ca-app-pub-3940256099942544/3419835294</string>
     <string name="admod_app_reward_id">ca-app-pub-3940256099942544/5224354917</string>
+
+
+    <string name="applovin_test_inter">95bbc30d840c2513</string>
+    <!--    <string name="applovin_test_inter">cb0a8303fedc7687</string>-->
+    <string name="applovin_test_banner">3341bc83715b8ea6</string>
+    <!--    <string name="applovin_test_banner">51999ea397c63f9c</string>-->
+    <string name="applovin_test_native">2da3ed7483bec0fc</string>
+    <!--    <string name="applovin_test_native">c810c577b4c36ee5</string>-->
+    <string name="applovin_test_reward">8ba0c02d7f3a3d59</string>
+
+
 </resources>
