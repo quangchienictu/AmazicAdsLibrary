@@ -15,6 +15,7 @@ import com.amazic.ads.callback.InterCallback;
 import com.amazicadslibrary.R;
 import com.applovin.mediation.ads.MaxInterstitialAd;
 import com.applovin.mediation.ads.MaxRewardedAd;
+import com.applovin.mediation.nativeAds.MaxNativeAdView;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 public class MainApplovinActivity extends AppCompatActivity {
@@ -29,7 +30,7 @@ public class MainApplovinActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_applovin);
-        frAds = findViewById(R.id.fl_adplaceholder);
+        frAds = findViewById(R.id.fr_ads);
         shimmerFrameLayout = findViewById(R.id.shimmer_container_native);
         interstitialAd = AppLovin.getInstance().getInterstitialAds(this, getString(R.string.admod_interstitial_id));
         AppLovin.getInstance().loadBanner(this, getString(R.string.applovin_test_banner));
@@ -84,17 +85,13 @@ public class MainApplovinActivity extends AppCompatActivity {
             }
         });*/
 
+        AppLovin.getInstance().loadNativeAd(this, frAds, getString(R.string.applovin_test_native), R.layout.layout_native_custom);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        AppLovin.getInstance().loadNativeAd(
-                this,
-                shimmerFrameLayout,
-                frAds,
-                getString(R.string.applovin_test_native),
-                R.layout.max_native_custom_ad_view
-        );
+
     }
 }

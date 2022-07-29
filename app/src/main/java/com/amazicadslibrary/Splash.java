@@ -13,6 +13,7 @@ import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.BillingListener;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admod;
+import com.amazicadslibrary.applovin.MainApplovinActivity;
 import com.applovin.mediation.MaxError;
 import com.google.android.gms.ads.LoadAdError;
 
@@ -39,14 +40,14 @@ public class Splash extends AppCompatActivity {
                         AppLovin.getInstance().loadSplashInterstitialAds(Splash.this, getString(R.string.applovin_test_banner),25000,5000, new AppLovinCallback(){
                             @Override
                             public void onAdClosed() {
-                                startActivity(new Intent(Splash.this,MainActivity.class));
+                                startActivity(new Intent(Splash.this, MainApplovinActivity.class));
                                 finish();
                             }
 
                             @Override
                             public void onAdFailedToLoad(MaxError i) {
                                 super.onAdFailedToLoad(i);
-                                startActivity(new Intent(Splash.this,MainActivity.class));
+                                startActivity(new Intent(Splash.this,MainApplovinActivity.class));
                                 finish();
                             }
                         });

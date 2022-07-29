@@ -22,6 +22,7 @@
                 android:padding="8dip">
 
                 <ImageView
+                    android:layout_marginStart="15dp"
                     android:id="@+id/ad_app_icon"
                     android:layout_width="40dip"
                     android:layout_height="40dip"
