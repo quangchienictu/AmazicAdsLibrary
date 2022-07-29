@@ -139,7 +139,9 @@ public class AppLovin {
             }
             return;
         }
-
+        if (AppOpenManager.getInstance().isInitialized()) {
+            AppOpenManager.getInstance().disableAppResume();
+        }
         interstitialSplash = getInterstitialAds(context, id);
         new Handler().postDelayed(() -> {
             //check delay show ad splash
@@ -366,6 +368,9 @@ public class AppLovin {
 
             @Override
             public void onAdHidden(MaxAd ad) {
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().enableAppResume();
+                }
                 Log.d(TAG, "onAdHidden: " + ((AppCompatActivity) activity).getLifecycle().getCurrentState());
                 if (adListener != null && ((AppCompatActivity) activity).getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                     adListener.onAdClosed();
