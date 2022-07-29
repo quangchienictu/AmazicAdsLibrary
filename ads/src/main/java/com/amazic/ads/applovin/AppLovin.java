@@ -20,6 +20,7 @@ import com.amazic.ads.R;
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
+import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.FirebaseUtil;
 import com.applovin.mediation.MaxAd;
 import com.applovin.mediation.MaxAdListener;
@@ -540,6 +541,9 @@ public class AppLovin {
 
             @Override
             public void onAdHidden(MaxAd ad) {
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().enableAppResume();
+                }
                 if (callback != null && ((AppCompatActivity) context).getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                     callback.onAdClosed();
                     if (shouldReloadAds) {
@@ -564,6 +568,9 @@ public class AppLovin {
 
             @Override
             public void onAdDisplayFailed(MaxAd ad, MaxError error) {
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().enableAppResume();
+                }
                 Log.e(TAG, "onAdDisplayFailed: " + error.getMessage());
                 if (callback != null) {
                     callback.onAdClosed();
@@ -608,7 +615,15 @@ public class AppLovin {
                     dialog = null;
                     e.printStackTrace();
                 }
-                new Handler().postDelayed(interstitialAd::showAd, 800);
+
+                new Handler().postDelayed(() -> {
+                    if (AppOpenManager.getInstance().isInitialized()) {
+                        AppOpenManager.getInstance().disableAppResume();
+                    }
+
+                    interstitialAd.showAd();
+
+                }, 800);
             }
             currentClicked = 0;
         } else if (callback != null) {
