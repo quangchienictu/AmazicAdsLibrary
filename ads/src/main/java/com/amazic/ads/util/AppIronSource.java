@@ -32,6 +32,10 @@ public class AppIronSource {
     public boolean isShowInter = true;
     public boolean isShowBanner = true;
     public long timeLimit = 0;
+    private boolean isTimeout; // xử lý timeout show ads
+    private Handler handlerTimeout;
+    private Runnable rdTimeout;
+
 
     public static AppIronSource getInstance() {
         if (instance == null) {
@@ -178,83 +182,6 @@ public class AppIronSource {
 
     }
 
-    public void loadBannerForPlacement(final Activity mActivity, String placementName) {
-        destroyBanner();
-        final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
-        final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
-        loadBannerForPlacement(mActivity, placementName, adContainer, containerShimmer);
-    }
-
-    public void loadBannerForPlacement(Activity activity, String placementName, FrameLayout mBannerParentLayout, final ShimmerFrameLayout containerShimmer) {
-
-        //show shimmer loading
-        containerShimmer.setVisibility(View.VISIBLE);
-        containerShimmer.startShimmer();
-
-        ISBannerSize size = ISBannerSize.BANNER;
-        // instantiate IronSourceBanner object, using the IronSource.createBanner API
-        mIronSourceBannerLayout = IronSource.createBanner(activity, size);
-
-        // add IronSourceBanner to your container
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT);
-        mBannerParentLayout.addView(mIronSourceBannerLayout, 0, layoutParams);
-
-        if (mIronSourceBannerLayout != null) {
-            // set the banner listener
-            mIronSourceBannerLayout.setBannerListener(new BannerListener() {
-                @Override
-                public void onBannerAdLoaded() {
-                    Log.d(TAG, "onBannerAdLoaded");
-                    // since banner container was "gone" by default, we need to make it visible as soon as the banner is ready
-                    containerShimmer.stopShimmer();
-                    containerShimmer.setVisibility(View.GONE);
-                    mBannerParentLayout.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onBannerAdLoadFailed(IronSourceError error) {
-                    Log.d(TAG, "onBannerAdLoadFailed" + " " + error);
-                    containerShimmer.stopShimmer();
-                    mBannerParentLayout.setVisibility(View.GONE);
-                    containerShimmer.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onBannerAdClicked() {
-                    Log.d(TAG, "onBannerAdClicked");
-                }
-
-                @Override
-                public void onBannerAdScreenPresented() {
-                    Log.d(TAG, "onBannerAdScreenPresented");
-                }
-
-                @Override
-                public void onBannerAdScreenDismissed() {
-                    Log.d(TAG, "onBannerAdScreenDismissed");
-                }
-
-                @Override
-                public void onBannerAdLeftApplication() {
-                    Log.d(TAG, "onBannerAdLeftApplication");
-                }
-            });
-
-            // load ad into the created banner
-            IronSource.loadBanner(mIronSourceBannerLayout, placementName);
-        } else {
-            Log.e(TAG, "loadBanner :IronSource.createBanner returned null");
-            containerShimmer.stopShimmer();
-            mBannerParentLayout.setVisibility(View.GONE);
-            containerShimmer.setVisibility(View.GONE);
-        }
-    }
-
-    private boolean isTimeout; // xử lý timeout show ads
-    private Handler handlerTimeout;
-    private Runnable rdTimeout;
-
     public void loadSplashInterstitial(Activity activity, InterCallback adListener, int timeOut) {
         isTimeout = false;
         if (timeOut > 0) {
@@ -303,7 +230,7 @@ public class AppIronSource {
 
             @Override
             public void onInterstitialAdClosed() {
-                Log.i(TAG, "onInterstitialAdClosed: ");
+                Log.i(TAG, "onInterstitialAdClosed : ");
                 adListener.onAdClosed();
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().enableAppResume();
@@ -332,85 +259,6 @@ public class AppIronSource {
         IronSource.loadInterstitial();
     }
 
-    public void loadSplashInterstitialPlacements(Activity activity, InterCallback adListener, String placement, int timeOut) {
-        isTimeout = false;
-        if (timeOut > 0) {
-            handlerTimeout = new Handler();
-            rdTimeout = new Runnable() {
-                @Override
-                public void run() {
-                    Log.e(TAG, "loadSplashInterstitalAds: on timeout");
-                    isTimeout = true;
-                    if (IronSource.isInterstitialReady()) {
-                        showInterstitialForPlacements(activity, placement, adListener);
-                        return;
-                    }
-                    if (adListener != null) {
-                        adListener.onAdClosed();
-                    }
-                }
-            };
-            handlerTimeout.postDelayed(rdTimeout, timeOut);
-        }
-
-        IronSource.setInterstitialListener(new InterstitialListener() {
-            @Override
-            public void onInterstitialAdReady() {
-
-                if (!isTimeout)
-                    showInterstitialForPlacements(activity, placement, adListener);
-
-                Log.i(TAG, "onInterstitialAdReady: ");
-            }
-
-            @Override
-            public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-                if (handlerTimeout != null && rdTimeout != null) {
-                    handlerTimeout.removeCallbacks(rdTimeout);
-                }
-                Log.e(TAG, "onInterstitialAdLoadFailed: " + ironSourceError.getErrorMessage());
-                adListener.onAdFailedToLoadIs();
-            }
-
-            @Override
-            public void onInterstitialAdOpened() {
-                Log.i(TAG, "onInterstitialAdOpened: ");
-
-            }
-
-            @Override
-            public void onInterstitialAdClosed() {
-                Log.i(TAG, "onInterstitialAdClosed: ");
-                adListener.onAdClosed();
-                if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().enableAppResume();
-                }
-            }
-
-            @Override
-            public void onInterstitialAdShowSucceeded() {
-                Log.i(TAG, "onInterstitialAdShowSucceeded: ");
-            }
-
-            @Override
-            public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-                Log.i(TAG, "onInterstitialAdShowFailed: ");
-                if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().enableAppResume();
-                }
-            }
-
-            @Override
-            public void onInterstitialAdClicked() {
-                adListener.onAdClicked();
-                Log.i(TAG, "onInterstitialAdClicked: ");
-                FirebaseAnalyticsUtil.logClickAdsEventIS(activity, placement);
-                setTimeLimitInter();
-            }
-        });
-        IronSource.loadInterstitial();
-    }
-
     public void loadInterstitial(Activity activity, InterCallback adListener) {
         if (isShowInter) {
             if (!isInterstitialReady()) {
@@ -418,24 +266,24 @@ public class AppIronSource {
                     @Override
                     public void onInterstitialAdReady() {
                         adListener.onAdLoaded();
-                        Log.d(TAG, "onInterstitialAdReady: ");
+                        Log.d(TAG, "onInterstitialAdReady: 1");
                     }
 
                     @Override
                     public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
                         adListener.onAdFailedToLoadIs();
-                        Log.d(TAG, "onInterstitialAdLoadFailed: " + ironSourceError.getErrorMessage());
+                        Log.d(TAG, "onInterstitialAdLoadFailed: 1" + ironSourceError.getErrorMessage());
                     }
 
                     @Override
                     public void onInterstitialAdOpened() {
-                        Log.d(TAG, "onInterstitialAdOpened: ");
+                        Log.d(TAG, "onInterstitialAdOpened: 1");
 
                     }
 
                     @Override
                     public void onInterstitialAdClosed() {
-                        Log.d(TAG, "onInterstitialAdClosed: ");
+                        Log.d(TAG, "onInterstitialAdClosed: 1");
                         adListener.onAdClosed();
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().enableAppResume();
@@ -444,12 +292,12 @@ public class AppIronSource {
 
                     @Override
                     public void onInterstitialAdShowSucceeded() {
-                        Log.d(TAG, "onInterstitialAdShowSucceeded: ");
+                        Log.d(TAG, "onInterstitialAdShowSucceeded: 1");
                     }
 
                     @Override
                     public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-                        Log.d(TAG, "onInterstitialAdShowFailed: ");
+                        Log.d(TAG, "onInterstitialAdShowFailed: 1");
                     }
 
                     @Override
@@ -488,7 +336,7 @@ public class AppIronSource {
                     @Override
                     public void onInterstitialAdReady() {
                         adListener.onAdLoaded();
-                        Log.d(TAG, "onInterstitialAdReady: ");
+                        Log.d(TAG, "onInterstitialAdReady: 2");
                     }
 
                     @Override
@@ -499,13 +347,14 @@ public class AppIronSource {
 
                     @Override
                     public void onInterstitialAdOpened() {
-                        Log.d(TAG, "onInterstitialAdOpened: ");
-
+                        Log.d(TAG, "onInterstitialAdOpened: 2");
+                        if (dialog != null && !((Activity) context).isDestroyed())
+                            dialog.dismiss();
                     }
 
                     @Override
                     public void onInterstitialAdClosed() {
-                        Log.d(TAG, "onInterstitialAdClosed: ");
+                        Log.d(TAG, "onInterstitialAdClosed: 2");
                         try {
                             if (dialog != null && !((Activity) context).isDestroyed())
                                 dialog.dismiss();
@@ -523,12 +372,12 @@ public class AppIronSource {
 
                     @Override
                     public void onInterstitialAdShowSucceeded() {
-                        Log.d(TAG, "onInterstitialAdShowSucceeded: ");
+                        Log.d(TAG, "onInterstitialAdShowSucceeded: 1");
                     }
 
                     @Override
                     public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-                        Log.d(TAG, "onInterstitialAdShowFailed: ");
+                        Log.d(TAG, "onInterstitialAdShowFailed: 1");
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().enableAppResume();
                         }
@@ -575,107 +424,6 @@ public class AppIronSource {
             adListener.onAdClosed();
         }
 
-    }
-
-    public void showInterstitialForPlacements(String placementName) {
-        if (IronSource.isInterstitialReady()) {
-            //show the interstitial
-            Log.d(TAG, "showInterstitialForPlacements: " + IronSource.isInterstitialPlacementCapped(placementName));
-            IronSource.showInterstitial(placementName);
-        }
-    }
-
-    public void showInterstitialForPlacements(Context context, String placementName, InterCallback adListener) {
-        if (handlerTimeout != null && rdTimeout != null) { // cancel check timeout
-            handlerTimeout.removeCallbacks(rdTimeout);
-        }
-        if (IronSource.isInterstitialReady()) {
-            IronSource.setInterstitialListener(new InterstitialListener() {
-                @Override
-                public void onInterstitialAdReady() {
-                    adListener.onAdLoaded();
-                    Log.d(TAG, "onInterstitialAdReady: ");
-                }
-
-                @Override
-                public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-                    adListener.onAdFailedToLoadIs();
-                    Log.d(TAG, "onInterstitialAdLoadFailed: " + ironSourceError.getErrorMessage());
-                }
-
-                @Override
-                public void onInterstitialAdOpened() {
-                    Log.d(TAG, "onInterstitialAdOpened: ");
-
-                }
-
-                @Override
-                public void onInterstitialAdClosed() {
-                    Log.d(TAG, "onInterstitialAdClosed: ");
-                    try {
-                        if (dialog != null && !((Activity) context).isDestroyed())
-                            dialog.dismiss();
-                        if (AppOpenManager.getInstance().isInitialized()) {
-                            AppOpenManager.getInstance().enableAppResume();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    if (!openActivityAfterShowInterAds) {
-                        adListener.onAdClosed();
-                    }
-                }
-
-                @Override
-                public void onInterstitialAdShowSucceeded() {
-                    Log.d(TAG, "onInterstitialAdShowSucceeded: ");
-                }
-
-                @Override
-                public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-                    Log.d(TAG, "onInterstitialAdShowFailed: ");
-                    if (AppOpenManager.getInstance().isInitialized()) {
-                        AppOpenManager.getInstance().enableAppResume();
-                    }
-                }
-
-                @Override
-                public void onInterstitialAdClicked() {
-                    adListener.onAdClicked();
-                    FirebaseAnalyticsUtil.logClickAdsEventIS(context, placementName);
-                    setTimeLimitInter();
-                }
-            });
-            if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                try {
-                    if (dialog != null && dialog.isShowing())
-                        dialog.dismiss();
-                    dialog = new LoadingAdsDialog(context);
-                    try {
-                        dialog.show();
-                    } catch (Exception e) {
-                        adListener.onAdClosed();
-                        return;
-                    }
-                } catch (Exception e) {
-                    dialog = null;
-                    e.printStackTrace();
-                }
-                new Handler().postDelayed(() -> {
-                    if (AppOpenManager.getInstance().isInitialized()) {
-                        AppOpenManager.getInstance().disableAppResume();
-                    }
-
-                    if (openActivityAfterShowInterAds && adListener != null) {
-                        adListener.onAdClosed();
-                    }
-                    IronSource.showInterstitial(placementName);
-                }, 800);
-
-            }
-
-        }
     }
 
     public boolean isInterstitialReady() {
@@ -788,175 +536,106 @@ public class AppIronSource {
 
 
     private void loadAndShowInterstitial(Context context, InterCallback adListener, Dialog dialog) {
+        Log.d(TAG, "loadAndShowInterstitial Dialog: ");
         if (isShowInter) {
-            if (handlerTimeout != null && rdTimeout != null) { // cancel check timeout
-                handlerTimeout.removeCallbacks(rdTimeout);
-            }
-            if (IronSource.isInterstitialReady()) {
-                IronSource.setInterstitialListener(new InterstitialListener() {
-                    @Override
-                    public void onInterstitialAdReady() {
-                        adListener.onAdLoaded();
-                        Log.d(TAG, "onInterstitialAdReady: ");
-                    }
-
-                    @Override
-                    public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-                        dialog.dismiss();
-                        adListener.onAdFailedToLoadIs();
-                    }
-
-                    @Override
-                    public void onInterstitialAdOpened() {
-                        Log.d(TAG, "onInterstitialAdOpened: ");
-                    }
-
-                    @Override
-                    public void onInterstitialAdClosed() {
-                        Log.d(TAG, "onInterstitialAdClosed: ");
-                        try {
-                            dialog.dismiss();
-                            if (AppOpenManager.getInstance().isInitialized()) {
-                                AppOpenManager.getInstance().enableAppResume();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+            if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().disableAppResume();
+                }
+                if (handlerTimeout != null && rdTimeout != null) { // cancel check timeout
+                    handlerTimeout.removeCallbacks(rdTimeout);
+                }
+                if (IronSource.isInterstitialReady()) {
+                    IronSource.setInterstitialListener(new InterstitialListener() {
+                        @Override
+                        public void onInterstitialAdReady() {
+                            adListener.onAdLoaded();
+                            Log.d(TAG, "onInterstitialAdReady: ");
                         }
 
-                        if (!openActivityAfterShowInterAds) {
+                        @Override
+                        public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
+                            dialog.dismiss();
+                            adListener.onAdFailedToLoadIs();
+                        }
+
+                        @Override
+                        public void onInterstitialAdOpened() {
+                            Log.d(TAG, "onInterstitialAdOpened: ");
+                        }
+
+                        @Override
+                        public void onInterstitialAdClosed() {
+                            Log.d(TAG, "onInterstitialAdClosed: ");
+                            try {
+                                dialog.dismiss();
+                                if (AppOpenManager.getInstance().isInitialized()) {
+                                    AppOpenManager.getInstance().enableAppResume();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            if (!openActivityAfterShowInterAds) {
+                                adListener.onAdClosed();
+                            }
+                        }
+
+                        @Override
+                        public void onInterstitialAdShowSucceeded() {
+                            try {
+                                dialog.dismiss();
+                            } catch (Exception e) {
+
+                            }
+
+                            Log.d(TAG, "onInterstitialAdShowSucceeded: ");
+                        }
+
+                        @Override
+                        public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
+                            Log.d(TAG, "onInterstitialAdShowFailed: ");
+                           /* if (AppOpenManager.getInstance().isInitialized()) {
+                                AppOpenManager.getInstance().enableAppResume();
+                            }*/
+                        }
+
+                        @Override
+                        public void onInterstitialAdClicked() {
+                            adListener.onAdClicked();
+                            Log.d(TAG, "onInterstitialAdClicked: ");
+                            FirebaseAnalyticsUtil.logClickAdsEventIS(context, "Interstitial_Splash");
+                            setTimeLimitInter();
+                        }
+                    });
+                } else {
+                    adListener.onAdClosed();
+                }
+                if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                    new Handler().postDelayed(() -> {
+                        Log.d(TAG, "Handler 1: ");
+                        if (AppOpenManager.getInstance().isInitialized()) {
+                            AppOpenManager.getInstance().disableAppResume();
+                        }
+
+                        if (openActivityAfterShowInterAds && adListener != null) {
                             adListener.onAdClosed();
                         }
-                    }
+                        IronSource.showInterstitial();
+                    }, 800);
 
-                    @Override
-                    public void onInterstitialAdShowSucceeded() {
-                        try {
-                            dialog.dismiss();
-                        } catch (Exception e) {
-
-                        }
-
-                        Log.d(TAG, "onInterstitialAdShowSucceeded: ");
-                    }
-
-                    @Override
-                    public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-                        Log.d(TAG, "onInterstitialAdShowFailed: ");
-                        if (AppOpenManager.getInstance().isInitialized()) {
-                            AppOpenManager.getInstance().enableAppResume();
-                        }
-                    }
-
-                    @Override
-                    public void onInterstitialAdClicked() {
-                        adListener.onAdClicked();
-                        Log.d(TAG, "onInterstitialAdClicked: ");
-                        FirebaseAnalyticsUtil.logClickAdsEventIS(context, "Interstitial_Splash");
-                        setTimeLimitInter();
-                    }
-                });
-            } else {
-                adListener.onAdClosed();
+                }
+            }else if (adListener != null) {
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().disableAppResume();
+                }
+                dialog.show();
             }
 
-
-            if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                new Handler().postDelayed(() -> {
-                    if (AppOpenManager.getInstance().isInitialized()) {
-                        AppOpenManager.getInstance().disableAppResume();
-                    }
-
-                    if (openActivityAfterShowInterAds && adListener != null) {
-                        adListener.onAdClosed();
-                    }
-                    IronSource.showInterstitial();
-                }, 800);
-
-            }
 
         }
     }
 
-    private void loadAndShowInterstitial(Context context, String placemenName, InterCallback adListener, Dialog dialog) {
-        if (handlerTimeout != null && rdTimeout != null) { // cancel check timeout
-            handlerTimeout.removeCallbacks(rdTimeout);
-        }
-        if (IronSource.isInterstitialReady()) {
-            IronSource.setInterstitialListener(new InterstitialListener() {
-                @Override
-                public void onInterstitialAdReady() {
-                    adListener.onAdLoaded();
-                    Log.d(TAG, "onInterstitialAdReady: ");
-                }
-
-                @Override
-                public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-                    dialog.dismiss();
-                    adListener.onAdFailedToLoadIs();
-                }
-
-                @Override
-                public void onInterstitialAdOpened() {
-                    Log.d(TAG, "onInterstitialAdOpened: ");
-                }
-
-                @Override
-                public void onInterstitialAdClosed() {
-                    Log.d(TAG, "onInterstitialAdClosed: ");
-                    try {
-                        dialog.dismiss();
-                        if (AppOpenManager.getInstance().isInitialized()) {
-                            AppOpenManager.getInstance().enableAppResume();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    if (!openActivityAfterShowInterAds) {
-                        adListener.onAdClosed();
-                    }
-                }
-
-                @Override
-                public void onInterstitialAdShowSucceeded() {
-                    try {
-                        dialog.dismiss();
-                    } catch (Exception e) {
-
-                    }
-
-                    Log.d(TAG, "onInterstitialAdShowSucceeded: ");
-                }
-
-                @Override
-                public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-                    Log.d(TAG, "onInterstitialAdShowFailed: ");
-                    if (AppOpenManager.getInstance().isInitialized()) {
-                        AppOpenManager.getInstance().enableAppResume();
-                    }
-                }
-
-                @Override
-                public void onInterstitialAdClicked() {
-                    adListener.onAdClicked();
-                    Log.d(TAG, "onInterstitialAdClicked: ");
-                }
-            });
-            if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                new Handler().postDelayed(() -> {
-                    if (AppOpenManager.getInstance().isInitialized()) {
-                        AppOpenManager.getInstance().disableAppResume();
-                    }
-
-                    if (openActivityAfterShowInterAds && adListener != null) {
-                        adListener.onAdClosed();
-                    }
-                    IronSource.showInterstitial(placemenName);
-                }, 800);
-            }
-
-        }
-    }
 
     private void setTimeLimitInter() {
         if (timeLimit > 1000) {

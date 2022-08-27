@@ -15,4 +15,7 @@ public class LoadingAdsDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_loading_ads);
     }
+
+    @Override
+    public void onBackPressed() {}
 }
