@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <Button
+            android:visibility="gone"
             android:id="@+id/btnShow"
             android:text="Show Inter ForPlacements"
             android:layout_width="wrap_content"

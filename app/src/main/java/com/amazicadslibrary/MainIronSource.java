@@ -2,6 +2,7 @@ package com.amazicadslibrary;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -28,16 +29,7 @@ public class MainIronSource extends AppCompatActivity {
 
         loadInter();
 
-        btnShow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (AppIronSource.getInstance().isInterstitialReady()) {
-                    AppIronSource.getInstance().showInterstitialForPlacements("Home_Screen");
-                } else {
-                    Toast.makeText(MainIronSource.this, "Ad not loaded", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
 
 
         btnShowIS.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +55,12 @@ public class MainIronSource extends AppCompatActivity {
         btnLoadAndShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppIronSource.getInstance().loadAndShowInter(MainIronSource.this, 15000, new InterCallback() {
+                if(AppIronSource.getInstance().isInterstitialReady()){
+                    Log.e("TAG", "isInterstitialReady: " );
+                }else{
+                    Log.e("TAG", "!isInterstitialReady: " );
+                }
+                AppIronSource.getInstance().loadSplashInterstitial(MainIronSource.this, new InterCallback() {
                     @Override
                     public void onAdClosed() {
                         super.onAdClosed();
@@ -75,7 +72,7 @@ public class MainIronSource extends AppCompatActivity {
                         super.onAdFailedToLoad(i);
                         startActivity(new Intent(MainIronSource.this, MainIronSource2.class));
                     }
-                });
+                },15000);
             }
         });
     }
