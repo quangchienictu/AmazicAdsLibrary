@@ -90,6 +90,7 @@ public class Admod {
     private boolean isShowBanner = true;
     private boolean isShowNative = true;
 
+    private boolean isShowAllAds = true;
 
 
     private boolean isFan = false;
@@ -140,16 +141,29 @@ public class Admod {
 
     /* =======================   Banner ================================= */
 
+    /**
+     * Set tắt toàn bộ ads trong project
+     **/
+    public void setShowAllAds(boolean isShowAllAds){
+        this.isShowAllAds = isShowAllAds;
+    }
+
+
 
     public void loadBanner(final Activity mActivity, String id) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
-        loadBanner(mActivity, id, adContainer, containerShimmer, false);
+        if(!isShowAllAds){
+            adContainer.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
+        }else{
+            loadBanner(mActivity, id, adContainer, containerShimmer, false);
+        }
     }
 
     private void loadBanner(final Activity mActivity, String id, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, Boolean useInlineAdaptive) {
         if(isShowBanner){
-            if (AppPurchase.getInstance().isPurchased(mActivity)) {
+            if (AppPurchase.getInstance().isPurchased(mActivity)||!isShowAllAds) {
                 containerShimmer.setVisibility(View.GONE);
                 return;
             }
@@ -229,7 +243,13 @@ public class Admod {
     public void loadBannerFragment(final Activity mActivity, String id, final View rootView) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
-        loadBanner(mActivity, id, adContainer, containerShimmer, false);
+
+        if(isShowAllAds){
+            loadBanner(mActivity, id, adContainer, containerShimmer, false);
+        }else{
+            adContainer.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
+        }
     }
 
     /*===========================  end Banner ========================================= */
@@ -258,11 +278,16 @@ public class Admod {
     public void loadSplashInterAds(final Context context, String id, long timeOut, long timeDelay, final InterCallback adListener) {
         isTimeDelay = false;
         isTimeout = false;
-        if (AppPurchase.getInstance().isPurchased(context)) {
-            if (adListener != null) {
-                adListener.onAdClosed();
-            }
-            return;
+        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (adListener != null) {
+                        adListener.onAdClosed();
+                    }
+                    return;
+                }
+            },3000);
         }
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -465,7 +490,7 @@ public class Admod {
      */
 
     public void loadInterAds(Context context, String id, InterCallback adCallback) {
-        if (AppPurchase.getInstance().isPurchased(context) ) {
+        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
             adCallback.onInterstitialLoad(null);
             return;
         }
@@ -508,7 +533,7 @@ public class Admod {
 
     private void showInterAdByTimes(final Context context, InterstitialAd mInterstitialAd, final InterCallback callback, final boolean shouldReloadAds) {
         Helper.setupAdmodData(context);
-        if (AppPurchase.getInstance().isPurchased(context)) {
+        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
             callback.onAdClosed();
             return;
         }
@@ -584,7 +609,7 @@ public class Admod {
     }
 
     private void showInterstitialAd(Context context, InterstitialAd mInterstitialAd, InterCallback callback) {
-        if(!isShowInter){
+        if(!isShowInter||!isShowAllAds){
             callback.onAdClosed();
             return;
         }
@@ -644,14 +669,11 @@ public class Admod {
             callback.onAdClosed();
             return;
         }
-        if (AppPurchase.getInstance().isPurchased(context)) {
+        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds||!isShowInter) {
             callback.onAdClosed();
             return;
         }
-        if(!isShowInter){
-            callback.onAdClosed();
-            return;
-        }
+
         if (AppOpenManager.getInstance().isInitialized()) {
             AppOpenManager.getInstance().disableAppResumeWithActivity(activity.getClass());
         }
@@ -730,6 +752,10 @@ public class Admod {
     /* =============================  Rewarded Ads ==========================================*/
 
     public void showRewardAds(final Activity context, final RewardCallback adCallback) {
+        if (!isShowAllAds) {
+            adCallback.onAdClosed();
+            return;
+        }
         if (rewardedAd == null) {
             initRewardAds(context, rewardedId);
             adCallback.onAdFailedToShow(0);
@@ -782,7 +808,7 @@ public class Admod {
         }
     }
     public void initRewardAds(Context context, String id) {
-        if (AppPurchase.getInstance().isPurchased(context)) {
+        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
             return;
         }
         this.rewardedId = id;
@@ -807,7 +833,7 @@ public class Admod {
     /* =============================  Native Ads ==========================================*/
 
     public void loadNativeAd(Context context, String id, final NativeCallback callback) {
-        if (AppPurchase.getInstance().isPurchased(context)) {
+        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
             callback.onAdFailedToLoad();
             return;
         }
@@ -991,7 +1017,7 @@ public class Admod {
         loadNative(mActivity, containerShimmer, frameLayout, id, R.layout.native_admob_ad);
     }
     private void loadNative(final Context context, final ShimmerFrameLayout containerShimmer, final FrameLayout frameLayout, final String id, final int layout) {
-        if (AppPurchase.getInstance().isPurchased(context)) {
+        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
             containerShimmer.setVisibility(View.GONE);
             return;
         }

@@ -25,7 +25,8 @@ public class Splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         String android_id = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-       // Log.e("xxx",android_id);
+       Admod.getInstance().setShowAllAds(true);
+
         // Admod
         AppPurchase.getInstance().setBillingListener(new BillingListener() {
             @Override
