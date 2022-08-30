@@ -23,4 +23,7 @@ public class InterCallback {
     }
     public void onAdFailedToLoadIs() {
     }
+    public void onAdClosedByUser(){
+
+    }
 }

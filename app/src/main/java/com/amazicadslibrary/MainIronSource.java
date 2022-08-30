@@ -10,8 +10,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.amazic.ads.callback.InterCallback;
+import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.util.AppIronSource;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.rewarded.RewardItem;
 
 public class MainIronSource extends AppCompatActivity {
     Button btnShow, btnLoadAndShow,btnShowIS;
@@ -28,10 +30,6 @@ public class MainIronSource extends AppCompatActivity {
 
 
         loadInter();
-
-
-
-
         btnShowIS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,42 +53,29 @@ public class MainIronSource extends AppCompatActivity {
         btnLoadAndShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(AppIronSource.getInstance().isInterstitialReady()){
-                    Log.e("TAG", "isInterstitialReady: " );
-                }else{
-                    Log.e("TAG", "!isInterstitialReady: " );
-                }
-                AppIronSource.getInstance().loadSplashInterstitial(MainIronSource.this, new InterCallback() {
+                AppIronSource.getInstance().loadAndShowRewards( new RewardCallback() {
                     @Override
-                    public void onAdClosed() {
-                        super.onAdClosed();
-                        startActivity(new Intent(MainIronSource.this, MainIronSource2.class));
+                    public void onEarnedReward(RewardItem rewardItem) {
+                        Log.e("xxxx", "onEarnedReward: ");
                     }
 
                     @Override
-                    public void onAdFailedToLoad(LoadAdError i) {
-                        super.onAdFailedToLoad(i);
-                        startActivity(new Intent(MainIronSource.this, MainIronSource2.class));
+                    public void onAdClosed() {
+                        Log.e("xxxx", "onAdClosed: ");
                     }
-                },15000);
+
+
+                    @Override
+                    public void onAdFailedToShow(int codeError) {
+                        Log.e("xxxx", "onAdFailedToShow: ");
+                    }
+                });
             }
         });
     }
 
     public void loadInter() {
-        AppIronSource.getInstance().loadInterstitial(MainIronSource.this, new InterCallback() {
-                @Override
-                public void onAdClosed() {
-                    super.onAdClosed();
-                    startActivity(new Intent(MainIronSource.this, MainIronSource2.class));
-                    loadInter();  // load lại nếu sử dụng tiếp mà k finish activity
-                }
-
-                @Override
-                public void onAdFailedToLoad(LoadAdError i) {
-                    super.onAdFailedToLoad(i);
-                }
-            });
+        AppIronSource.getInstance().loadInterstitial(MainIronSource.this, new InterCallback() {});
     }
 
     @Override
