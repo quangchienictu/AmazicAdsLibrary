@@ -384,7 +384,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
-
+                                FirebaseAnalyticsUtil.logClickAdsEventByActivity(currentActivity, FirebaseAnalyticsUtil.RESUME);
                             }
                         });
                 splashAd.show(currentActivity);
@@ -477,6 +477,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                         @Override
                         public void onAdClicked() {
                             super.onAdClicked();
+                            FirebaseAnalyticsUtil.logClickAdsEventByActivity(currentActivity, FirebaseAnalyticsUtil.RESUME);
                             if(Admod.getInstance().getTimeLimit()>1000){
                                 setTimeLimitResume();
                             }

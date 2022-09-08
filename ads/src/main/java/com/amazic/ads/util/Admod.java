@@ -839,6 +839,7 @@ public class Admod {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
+                                FirebaseAnalyticsUtil.logClickAdsEventByActivity(context,FirebaseAnalyticsUtil.NATIVE);
                                 if(timeLimitAds>1000){
                                     setTimeLimitNative();
                                     if (callback != null) {
@@ -1037,6 +1038,7 @@ public class Admod {
                     @Override
                     public void onAdClicked() {
                         super.onAdClicked();
+                        FirebaseAnalyticsUtil.logClickAdsEventByActivity(context,FirebaseAnalyticsUtil.NATIVE);
                     }
 
                 })
