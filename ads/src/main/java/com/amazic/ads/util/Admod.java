@@ -308,6 +308,7 @@ public class Admod {
             @Override
             public void onInterstitialLoad(InterstitialAd interstitialAd) {
                 super.onInterstitialLoad(interstitialAd);
+                adListener.onInterstitialLoad(interstitialAd);
                 Log.e(TAG, "loadSplashInterstitalAds  end time loading success:" + Calendar.getInstance().getTimeInMillis() + "     time limit:" + isTimeout);
                 if (isTimeout)
                     return;
@@ -367,8 +368,8 @@ public class Admod {
             @Override
             public void onAdShowedFullScreenContent() {
                 isShowLoadingSplash = false;
+                adListener.onAdShowSuccess();
             }
-
             @Override
             public void onAdDismissedFullScreenContent() {
                 if (AppOpenManager.getInstance().isInitialized()) {
@@ -408,8 +409,10 @@ public class Admod {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
+                adListener.onAdClicked();
                 if(timeLimitAds>1000){setTimeLimitInter();}
             }
+
         });
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
             try {
@@ -551,7 +554,7 @@ public class Admod {
             public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                 super.onAdFailedToShowFullScreenContent(adError);
                 Log.e(TAG, "onAdFailedToShowFullScreenContent: " + adError.getMessage());
-                // Called when fullscreen content failed to show.
+                callback.onAdFailedToShow(adError);
                 if (callback != null) {
                     if (!openActivityAfterShowInterAds) {
                         callback.onAdClosed();
@@ -566,6 +569,7 @@ public class Admod {
             @Override
             public void onAdShowedFullScreenContent() {
                 super.onAdShowedFullScreenContent();
+                callback.onAdShowSuccess();
                 // Called when fullscreen content is shown.
             }
 

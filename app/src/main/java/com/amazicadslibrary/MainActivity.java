@@ -24,6 +24,7 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 public class MainActivity extends AppCompatActivity {
     private InterstitialAd mInterstitialAd;
     private FrameLayout native_ads,fr_ads;
+    private String TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +86,17 @@ public class MainActivity extends AppCompatActivity {
                         loadAdInter();
                     }
 
+                    @Override
+                    public void onAdFailedToShow(AdError adError) {
+                        super.onAdFailedToShow(adError);
+                        Log.e(TAG, "onAdShowSuccess: " );
+                    }
+
+                    @Override
+                    public void onAdShowSuccess() {
+                        super.onAdShowSuccess();
+                        Log.e(TAG, "onAdShowSuccess: " );
+                    }
                 });
             }
         });
@@ -135,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
             public void onInterstitialLoad(InterstitialAd interstitialAd) {
                 super.onInterstitialLoad(interstitialAd);
                 mInterstitialAd = interstitialAd;
+                Log.e(TAG, "onInterstitialLoad: " );
             }
         });
     }

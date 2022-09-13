@@ -15,6 +15,8 @@ public class InterCallback {
     }
     public void onAdLoaded() {
     }
+    public void onAdLoadedSuccess() {
+    }
     public void onInterstitialLoad(InterstitialAd interstitialAd) {
     }
     public void onAdClicked() {
@@ -24,6 +26,8 @@ public class InterCallback {
     public void onAdFailedToLoadIs() {
     }
     public void onAdClosedByUser(){
+    }
+    public void onAdShowSuccess(){
 
     }
 }
