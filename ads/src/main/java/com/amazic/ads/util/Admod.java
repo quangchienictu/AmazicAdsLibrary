@@ -190,6 +190,8 @@ public class Admod {
                     @Override
                     public void onAdClicked() {
                         super.onAdClicked();
+                        FirebaseAnalyticsUtil.logClickAdsEventByActivity(context,FirebaseAnalyticsUtil.BANNER);
+                        FirebaseAnalyticsUtil.logClickAdsEventAdmob(context);
                         if(timeLimitAds>1000){
                             setTimeLimitBanner();
                             containerShimmer.stopShimmer();
@@ -339,6 +341,8 @@ public class Admod {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
+                FirebaseAnalyticsUtil.logClickAdsEventByActivity(context,FirebaseAnalyticsUtil.INTER);
+                FirebaseAnalyticsUtil.logClickAdsEventAdmob(context);
                 if(timeLimitAds>1000)
                     setTimeLimitInter();
             }
@@ -408,6 +412,8 @@ public class Admod {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
+                FirebaseAnalyticsUtil.logClickAdsEventByActivity(context,FirebaseAnalyticsUtil.INTER);
+                FirebaseAnalyticsUtil.logClickAdsEventAdmob(context);
                 if(timeLimitAds>1000){setTimeLimitInter();}
             }
         });
@@ -572,6 +578,8 @@ public class Admod {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
+                FirebaseAnalyticsUtil.logClickAdsEventByActivity(context,FirebaseAnalyticsUtil.INTER);
+                FirebaseAnalyticsUtil.logClickAdsEventAdmob(context);
                 if(timeLimitAds>1000)
                     setTimeLimitInter();
             }
@@ -706,6 +714,9 @@ public class Admod {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
+
+                                FirebaseAnalyticsUtil.logClickAdsEventAdmob(activity);
+                                FirebaseAnalyticsUtil.logClickAdsEventByActivity(context,FirebaseAnalyticsUtil.INTER);
                                 if(timeLimitAds>1000){setTimeLimitInter();}
                             }
                         });
@@ -839,6 +850,7 @@ public class Admod {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
+                                FirebaseAnalyticsUtil.logClickAdsEventAdmob(context);
                                 FirebaseAnalyticsUtil.logClickAdsEventByActivity(context,FirebaseAnalyticsUtil.NATIVE);
                                 if(timeLimitAds>1000){
                                     setTimeLimitNative();
@@ -1039,6 +1051,7 @@ public class Admod {
                     public void onAdClicked() {
                         super.onAdClicked();
                         FirebaseAnalyticsUtil.logClickAdsEventByActivity(context,FirebaseAnalyticsUtil.NATIVE);
+                        FirebaseAnalyticsUtil.logClickAdsEventAdmob(context);
                     }
 
                 })

@@ -159,7 +159,7 @@ public class AppIronSource {
                     public void onBannerAdClicked() {
                         Log.d(TAG, "onBannerAdClicked");
                         FirebaseAnalyticsUtil.logClickAdsEventIS(activity, "Banner");
-                        FirebaseAnalyticsUtil.logClickAdsEventByActivity(activity, FirebaseAnalyticsUtil.BANNER);
+                        FirebaseAnalyticsUtil.logClickAdsISEventByActivity(activity, FirebaseAnalyticsUtil.BANNER);
                         setTimeLimitBanner();
                         containerShimmer.stopShimmer();
                         mBannerParentLayout.setVisibility(View.GONE);
@@ -281,7 +281,7 @@ public class AppIronSource {
             @Override
             public void onInterstitialAdClicked() {
                 adListener.onAdClicked();
-                FirebaseAnalyticsUtil.logClickAdsEventByActivity(activity,FirebaseAnalyticsUtil.INTER);
+                FirebaseAnalyticsUtil.logClickAdsISEventByActivity(activity,FirebaseAnalyticsUtil.INTER);
                 Log.i(TAG, "inter splash click ");
             }
         });
@@ -333,7 +333,7 @@ public class AppIronSource {
                 @Override
                 public void onInterstitialAdClicked() {
                     FirebaseAnalyticsUtil.logClickAdsEventIS(activity, "Interstitial");
-                    FirebaseAnalyticsUtil.logClickAdsEventByActivity(activity, FirebaseAnalyticsUtil.INTER);
+                    FirebaseAnalyticsUtil.logClickAdsISEventByActivity(activity, FirebaseAnalyticsUtil.INTER);
                     Log.d(TAG, "onInterstitialAdClicked: loadInterstitiale");
                     adListener.onAdClicked();
                     setTimeLimitInter();
@@ -433,7 +433,7 @@ public class AppIronSource {
                         adListener.onAdClicked();
                         Log.d(TAG, "onInterstitialAdClicked: showInterstitialx");
                         FirebaseAnalyticsUtil.logClickAdsEventIS(context, "Interstitial_Splash");
-                        FirebaseAnalyticsUtil.logClickAdsEventByActivity(context, FirebaseAnalyticsUtil.INTER);
+                        FirebaseAnalyticsUtil.logClickAdsISEventByActivity(context, FirebaseAnalyticsUtil.INTER);
                         setTimeLimitInter();
                     }
                 });
