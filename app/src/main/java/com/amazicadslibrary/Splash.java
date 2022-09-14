@@ -10,7 +10,9 @@ import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admod;
 import com.amazic.ads.util.AppIronSource;
 import com.amazic.ads.util.AppOpenManager;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
 
 public class Splash extends AppCompatActivity {
     private static final String TAG = "SplashActivity";
@@ -28,10 +30,29 @@ public class Splash extends AppCompatActivity {
             }
 
             @Override
-            public void onAdFailedToLoadIs() {
-                super.onAdFailedToLoadIs();
+            public void onAdFailedToLoad(LoadAdError i) {
+                super.onAdFailedToLoad(i);
+                Log.e(TAG, "onAdFailedToLoad: ");
                 startActivity(new Intent(Splash.this,MainActivity.class));
                 finish();
+            }
+
+            @Override
+            public void onAdFailedToShow(AdError adError) {
+                super.onAdFailedToShow(adError);
+                Log.e(TAG, "onAdFailedToShow: ");
+            }
+
+            @Override
+            public void onAdShowSuccess() {
+                super.onAdShowSuccess();
+                Log.e(TAG, "onAdShowSuccess: ");
+            }
+
+            @Override
+            public void onInterstitialLoad(InterstitialAd interstitialAd) {
+                super.onInterstitialLoad(interstitialAd);
+                Log.e(TAG, "onInterstitialLoad: ");
             }
         });
     }
