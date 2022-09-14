@@ -355,6 +355,8 @@ public class Admod {
         if (mInterstitialSplash == null) {
             adListener.onAdClosed();
             return;
+        }else{
+            adListener.onAdLoadedSuccess();
         }
         if (handlerTimeout != null && rdTimeout != null) {
             handlerTimeout.removeCallbacks(rdTimeout);
@@ -524,6 +526,8 @@ public class Admod {
                 callback.onAdClosed();
             }
             return;
+        }else{
+            callback.onAdLoadedSuccess();
         }
 
         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
