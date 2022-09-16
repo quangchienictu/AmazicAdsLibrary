@@ -208,84 +208,85 @@ public class AppIronSource {
                     return;
                 }
             },3000);
-        }
-        isTimeout = false;
-        if (timeOut > 0) {
-            handlerTimeout = new Handler();
-            rdTimeout = new Runnable() {
+        }else {
+            isTimeout = false;
+            if (timeOut > 0) {
+                handlerTimeout = new Handler();
+                rdTimeout = new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e(TAG, "loadSplashInterstitalAds: on timeout");
+                        isTimeout = true;
+                        if (IronSource.isInterstitialReady()) {
+                            showInterstitial(activity, adListener);
+                            return;
+                        }
+                        if (adListener != null) {
+                            adListener.onAdClosed();
+                            loadInterAds();
+                        }
+                    }
+                };
+                handlerTimeout.postDelayed(rdTimeout, timeOut);
+            }
+
+            IronSource.setInterstitialListener(new InterstitialListener() {
                 @Override
-                public void run() {
-                    Log.e(TAG, "loadSplashInterstitalAds: on timeout");
-                    isTimeout = true;
-                    if (IronSource.isInterstitialReady()) {
+                public void onInterstitialAdReady() {
+
+                    if (!isTimeout)
                         showInterstitial(activity, adListener);
-                        return;
+
+                    Log.i(TAG, "onInterstitialAdReady: ");
+                }
+
+                @Override
+                public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
+                    if (handlerTimeout != null && rdTimeout != null) {
+                        handlerTimeout.removeCallbacks(rdTimeout);
                     }
-                    if (adListener != null) {
-                        adListener.onAdClosed();
-                        loadInterAds();
+                    Log.e(TAG, "onInterstitialAdLoadFailed: " + ironSourceError.getErrorMessage());
+                    adListener.onAdFailedToLoadIs();
+                }
+
+                @Override
+                public void onInterstitialAdOpened() {
+                    Log.i(TAG, "onInterstitialAdOpened: ");
+
+                }
+
+                @Override
+                public void onInterstitialAdClosed() {
+                    Log.i(TAG, "onInterstitialAdClosed : ");
+                    adListener.onAdClosed();
+                    if (AppOpenManager.getInstance().isInitialized()) {
+                        AppOpenManager.getInstance().enableAppResume();
                     }
                 }
-            };
-            handlerTimeout.postDelayed(rdTimeout, timeOut);
+
+                @Override
+                public void onInterstitialAdShowSucceeded() {
+                    Log.i(TAG, "onInterstitialAdShowSucceeded: ");
+                }
+
+                @Override
+                public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
+                    Log.i(TAG, "onInterstitialAdShowFailed: ");
+                    if (AppOpenManager.getInstance().isInitialized()) {
+                        AppOpenManager.getInstance().enableAppResume();
+                    }
+                    loadInterAds();
+                }
+
+                @Override
+                public void onInterstitialAdClicked() {
+                    adListener.onAdClicked();
+                    FirebaseAnalyticsUtil.logClickAdsISEventByActivity(activity,FirebaseAnalyticsUtil.INTER);
+                    Log.i(TAG, "inter splash click ");
+                }
+            });
+            IronSource.loadInterstitial();
         }
-
-        IronSource.setInterstitialListener(new InterstitialListener() {
-            @Override
-            public void onInterstitialAdReady() {
-
-                if (!isTimeout)
-                    showInterstitial(activity, adListener);
-
-                Log.i(TAG, "onInterstitialAdReady: ");
-            }
-
-            @Override
-            public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
-                if (handlerTimeout != null && rdTimeout != null) {
-                    handlerTimeout.removeCallbacks(rdTimeout);
-                }
-                Log.e(TAG, "onInterstitialAdLoadFailed: " + ironSourceError.getErrorMessage());
-                adListener.onAdFailedToLoadIs();
-            }
-
-            @Override
-            public void onInterstitialAdOpened() {
-                Log.i(TAG, "onInterstitialAdOpened: ");
-
-            }
-
-            @Override
-            public void onInterstitialAdClosed() {
-                Log.i(TAG, "onInterstitialAdClosed : ");
-                adListener.onAdClosed();
-                if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().enableAppResume();
-                }
-            }
-
-            @Override
-            public void onInterstitialAdShowSucceeded() {
-                Log.i(TAG, "onInterstitialAdShowSucceeded: ");
-            }
-
-            @Override
-            public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
-                Log.i(TAG, "onInterstitialAdShowFailed: ");
-                if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().enableAppResume();
-                }
-                loadInterAds();
-            }
-
-            @Override
-            public void onInterstitialAdClicked() {
-                adListener.onAdClicked();
-                FirebaseAnalyticsUtil.logClickAdsISEventByActivity(activity,FirebaseAnalyticsUtil.INTER);
-                Log.i(TAG, "inter splash click ");
-            }
-        });
-        IronSource.loadInterstitial();
     }
 
     public void loadInterstitial(Activity activity, InterCallback adListener) {
