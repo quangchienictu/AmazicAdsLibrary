@@ -3,6 +3,7 @@ package com.amazic.ads.util;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Build;
@@ -665,84 +666,82 @@ public class Admod {
      load and show ads inter
      */
     public void loadAndShowInter(AppCompatActivity activity, String idInter, int timeDelay, int timeOut, InterCallback callback){
-        if (!isNetworkConnected()) {
-            callback.onAdClosed();
-            return;
-        }
-        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds||!isShowInter) {
-            callback.onAdClosed();
-            return;
-        }
-
-        if (AppOpenManager.getInstance().isInitialized()) {
-            AppOpenManager.getInstance().disableAppResumeWithActivity(activity.getClass());
-        }
-        dialog = new LoadingAdsDialog(activity);
-        dialog.show();
-        InterstitialAd.load(activity, idInter, getAdRequestTimeOut(timeOut), new InterstitialAdLoadCallback() {
-            @Override
-            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                super.onAdFailedToLoad(loadAdError);
-                dialog.dismiss();
-                callback.onAdFailedToLoad(loadAdError);
-                if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                }
+            if (!isNetworkConnected()) {
+                callback.onAdClosed();
+                return;
+            }
+            if (AppPurchase.getInstance().isPurchased(context)&&!isShowAllAds&&!isShowInter) {
+                callback.onAdClosed();
+                return;
             }
 
-            @Override
-            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                super.onAdLoaded(interstitialAd);
-                if(interstitialAd!=null){
-                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                        interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
-                            @Override
-                            public void onAdDismissedFullScreenContent() {
-                                dialog.dismiss();
-                                callback.onAdClosed();
-                                if (AppOpenManager.getInstance().isInitialized()) {
-                                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                                }
-                            }
-
-                            @Override
-                            public void onAdFailedToShowFullScreenContent(AdError adError) {
-                                dialog.dismiss();
-                                callback.onAdClosed();
-                                if (AppOpenManager.getInstance().isInitialized()) {
-                                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                                }
-                            }
-
-                            @Override
-                            public void onAdShowedFullScreenContent() {
-                                // Called when fullscreen content is shown.
-                                // Make sure to set your reference to null so you don't
-                                // show it a second time.
-                                Log.d("TAG", "The ad was shown.");
-                            }
-
-                            @Override
-                            public void onAdClicked() {
-                                super.onAdClicked();
-                                if(timeLimitAds>1000){setTimeLimitInter();}
-                                FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
-                            }
-                        });
-                        if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && interstitialAd != null) {
-                           // dialog.dismiss();
-                            interstitialAd.show(activity);
-                        } else {
-                            if (AppOpenManager.getInstance().isInitialized()) {
-                                AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                            }
-                           // dialog.dismiss();
-                        }
-                    },timeDelay);
-                }
+            if (AppOpenManager.getInstance().isInitialized()) {
+                AppOpenManager.getInstance().disableAppResumeWithActivity(activity.getClass());
             }
-        });
+            Dialog dialog2 = new LoadingAdsDialog(activity);
+            dialog2.show();
+            InterstitialAd.load(activity, idInter, getAdRequestTimeOut(timeOut), new InterstitialAdLoadCallback() {
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    super.onAdFailedToLoad(loadAdError);
+                    dialog2.dismiss();
+                    callback.onAdFailedToLoad(loadAdError);
+                    if (AppOpenManager.getInstance().isInitialized()) {
+                        AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                    }
+                }
 
+                @Override
+                public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                    super.onAdLoaded(interstitialAd);
+                    if(interstitialAd!=null){
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                                @Override
+                                public void onAdDismissedFullScreenContent() {
+                                    dialog2.dismiss();
+                                    callback.onAdClosed();
+                                    if (AppOpenManager.getInstance().isInitialized()) {
+                                        AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                                    }
+                                }
+
+                                @Override
+                                public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                    dialog2.dismiss();
+                                    callback.onAdClosed();
+                                    if (AppOpenManager.getInstance().isInitialized()) {
+                                        AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                                    }
+                                }
+
+                                @Override
+                                public void onAdShowedFullScreenContent() {
+                                    Log.d("TAG", "The ad was shown.");
+                                }
+
+                                @Override
+                                public void onAdClicked() {
+                                    super.onAdClicked();
+                                    if(timeLimitAds>1000){setTimeLimitInter();}
+                                    FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
+                                }
+                            });
+                            if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && interstitialAd != null) {
+                                interstitialAd.show(activity);
+                            } else {
+                               if(interstitialAd!=null){
+                                   if (AppOpenManager.getInstance().isInitialized()) {
+                                       AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                                       dialog2.dismiss();
+                                   }
+                               }
+                                // dialog.dismiss();
+                            }
+                        },timeDelay);
+                    }
+                }
+            });
     }
 
 
