@@ -3,6 +3,7 @@ package com.amazic.ads.util;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Build;
@@ -670,24 +671,21 @@ public class Admod {
             callback.onAdClosed();
             return;
         }
-        if (!isShowAllAds ) {
+        if (!isShowAllAds&&!isShowInter) {
             callback.onAdClosed();
             return;
         }
-        if(!isShowInter){
-            callback.onAdClosed();
-            return;
-        }
+
         if (AppOpenManager.getInstance().isInitialized()) {
             AppOpenManager.getInstance().disableAppResumeWithActivity(activity.getClass());
         }
-        dialog = new LoadingAdsDialog(activity);
-        dialog.show();
+        Dialog dialog2 = new LoadingAdsDialog(activity);
+        dialog2.show();
         InterstitialAd.load(activity, idInter, getAdRequestTimeOut(timeOut), new InterstitialAdLoadCallback() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
-                dialog.dismiss();
+                dialog2.dismiss();
                 callback.onAdFailedToLoad(loadAdError);
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
@@ -702,7 +700,7 @@ public class Admod {
                         interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
                             @Override
                             public void onAdDismissedFullScreenContent() {
-                                dialog.dismiss();
+                                dialog2.dismiss();
                                 callback.onAdClosed();
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
@@ -711,7 +709,7 @@ public class Admod {
 
                             @Override
                             public void onAdFailedToShowFullScreenContent(AdError adError) {
-                                dialog.dismiss();
+                                dialog2.dismiss();
                                 callback.onAdClosed();
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
@@ -720,27 +718,23 @@ public class Admod {
 
                             @Override
                             public void onAdShowedFullScreenContent() {
-                                // Called when fullscreen content is shown.
-                                // Make sure to set your reference to null so you don't
-                                // show it a second time.
                                 Log.d("TAG", "The ad was shown.");
                             }
 
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
-
-                                FirebaseAnalyticsUtil.logClickAdsEventAdmob(activity);
-                                FirebaseAnalyticsUtil.logClickAdsEventByActivity(context,FirebaseAnalyticsUtil.INTER);
                                 if(timeLimitAds>1000){setTimeLimitInter();}
                             }
                         });
                         if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && interstitialAd != null) {
-                            // dialog.dismiss();
                             interstitialAd.show(activity);
                         } else {
-                            if (AppOpenManager.getInstance().isInitialized()) {
-                                AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                            if(interstitialAd!=null){
+                                if (AppOpenManager.getInstance().isInitialized()) {
+                                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                                    dialog2.dismiss();
+                                }
                             }
                             // dialog.dismiss();
                         }
@@ -748,7 +742,6 @@ public class Admod {
                 }
             }
         });
-
     }
 
 

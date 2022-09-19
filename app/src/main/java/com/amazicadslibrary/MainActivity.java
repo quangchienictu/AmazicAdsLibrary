@@ -139,6 +139,29 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+        findViewById(R.id.btnLoadAndShow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Admod.getInstance().loadAndShowInter(MainActivity.this,getString(R.string.admod_interstitial_id),5000,20000, new InterCallback(){
+                    @Override
+                    public void onAdClosed() {
+                        super.onAdClosed();
+                        startActivity(new Intent(MainActivity.this,MainActivity3.class));
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError i) {
+                        super.onAdFailedToLoad(i);
+                        startActivity(new Intent(MainActivity.this,MainActivity3.class));
+                    }
+                });
+            }
+        });
+
+
     }
 
     private void loadAdInter() {
