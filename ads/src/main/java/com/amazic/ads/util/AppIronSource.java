@@ -275,6 +275,7 @@ public class AppIronSource {
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().enableAppResume();
                     }
+                    adListener.onAdClosed();
                     loadInterAds();
                 }
 

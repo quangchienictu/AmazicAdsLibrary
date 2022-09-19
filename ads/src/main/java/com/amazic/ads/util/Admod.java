@@ -423,8 +423,8 @@ public class Admod {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
-                FirebaseAnalyticsUtil.logClickAdsEventByActivity(context,FirebaseAnalyticsUtil.INTER);
-                FirebaseAnalyticsUtil.logClickAdsEventAdmob(context);
+                FirebaseAnalyticsUtil.logClickAdsEventByActivity(activity,FirebaseAnalyticsUtil.INTER);
+                FirebaseAnalyticsUtil.logClickAdsEventAdmob(activity);
                 adListener.onAdClicked();
                 if(timeLimitAds>1000){setTimeLimitInter();}
             }
@@ -710,7 +710,7 @@ public class Admod {
                             @Override
                             public void onAdFailedToShowFullScreenContent(AdError adError) {
                                 dialog2.dismiss();
-                                callback.onAdClosed();
+                                callback.onAdFailedToShow(adError);
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                                 }
@@ -724,6 +724,8 @@ public class Admod {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
+                                FirebaseAnalyticsUtil.logClickAdsEventByActivity(activity,FirebaseAnalyticsUtil.INTER);
+                                FirebaseAnalyticsUtil.logClickAdsEventAdmob(activity);
                                 if(timeLimitAds>1000){setTimeLimitInter();}
                             }
                         });
