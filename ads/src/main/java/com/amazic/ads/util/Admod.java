@@ -718,7 +718,10 @@ public class Admod {
 
                             @Override
                             public void onAdShowedFullScreenContent() {
-                                Log.d("TAG", "The ad was shown.");
+                                callback.onAdShowSuccess();
+                                if (AppOpenManager.getInstance().isInitialized()) {
+                                    AppOpenManager.getInstance().disableAppResume();
+                                }
                             }
 
                             @Override
