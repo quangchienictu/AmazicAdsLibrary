@@ -275,6 +275,12 @@ public class AppIronSource {
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().enableAppResume();
                     }
+                    try {
+                        if (dialog != null && !activity.isDestroyed())
+                            dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     adListener.onAdClosed();
                     loadInterAds();
                 }
@@ -329,6 +335,12 @@ public class AppIronSource {
                 @Override
                 public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
                     Log.d(TAG, "onInterstitialAdShowFailed: 1");
+                    try {
+                        if (dialog != null && !activity.isDestroyed())
+                            dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     loadInterAds();
                 }
 
@@ -409,8 +421,8 @@ public class AppIronSource {
 
                         if (!openActivityAfterShowInterAds) {
                             adListener.onAdClosed();
+                            loadInterAds();
                         }
-                        loadInterAds();
                     }
 
                     @Override
@@ -419,6 +431,7 @@ public class AppIronSource {
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().disableAppResume();
                         }
+
                     }
 
                     @Override
@@ -427,6 +440,12 @@ public class AppIronSource {
                         /*if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().enableAppResume();
                         }*/
+                        try {
+                            if (dialog != null && !((Activity) context).isDestroyed())
+                                dialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         loadInterAds();
                     }
 

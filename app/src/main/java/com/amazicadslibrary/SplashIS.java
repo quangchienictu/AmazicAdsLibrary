@@ -17,6 +17,7 @@ public class SplashIS extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_is);
         AppIronSource.getInstance().init(this, IRON_SOURCE_APP_KEY, true);
+        AppIronSource.getInstance().setOpenActivityAfterShowInterAds(true);
        /* AppIronSource.getInstance().setTimeLimit(60000);
         AppIronSource.getInstance().setShowAllAds(false);
         Admod.getInstance().setShowAllAds(false);*/
