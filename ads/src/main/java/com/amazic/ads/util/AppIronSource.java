@@ -314,13 +314,29 @@ public class AppIronSource {
                 @Override
                 public void onInterstitialAdOpened() {
                     Log.d(TAG, "onInterstitialAdOpened: 1");
-
+                    if (AppOpenManager.getInstance().isInitialized()) {
+                        AppOpenManager.getInstance().disableAppResume();
+                    }
+                    if(!openActivityAfterShowInterAds){
+                        if (dialog != null && !((Activity) activity).isDestroyed())
+                            dialog.dismiss();
+                    }
                 }
 
                 @Override
                 public void onInterstitialAdClosed() {
                     Log.d(TAG, "onInterstitialAdClosed: 1");
-                    adListener.onAdClosed();
+                    try {
+                        if (dialog != null && !((Activity) activity).isDestroyed())
+                            dialog.dismiss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (!openActivityAfterShowInterAds) {
+                        adListener.onAdClosed();
+                    }
+
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().enableAppResume();
                     }
