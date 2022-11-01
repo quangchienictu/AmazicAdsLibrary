@@ -554,7 +554,7 @@ public class AppIronSource {
 
             @Override
             public void onRewardedVideoAdRewarded(Placement placement) {
-                rewardCallback.onEarnedReward(null);
+                rewardCallback.onEarnedRewardIS();
             }
 
             @Override
