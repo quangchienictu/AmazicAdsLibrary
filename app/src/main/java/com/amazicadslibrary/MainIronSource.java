@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.amazic.ads.callback.InterCallback;
+import com.amazic.ads.callback.RewardCallBackIS;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.util.AppIronSource;
 import com.google.android.gms.ads.LoadAdError;
@@ -53,9 +54,9 @@ public class MainIronSource extends AppCompatActivity {
         btnLoadAndShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppIronSource.getInstance().loadAndShowRewards( new RewardCallback() {
+                AppIronSource.getInstance().loadAndShowRewards( new RewardCallBackIS() {
                     @Override
-                    public void onEarnedReward(RewardItem rewardItem) {
+                    public void onEarnedReward() {
                         Log.e("xxxx", "onEarnedReward: ");
                     }
 
@@ -66,7 +67,7 @@ public class MainIronSource extends AppCompatActivity {
 
 
                     @Override
-                    public void onAdFailedToShow(int codeError) {
+                    public void onAdFailedToShow() {
                         Log.e("xxxx", "onAdFailedToShow: ");
                     }
                 });

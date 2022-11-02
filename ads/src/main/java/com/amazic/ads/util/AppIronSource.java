@@ -13,6 +13,7 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.amazic.ads.R;
 import com.amazic.ads.callback.InterCallback;
+import com.amazic.ads.callback.RewardCallBackIS;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -514,9 +515,9 @@ public class AppIronSource {
         return IronSource.isInterstitialReady();
     }
 
-    public void loadAndShowRewards(RewardCallback rewardCallback){
+    public void loadAndShowRewards(RewardCallBackIS rewardCallback){
         if(!isShowAllAds){
-            rewardCallback.onAdFailedToShow(0);
+            rewardCallback.onAdFailedToShow();
             return;
         }
 
@@ -554,12 +555,12 @@ public class AppIronSource {
 
             @Override
             public void onRewardedVideoAdRewarded(Placement placement) {
-                rewardCallback.onEarnedRewardIS();
+                rewardCallback.onEarnedReward();
             }
 
             @Override
             public void onRewardedVideoAdShowFailed(IronSourceError ironSourceError) {
-                rewardCallback.onAdFailedToShow(1);
+                rewardCallback.onAdFailedToShow();
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().enableAppResume();
                 }
