@@ -81,6 +81,24 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         return INSTANCE;
     }
 
+
+    /**
+     * Init AppOpenManager
+     *
+     * @param application
+     */
+    public void init(Application application, String appOpenAdId) {
+        isInitialized = true;
+        disableAdResumeByClickAction = false;
+        this.myApplication = application;
+        this.myApplication.registerActivityLifecycleCallbacks(this);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+        this.appResumeAdId = appOpenAdId;
+//        if (!Purchase.getInstance().isPurchased(application.getApplicationContext()) &&
+//                !isAdAvailable(false) && appOpenAdId != null) {
+//            fetchAd(false);
+//        }
+    }
     /**
      * Init AppOpenManager
      *
