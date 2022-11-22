@@ -3,6 +3,7 @@ package com.amazic.ads.util;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -12,21 +13,27 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.amazic.ads.R;
+import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.callback.RewardCallBackIS;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.ironsource.mediationsdk.ISBannerSize;
 import com.ironsource.mediationsdk.IronSource;
 import com.ironsource.mediationsdk.IronSourceBannerLayout;
+import com.ironsource.mediationsdk.impressionData.ImpressionData;
+import com.ironsource.mediationsdk.impressionData.ImpressionDataListener;
 import com.ironsource.mediationsdk.integration.IntegrationHelper;
 import com.ironsource.mediationsdk.logger.IronSourceError;
 import com.ironsource.mediationsdk.model.Placement;
 import com.ironsource.mediationsdk.sdk.BannerListener;
 import com.ironsource.mediationsdk.sdk.InterstitialListener;
 import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
+
+import org.json.JSONObject;
 
 public class AppIronSource {
     private static final String TAG = "AppIronSource";
@@ -181,6 +188,96 @@ public class AppIronSource {
                     public void onBannerAdLeftApplication() {
                         Log.d(TAG, "onBannerAdLeftApplication");
                     }
+
+                });
+
+                    // load ad into the created banner
+                IronSource.loadBanner(mIronSourceBannerLayout);
+            } else {
+                Log.e(TAG, "loadBanner :IronSource.createBanner returned null");
+                containerShimmer.stopShimmer();
+                mBannerParentLayout.setVisibility(View.GONE);
+                containerShimmer.setVisibility(View.GONE);
+            }
+        } else {
+            containerShimmer.stopShimmer();
+            mBannerParentLayout.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
+        }
+
+    }
+
+    public void loadBanner(Activity activity, FrameLayout mBannerParentLayout, final ShimmerFrameLayout containerShimmer, BannerCallBack bannerCallBack) {
+        if (isShowBanner) {
+            //show shimmer loading
+            containerShimmer.setVisibility(View.VISIBLE);
+            containerShimmer.startShimmer();
+
+            ISBannerSize size = ISBannerSize.BANNER;
+            // instantiate IronSourceBanner object, using the IronSource.createBanner API
+            mIronSourceBannerLayout = IronSource.createBanner(activity, size);
+
+            // add IronSourceBanner to your container
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT);
+            mBannerParentLayout.addView(mIronSourceBannerLayout, 0, layoutParams);
+
+            if (mIronSourceBannerLayout != null) {
+                // set the banner listener
+                mIronSourceBannerLayout.setBannerListener(new BannerListener() {
+                    @Override
+                    public void onBannerAdLoaded() {
+                        Log.d(TAG, "onBannerAdLoaded");
+                        // since banner container was "gone" by default, we need to make it visible as soon as the banner is ready
+                        containerShimmer.stopShimmer();
+                        containerShimmer.setVisibility(View.GONE);
+                        mBannerParentLayout.setVisibility(View.VISIBLE);
+                        IronSource.addImpressionDataListener(new ImpressionDataListener() {
+                            @Override
+                            public void onImpressionSuccess(ImpressionData impressionData) {
+                                if (impressionData != null)
+                                {
+                                    bannerCallBack.onEarnRevenue(impressionData.getRevenue());
+                                    FirebaseAnalyticsUtil.logEarnRevenue(activity,impressionData);
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onBannerAdLoadFailed(IronSourceError error) {
+                        Log.d(TAG, "onBannerAdLoadFailed" + " " + error);
+                        containerShimmer.stopShimmer();
+                        mBannerParentLayout.setVisibility(View.GONE);
+                        containerShimmer.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onBannerAdClicked() {
+                        Log.d(TAG, "onBannerAdClicked");
+                        FirebaseAnalyticsUtil.logClickAdsEventIS(activity, "Banner");
+                        FirebaseAnalyticsUtil.logClickAdsISEventByActivity(activity, FirebaseAnalyticsUtil.BANNER);
+                        setTimeLimitBanner();
+                        containerShimmer.stopShimmer();
+                        mBannerParentLayout.setVisibility(View.GONE);
+                        containerShimmer.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onBannerAdScreenPresented() {
+                        Log.d(TAG, "onBannerAdScreenPresented");
+                    }
+
+                    @Override
+                    public void onBannerAdScreenDismissed() {
+                        Log.d(TAG, "onBannerAdScreenDismissed");
+                    }
+
+                    @Override
+                    public void onBannerAdLeftApplication() {
+                        Log.d(TAG, "onBannerAdLeftApplication");
+                    }
+
                 });
 
                 // load ad into the created banner
@@ -199,13 +296,13 @@ public class AppIronSource {
 
     }
 
-
     public void loadSplashInterstitial(Activity activity, InterCallback adListener, int timeOut) {
         if(!isShowAllAds){
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     adListener.onAdClosed();
+                    adListener.onNextAction();
                     return;
                 }
             },3000);
@@ -224,6 +321,7 @@ public class AppIronSource {
                         }
                         if (adListener != null) {
                             adListener.onAdClosed();
+                            adListener.onNextAction();
                             loadInterAds();
                         }
                     }
@@ -248,6 +346,7 @@ public class AppIronSource {
                     }
                     Log.e(TAG, "onInterstitialAdLoadFailed: " + ironSourceError.getErrorMessage());
                     adListener.onAdFailedToLoadIs();
+                    adListener.onNextAction();
                 }
 
                 @Override
@@ -260,6 +359,7 @@ public class AppIronSource {
                 public void onInterstitialAdClosed() {
                     Log.i(TAG, "onInterstitialAdClosed : ");
                     adListener.onAdClosed();
+                    adListener.onNextAction();
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().enableAppResume();
                     }
@@ -268,6 +368,16 @@ public class AppIronSource {
                 @Override
                 public void onInterstitialAdShowSucceeded() {
                     Log.i(TAG, "onInterstitialAdShowSucceeded: ");
+                    IronSource.addImpressionDataListener(new ImpressionDataListener() {
+                        @Override
+                        public void onImpressionSuccess(ImpressionData impressionData) {
+                            if (impressionData != null)
+                            {
+                                adListener.onEarnRevenue(impressionData.getRevenue());
+                                FirebaseAnalyticsUtil.logEarnRevenue(activity,impressionData);
+                            }
+                        }
+                    });
                 }
 
                 @Override
@@ -283,6 +393,7 @@ public class AppIronSource {
                         e.printStackTrace();
                     }
                     adListener.onAdClosed();
+                    adListener.onNextAction();
                     loadInterAds();
                 }
 
@@ -309,6 +420,7 @@ public class AppIronSource {
                 @Override
                 public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
                     adListener.onAdFailedToLoadIs();
+                    adListener.onNextAction();
                     Log.d(TAG, "onInterstitialAdLoadFailed: 1" + ironSourceError.getErrorMessage());
                 }
 
@@ -336,6 +448,7 @@ public class AppIronSource {
 
                     if (!openActivityAfterShowInterAds) {
                         adListener.onAdClosed();
+                        adListener.onNextAction();
                     }
 
                     if (AppOpenManager.getInstance().isInitialized()) {
@@ -347,6 +460,16 @@ public class AppIronSource {
                 @Override
                 public void onInterstitialAdShowSucceeded() {
                     Log.d(TAG, "onInterstitialAdShowSucceeded: 1");
+                    IronSource.addImpressionDataListener(new ImpressionDataListener() {
+                        @Override
+                        public void onImpressionSuccess(ImpressionData impressionData) {
+                            if (impressionData != null)
+                            {
+                                adListener.onEarnRevenue(impressionData.getRevenue());
+                                FirebaseAnalyticsUtil.logEarnRevenue(activity,impressionData);
+                            }
+                        }
+                    });
                 }
 
                 @Override
@@ -388,6 +511,7 @@ public class AppIronSource {
     public void showInterstitial(Context context, InterCallback adListener) {
         if(!isShowAllAds){
             adListener.onAdClosed();
+            adListener.onNextAction();
             return;
         }
         if (isInterstitialReady()) {
@@ -408,6 +532,7 @@ public class AppIronSource {
                     @Override
                     public void onInterstitialAdLoadFailed(IronSourceError ironSourceError) {
                         adListener.onAdFailedToLoadIs();
+                        adListener.onNextAction();
                         Log.d(TAG, "onInterstitialAdLoadFailed: " + ironSourceError.getErrorMessage());
                     }
 
@@ -438,6 +563,7 @@ public class AppIronSource {
 
                         if (!openActivityAfterShowInterAds) {
                             adListener.onAdClosed();
+                            adListener.onNextAction();
                             loadInterAds();
                         }
                     }
@@ -448,15 +574,24 @@ public class AppIronSource {
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().disableAppResume();
                         }
-
+                        IronSource.addImpressionDataListener(new ImpressionDataListener() {
+                            @Override
+                            public void onImpressionSuccess(ImpressionData impressionData) {
+                                if (impressionData != null)
+                                {
+                                    adListener.onEarnRevenue(impressionData.getRevenue());
+                                    FirebaseAnalyticsUtil.logEarnRevenue(context,impressionData);
+                                }
+                            }
+                        });
                     }
 
                     @Override
                     public void onInterstitialAdShowFailed(IronSourceError ironSourceError) {
                         Log.d(TAG, "onInterstitialAdShowFailed: 2");
-                        /*if (AppOpenManager.getInstance().isInitialized()) {
+                        if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().enableAppResume();
-                        }*/
+                        }
                         try {
                             if (dialog != null && !((Activity) context).isDestroyed())
                                 dialog.dismiss();
@@ -483,6 +618,7 @@ public class AppIronSource {
                             dialog.show();
                         } catch (Exception e) {
                             adListener.onAdClosed();
+                            adListener.onNextAction();
                             return;
                         }
                     } catch (Exception e) {
@@ -496,6 +632,7 @@ public class AppIronSource {
 
                         if (openActivityAfterShowInterAds && adListener != null) {
                             adListener.onAdClosed();
+                            adListener.onNextAction();
                             if (AppOpenManager.getInstance().isInitialized()) {
                                 AppOpenManager.getInstance().disableAppResume();
                             }
@@ -508,6 +645,7 @@ public class AppIronSource {
             }
         } else {
             adListener.onAdClosed();
+            adListener.onNextAction();
         }
     }
 
@@ -616,4 +754,6 @@ public class AppIronSource {
             IronSource.loadInterstitial();
         }
     }
+
+
 }

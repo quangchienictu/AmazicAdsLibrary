@@ -69,7 +69,7 @@ dependencies {
 
 
     //Add IronSource Mediation SDK dependency.
-    implementation 'com.ironsource.sdk:mediationsdk:7.1.13'
+    implementation 'com.ironsource.sdk:mediationsdk:7.2.5'
 
     implementation 'com.google.android.gms:play-services-appset:16.0.0'
     implementation 'com.google.android.gms:play-services-basement:17.1.1'

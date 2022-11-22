@@ -13,6 +13,7 @@ public abstract class AdsApplication extends Application{
         super.onCreate();
         Admod.getInstance().initAdmod(this, getListTestDeviceId());
         if(enableAdsResume()) {
+            if(Admod.isShowAllAds)
             AppOpenManager.getInstance().init(this, getResumeAdId());
         }
     }
