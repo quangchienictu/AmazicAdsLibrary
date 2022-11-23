@@ -54,7 +54,7 @@ public class FirebaseAnalyticsUtil {
         bundle.putString(FirebaseAnalytics.Param.AD_UNIT_NAME, impressionData.getInstanceName());
         bundle.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
         bundle.putDouble(FirebaseAnalytics.Param.VALUE, impressionData.getRevenue());
-        FirebaseAnalytics.getInstance(context).logEvent("paid_ad_impression", bundle);
+        FirebaseAnalytics.getInstance(context).logEvent("paid_ad_impression_is", bundle);
     }
 
 }
