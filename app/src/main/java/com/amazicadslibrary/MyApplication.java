@@ -1,7 +1,9 @@
 package com.amazicadslibrary;
 
+import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.AdsApplication;
+import com.amazic.ads.util.AppUtil;
 
 import java.util.List;
 
@@ -25,5 +27,10 @@ public class MyApplication extends AdsApplication {
     @Override
     public String getResumeAdId() {
         return getString(R.string.admod_app_open_ad_id);
+    }
+
+    @Override
+    public Boolean buildDebug() {
+        return true;
     }
 }

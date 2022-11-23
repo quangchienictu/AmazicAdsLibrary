@@ -13,7 +13,7 @@
 <pre>
  dependencies {
     implementation 'com.github.quangchienictu:AmazicAdsLibrary:{version}'
-    implementation 'com.google.android.gms:play-services-ads:20.4.0'
+    implementation 'com.google.android.gms:play-services-ads:20.5.0'
     //multidex
     implementation "androidx.multidex:multidex:2.0.1"
   }
@@ -184,7 +184,17 @@
                 Admod.getInstance().pushAdsToViewCustom(nativeAd, adView);
             }
         });
-  
+           @Override
+                public void onAdFailedToLoad() {
+                    fr_ads1.removeAllViews();
+                }
 </pre>
 
 </div>
+
+<h4>Hide all ads</h4>
+<pre>
+ Admod.getInstance().setShowAllAds(true);
+ true - show all ads
+ false - hide all ads
+</pre>

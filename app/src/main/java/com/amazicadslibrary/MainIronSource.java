@@ -34,21 +34,21 @@ public class MainIronSource extends AppCompatActivity {
         btnShowIS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    AppIronSource.getInstance().showInterstitial(MainIronSource.this, new InterCallback(){
-                        @Override
-                        public void onAdClosed() {
-                            super.onAdClosed();
-                            startActivity(new Intent(MainIronSource.this, MainIronSource2.class));
-                            loadInter();
-                        }
+                AppIronSource.getInstance().showInterstitial(MainIronSource.this, new InterCallback(){
+                    @Override
+                    public void onAdClosed() {
+                        super.onAdClosed();
+                        startActivity(new Intent(MainIronSource.this, MainActivity2.class));
+                        loadInter();
+                    }
 
-                        @Override
-                        public void onAdFailedToLoad(LoadAdError i) {
-                            super.onAdFailedToLoad(i);
-                            startActivity(new Intent(MainIronSource.this, MainIronSource2.class));
-                            loadInter();
-                        }
-                    });
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError i) {
+                        super.onAdFailedToLoad(i);
+                        startActivity(new Intent(MainIronSource.this, MainActivity2.class));
+                        loadInter();
+                    }
+                });
             }
         });
         btnLoadAndShow.setOnClickListener(new View.OnClickListener() {

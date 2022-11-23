@@ -6,7 +6,11 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+<<<<<<< HEAD
         <option name="gradleJvm" value="corretto-11" />
+=======
+        <option name="resolveModulePerSourceSet" value="false" />
+>>>>>>> 54a07b08ac6b3d70bc7cf0be3e68a905f3914074
       </GradleProjectSettings>
     </option>
   </component>

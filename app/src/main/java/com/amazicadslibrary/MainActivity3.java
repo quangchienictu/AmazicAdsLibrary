@@ -19,7 +19,7 @@ public class MainActivity3 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
         fr_ads = findViewById(R.id.fr_ads);
-
+        Admod.getInstance().loadBanner(this, getString(R.string.admod_banner_id));
         Admod.getInstance().loadNativeAd(this, getString(R.string.admod_native_id), new NativeCallback(){
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {

@@ -11,6 +11,8 @@ public abstract class AdsApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
+        AppUtil.BUILD_DEBUG = buildDebug();
+        Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG);
         Admod.getInstance().initAdmod(this, getListTestDeviceId());
         if(enableAdsResume()) {
             if(Admod.isShowAllAds)
@@ -22,4 +24,6 @@ public abstract class AdsApplication extends Application{
     public abstract List<String> getListTestDeviceId();
 
     public abstract String getResumeAdId();
+    public abstract Boolean buildDebug();
+
 }

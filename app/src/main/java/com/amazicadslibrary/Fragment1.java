@@ -22,12 +22,10 @@ import com.google.android.gms.ads.nativead.NativeAdView;
 public class Fragment1 extends Fragment {
     Button btnclick;
     InterstitialAd mInterstitialAd;
-    private FrameLayout native_ads;
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment1,container,false);
         Admod.getInstance().loadBannerFragment(requireActivity(),getString(R.string.admod_banner_id),view);
-
         return view;
 
     }
@@ -41,9 +39,6 @@ public class Fragment1 extends Fragment {
                 mInterstitialAd = interstitialAd;
             }
         });
-
-
-        native_ads = view.findViewById(R.id.native_ads);
         btnclick  = view.findViewById(R.id.btnclick);
         btnclick.setOnClickListener(new View.OnClickListener() {
             @Override
