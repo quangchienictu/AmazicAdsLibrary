@@ -209,6 +209,13 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                         } else {
                             AppOpenManager.this.splashAd = ad;
                             AppOpenManager.this.splashLoadTime = (new Date()).getTime();
+                            AppOpenManager.this.appResumeAd.setOnPaidEventListener(adValue -> {
+                                FirebaseUtil.logPaidAdImpression(myApplication.getApplicationContext(),
+                                        adValue,
+                                        ad.getAdUnitId(),
+                                        ad.getResponseInfo()
+                                                .getMediationAdapterClassName());
+                            });
                         }
 
 
