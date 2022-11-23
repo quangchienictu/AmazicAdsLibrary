@@ -28,6 +28,9 @@ public class InterCallback {
     public void onAdClosedByUser(){
     }
     public void onAdShowSuccess(){
-
+    }
+    public void onEarnRevenue(Double Revenue){
+    }
+    public void onNextAction(){
     }
 }

@@ -19,22 +19,16 @@ public class SplashIS extends AppCompatActivity {
         AppIronSource.getInstance().init(this, IRON_SOURCE_APP_KEY, true);
         AppIronSource.getInstance().setOpenActivityAfterShowInterAds(true);
        /* AppIronSource.getInstance().setTimeLimit(60000);
-        AppIronSource.getInstance().setShowAllAds(false);
-        Admod.getInstance().setShowAllAds(false);*/
+        AppIronSource.getInstance().setShowAllAds(false);*/
+        Admod.getInstance().setShowAllAds(false);
         loadAndShowInterAds();
     }
 
     private void loadAndShowInterAds() {
         AppIronSource.getInstance().loadSplashInterstitial(this, new InterCallback(){
             @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                startActivity(new Intent(SplashIS.this,MainIronSource.class));
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError i) {
-                super.onAdFailedToLoad(i);
+            public void onNextAction() {
+                super.onNextAction();
                 startActivity(new Intent(SplashIS.this,MainIronSource.class));
             }
         }, 30000);

@@ -90,7 +90,7 @@ public class Admod {
     private boolean isShowBanner = true;
     private boolean isShowNative = true;
 
-    private boolean isShowAllAds = true;
+    public static boolean isShowAllAds = true;
 
 
 
@@ -392,6 +392,7 @@ public class Admod {
                 if (adListener != null) {
                     if (!openActivityAfterShowInterAds) {
                         adListener.onAdClosed();
+                        adListener.onNextAction();
                     }else {
                         adListener.onAdClosedByUser();
                     }
@@ -412,6 +413,7 @@ public class Admod {
                 if (adListener != null) {
                     if (!openActivityAfterShowInterAds) {
                         adListener.onAdFailedToShow(adError);
+                        adListener.onNextAction();
                     }
 
                     if (dialog != null) {
@@ -439,6 +441,7 @@ public class Admod {
                     dialog.show();
                 } catch (Exception e) {
                     adListener.onAdClosed();
+                    adListener.onNextAction();
                     return;
                 }
             } catch (Exception e) {
@@ -452,6 +455,7 @@ public class Admod {
 
                 if (openActivityAfterShowInterAds && adListener != null) {
                     adListener.onAdClosed();
+                    adListener.onNextAction();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -469,6 +473,7 @@ public class Admod {
                         dialog.dismiss();
                     }
                     adListener.onAdClosed();
+                    adListener.onNextAction();
                     isShowLoadingSplash = false;
                 }
             }, 800);
@@ -533,11 +538,13 @@ public class Admod {
         Helper.setupAdmodData(context);
         if (!isShowAllAds ) {
             callback.onAdClosed();
+            callback.onNextAction();
             return;
         }
         if (mInterstitialAd == null) {
             if (callback != null) {
                 callback.onAdClosed();
+                callback.onNextAction();
             }
             return;
         }else{
@@ -556,6 +563,7 @@ public class Admod {
                 if (callback != null) {
                     if (!openActivityAfterShowInterAds) {
                         callback.onAdClosed();
+                        callback.onNextAction();
                     }else {
                         callback.onAdClosedByUser();
                     }
@@ -573,11 +581,8 @@ public class Admod {
                 super.onAdFailedToShowFullScreenContent(adError);
                 Log.e(TAG, "onAdFailedToShowFullScreenContent: " + adError.getMessage());
                 callback.onAdFailedToShow(adError);
+                callback.onNextAction();
                 if (callback != null) {
-                    if (!openActivityAfterShowInterAds) {
-                        callback.onAdClosed();
-                    }
-
                     if (dialog != null) {
                         dialog.dismiss();
                     }
@@ -607,12 +612,14 @@ public class Admod {
         }
         if (callback != null) {
             callback.onAdClosed();
+            callback.onNextAction();
         }
     }
 
     private void showInterstitialAd(Context context, InterstitialAd mInterstitialAd, InterCallback callback) {
         if(!isShowInter){
             callback.onAdClosed();
+            callback.onNextAction();
             return;
         }
         currentClicked++;
@@ -626,6 +633,7 @@ public class Admod {
                         dialog.show();
                     } catch (Exception e) {
                         callback.onAdClosed();
+                        callback.onNextAction();
                         return;
                     }
                 } catch (Exception e) {
@@ -639,6 +647,7 @@ public class Admod {
 
                     if (openActivityAfterShowInterAds && callback != null) {
                         callback.onAdClosed();
+                        callback.onNextAction();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -659,6 +668,7 @@ public class Admod {
                 dialog.dismiss();
             }
             callback.onAdClosed();
+            callback.onNextAction();
         }
     }
 
@@ -669,10 +679,12 @@ public class Admod {
     public void loadAndShowInter(AppCompatActivity activity, String idInter, int timeDelay, int timeOut, InterCallback callback){
         if (!isNetworkConnected()) {
             callback.onAdClosed();
+            callback.onNextAction();
             return;
         }
         if (!isShowAllAds&&!isShowInter) {
             callback.onAdClosed();
+            callback.onNextAction();
             return;
         }
 
@@ -702,6 +714,7 @@ public class Admod {
                             public void onAdDismissedFullScreenContent() {
                                 dialog2.dismiss();
                                 callback.onAdClosed();
+                                callback.onNextAction();
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                                 }
@@ -711,6 +724,7 @@ public class Admod {
                             public void onAdFailedToShowFullScreenContent(AdError adError) {
                                 dialog2.dismiss();
                                 callback.onAdFailedToShow(adError);
+                                callback.onNextAction();
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                                 }
@@ -767,7 +781,6 @@ public class Admod {
                     super.onAdDismissedFullScreenContent();
                     if (adCallback != null)
                         adCallback.onAdClosed();
-
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().enableAppResume();
                     }

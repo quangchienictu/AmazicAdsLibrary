@@ -27,6 +27,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.ironsource.mediationsdk.IronSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -190,6 +191,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
      * Request an ad
      */
     public void fetchAd(final boolean isSplash) {
+        if(!Admod.isShowAllAds){
+            return;
+        }
         Log.d(TAG, "fetchAd: isSplash = " + isSplash);
         if (isAdAvailable(isSplash)) {
             return;
@@ -589,11 +593,14 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onResume() {
+        if(!Admod.isShowAllAds){
+            return;
+        }
+        IronSource.onResume(getInstance().currentActivity);
         if (!isAppResumeEnabled) {
             Log.d(TAG, "onResume: app resume is disabled");
             return;
         }
-
         if (isInterstitialShowing){
             Log.d(TAG, "onResume: interstitial is showing");
             return;
