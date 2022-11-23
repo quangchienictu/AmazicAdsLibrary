@@ -245,7 +245,7 @@ public class Admod {
 
 
 
-    public boolean interstialSplashLoead() {
+    public boolean interstitialSplashLoaded() {
         return mInterstitialSplash != null;
     }
 
@@ -1168,5 +1168,17 @@ public class Admod {
 
     public long getTimeLimit() {
         return this.timeLimitAds;
+    }
+
+    public void onCheckShowSplashWhenFail(final AppCompatActivity activity, final InterCallback callback, int timeDelay) {
+        (new Handler(activity.getMainLooper())).postDelayed(new Runnable() {
+            public void run() {
+                if (Admod.this.interstitialSplashLoaded() && !Admod.this.isShowLoadingSplash) {
+                    Log.i("AperoAdmob", "show ad splash when show fail in background");
+                    Admod.getInstance().onShowSplash(activity, callback);
+                }
+
+            }
+        }, (long)timeDelay);
     }
 }
