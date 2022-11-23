@@ -194,6 +194,16 @@ public class Admod {
                         containerShimmer.stopShimmer();
                         containerShimmer.setVisibility(View.GONE);
                         adContainer.setVisibility(View.VISIBLE);
+                        if (adView != null) {
+                            adView.setOnPaidEventListener(adValue -> {
+                                Log.d(TAG, "OnPaidEvent banner:" + adValue.getValueMicros());
+                                FirebaseUtil.logPaidAdImpression(context,
+                                        adValue,
+                                        adView.getAdUnitId(),
+                                        adView.getResponseInfo()
+                                                .getMediationAdapterClassName());
+                            });
+                        }
                     }
 
                     @Override
@@ -341,6 +351,16 @@ public class Admod {
                         Log.i(TAG, "loadSplashInterstitalAds:show ad on loaded ");
                     }
                 }
+                if (interstitialAd != null) {
+                    interstitialAd.setOnPaidEventListener(adValue -> {
+                        Log.d(TAG, "OnPaidEvent loadInterstitialAds:" + adValue.getValueMicros());
+                        FirebaseUtil.logPaidAdImpression(context,
+                                adValue,
+                                interstitialAd.getAdUnitId(),
+                                interstitialAd.getResponseInfo()
+                                        .getMediationAdapterClassName());
+                    });
+                }
             }
 
             @Override
@@ -379,6 +399,15 @@ public class Admod {
             adListener.onNextAction();
             return;
         }
+        mInterstitialSplash.setOnPaidEventListener(adValue -> {
+            Log.d(TAG, "OnPaidEvent splash:" + adValue.getValueMicros());
+            FirebaseUtil.logPaidAdImpression(context,
+                    adValue,
+                    mInterstitialSplash.getAdUnitId(),
+                    mInterstitialSplash.getResponseInfo()
+                            .getMediationAdapterClassName());
+        });
+
         if (handlerTimeout != null && rdTimeout != null) {
             handlerTimeout.removeCallbacks(rdTimeout);
         }
@@ -514,6 +543,16 @@ public class Admod {
                             if(adCallback!=null){
                                 adCallback.onInterstitialLoad(interstitialAd);
                             }
+
+                            //tracking adjust
+                            interstitialAd.setOnPaidEventListener(adValue -> {
+                                Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
+                                FirebaseUtil.logPaidAdImpression(context,
+                                        adValue,
+                                        interstitialAd.getAdUnitId(),
+                                        interstitialAd.getResponseInfo()
+                                                .getMediationAdapterClassName());
+                            });
                         }
 
                         @Override
@@ -836,6 +875,14 @@ public class Admod {
             @Override
             public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
                 Admod.this.rewardedAd = rewardedAd;
+                Admod.this.rewardedAd.setOnPaidEventListener(adValue -> {
+
+                    Log.d(TAG, "OnPaidEvent Reward:" + adValue.getValueMicros());
+                    FirebaseUtil.logPaidAdImpression(context,
+                            adValue,
+                            rewardedAd.getAdUnitId(),
+                            "rewardedAd");
+                });
             }
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
@@ -872,6 +919,13 @@ public class Admod {
                             @Override
                             public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
                                 callback.onNativeAdLoaded(nativeAd);
+                                nativeAd.setOnPaidEventListener(adValue -> {
+                                    Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
+                                    FirebaseUtil.logPaidAdImpression(context,
+                                            adValue,
+                                            id,
+                                            "native");
+                                });
                             }
                         })
                         .withAdListener(new AdListener() {
@@ -1068,6 +1122,13 @@ public class Admod {
                         pushAdsToViewCustom(nativeAd, adView);
                         frameLayout.removeAllViews();
                         frameLayout.addView(adView);
+                        nativeAd.setOnPaidEventListener(adValue -> {
+                            Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
+                            FirebaseUtil.logPaidAdImpression(context,
+                                    adValue,
+                                    id,
+                                    "native");
+                        });
                     }
 
 
