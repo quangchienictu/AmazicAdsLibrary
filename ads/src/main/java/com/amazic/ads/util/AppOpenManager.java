@@ -568,6 +568,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onResume() {
+        if(!Admod.isShowAllAds){
+            return;
+        }
         if (!isAppResumeEnabled) {
             Log.d(TAG, "onResume: app resume is disabled");
             return;

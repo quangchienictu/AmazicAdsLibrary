@@ -91,7 +91,7 @@ public class Admod {
     private boolean isShowBanner = true;
     private boolean isShowNative = true;
 
-    private boolean isShowAllAds = true;
+    public static boolean isShowAllAds = true;
 
 
     private boolean isFan = false;
@@ -258,7 +258,7 @@ public class Admod {
 
 
 
-    public boolean interstialSplashLoead() {
+    public boolean interstitialSplashLoaded() {
         return mInterstitialSplash != null;
     }
 
@@ -285,6 +285,7 @@ public class Admod {
                 public void run() {
                     if (adListener != null) {
                         adListener.onAdClosed();
+                        adListener.onNextAction();
                     }
                     return;
                 }
@@ -317,6 +318,7 @@ public class Admod {
                     }
                     if (adListener != null) {
                         adListener.onAdClosed();
+                        adListener.onNextAction();
                         isShowLoadingSplash = false;
                     }
                 }
@@ -374,6 +376,7 @@ public class Admod {
         isShowLoadingSplash = true;
         if (mInterstitialSplash == null) {
             adListener.onAdClosed();
+            adListener.onNextAction();
             return;
         }
         if (handlerTimeout != null && rdTimeout != null) {
@@ -398,6 +401,7 @@ public class Admod {
                 if (adListener != null) {
                     if (!openActivityAfterShowInterAds) {
                         adListener.onAdClosed();
+                        adListener.onNextAction();
                     }else {
                         adListener.onAdClosedByUser();
                     }
@@ -418,6 +422,7 @@ public class Admod {
                 if (adListener != null) {
                     if (!openActivityAfterShowInterAds) {
                         adListener.onAdFailedToShow(adError);
+                        adListener.onNextAction();
                     }
 
                     if (dialog != null) {
@@ -442,6 +447,7 @@ public class Admod {
                     dialog.show();
                 } catch (Exception e) {
                     adListener.onAdClosed();
+                    adListener.onNextAction();
                     return;
                 }
             } catch (Exception e) {
@@ -455,6 +461,7 @@ public class Admod {
 
                 if (openActivityAfterShowInterAds && adListener != null) {
                     adListener.onAdClosed();
+                    adListener.onNextAction();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -472,6 +479,7 @@ public class Admod {
                         dialog.dismiss();
                     }
                     adListener.onAdClosed();
+                    adListener.onNextAction();
                     isShowLoadingSplash = false;
                 }
             }, 800);
@@ -536,11 +544,13 @@ public class Admod {
         Helper.setupAdmodData(context);
         if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
             callback.onAdClosed();
+            callback.onNextAction();
             return;
         }
         if (mInterstitialAd == null) {
             if (callback != null) {
                 callback.onAdClosed();
+                callback.onNextAction();
             }
             return;
         }
@@ -557,6 +567,7 @@ public class Admod {
                 if (callback != null) {
                     if (!openActivityAfterShowInterAds) {
                         callback.onAdClosed();
+                        callback.onNextAction();
                     }else {
                         callback.onAdClosedByUser();
                     }
@@ -577,6 +588,7 @@ public class Admod {
                 if (callback != null) {
                     if (!openActivityAfterShowInterAds) {
                         callback.onAdClosed();
+                        callback.onNextAction();
                     }
 
                     if (dialog != null) {
@@ -606,12 +618,14 @@ public class Admod {
         }
         if (callback != null) {
             callback.onAdClosed();
+            callback.onNextAction();
         }
     }
 
     private void showInterstitialAd(Context context, InterstitialAd mInterstitialAd, InterCallback callback) {
         if(!isShowInter||!isShowAllAds){
             callback.onAdClosed();
+            callback.onNextAction();
             return;
         }
         currentClicked++;
@@ -625,6 +639,7 @@ public class Admod {
                         dialog.show();
                     } catch (Exception e) {
                         callback.onAdClosed();
+                        callback.onNextAction();
                         return;
                     }
                 } catch (Exception e) {
@@ -638,6 +653,7 @@ public class Admod {
 
                     if (openActivityAfterShowInterAds && callback != null) {
                         callback.onAdClosed();
+                        callback.onNextAction();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -658,6 +674,7 @@ public class Admod {
                 dialog.dismiss();
             }
             callback.onAdClosed();
+            callback.onNextAction();
         }
     }
 
@@ -668,10 +685,12 @@ public class Admod {
     public void loadAndShowInter(AppCompatActivity activity, String idInter, int timeDelay, int timeOut, InterCallback callback){
             if (!isNetworkConnected()) {
                 callback.onAdClosed();
+                callback.onNextAction();
                 return;
             }
             if (AppPurchase.getInstance().isPurchased(context)&&!isShowAllAds&&!isShowInter) {
                 callback.onAdClosed();
+                callback.onNextAction();
                 return;
             }
 
@@ -701,6 +720,7 @@ public class Admod {
                                 public void onAdDismissedFullScreenContent() {
                                     dialog2.dismiss();
                                     callback.onAdClosed();
+                                    callback.onNextAction();
                                     if (AppOpenManager.getInstance().isInitialized()) {
                                         AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                                     }
@@ -710,6 +730,7 @@ public class Admod {
                                 public void onAdFailedToShowFullScreenContent(AdError adError) {
                                     dialog2.dismiss();
                                     callback.onAdClosed();
+                                    callback.onNextAction();
                                     if (AppOpenManager.getInstance().isInitialized()) {
                                         AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                                     }
@@ -1159,5 +1180,17 @@ public class Admod {
             }, timeLimitAds);
         }
 
+    }
+
+    public void onCheckShowSplashWhenFail(final AppCompatActivity activity, final InterCallback callback, int timeDelay) {
+        (new Handler(activity.getMainLooper())).postDelayed(new Runnable() {
+            public void run() {
+                if (Admod.this.interstitialSplashLoaded() && !Admod.this.isShowLoadingSplash) {
+                    Log.i("AperoAdmob", "show ad splash when show fail in background");
+                    Admod.getInstance().onShowSplash(activity, callback);
+                }
+
+            }
+        }, (long)timeDelay);
     }
 }
