@@ -38,7 +38,7 @@ public class FirebaseUtil {
         params.putString("adunitid", adUnitId);
         params.putString("network", network);
 
-        FirebaseAnalytics.getInstance(context).logEvent("paid_ad_impression", params);
+        FirebaseAnalytics.getInstance(context).logEvent("paid_ad_impression_admob", params);
 
     }
 

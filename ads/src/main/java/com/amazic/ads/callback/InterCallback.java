@@ -25,4 +25,6 @@ public class InterCallback {
     }
     public void onNextAction(){
     }
+    public void onEarnRevenue(Double Revenue){
+    }
 }

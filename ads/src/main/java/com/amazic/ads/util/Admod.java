@@ -31,6 +31,7 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 import com.amazic.ads.BuildConfig;
 import com.amazic.ads.R;
 import com.amazic.ads.billing.AppPurchase;
+import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.RewardCallback;
@@ -230,6 +231,91 @@ public class Admod {
         }
 
     }
+
+
+ /*   ========= Banner log revenue  ================*/
+    public void loadBanner(final Activity mActivity, String id, BannerCallBack bannerCallBack) {
+        final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
+        final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        if(!isShowAllAds){
+            adContainer.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
+        }else{
+            loadBanner(mActivity, id, adContainer, containerShimmer, false,bannerCallBack);
+        }
+    }
+
+    private void loadBanner(final Activity mActivity, String id, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, Boolean useInlineAdaptive,BannerCallBack bannerCallBack) {
+        if(isShowBanner){
+            if (AppPurchase.getInstance().isPurchased(mActivity)||!isShowAllAds) {
+                containerShimmer.setVisibility(View.GONE);
+                return;
+            }
+            containerShimmer.setVisibility(View.VISIBLE);
+            containerShimmer.startShimmer();
+            try {
+                AdView adView = new AdView(mActivity);
+                adView.setAdUnitId(id);
+                adContainer.addView(adView);
+                AdSize adSize = getAdSize(mActivity, useInlineAdaptive);
+                adView.setAdSize(adSize);
+                adView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                adView.loadAd(getAdRequest());
+                adView.setAdListener(new AdListener() {
+
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        super.onAdFailedToLoad(loadAdError);
+                        containerShimmer.stopShimmer();
+                        adContainer.setVisibility(View.GONE);
+                        containerShimmer.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAdLoaded() {
+                        Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
+                        containerShimmer.stopShimmer();
+                        containerShimmer.setVisibility(View.GONE);
+                        adContainer.setVisibility(View.VISIBLE);
+                        if (adView != null) {
+                            adView.setOnPaidEventListener(adValue -> {
+                                Log.d(TAG, "OnPaidEvent banner:" + adValue.getValueMicros());
+                                FirebaseUtil.logPaidAdImpression(context,
+                                        adValue,
+                                        adView.getAdUnitId(),
+                                        adView.getResponseInfo()
+                                                .getMediationAdapterClassName());
+                                        bannerCallBack.onEarnRevenue((double) adValue.getValueMicros());
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onAdClicked() {
+                        super.onAdClicked();
+                        FirebaseUtil.logClickAdsEvent(context, id);
+                        if(timeLimitAds>1000){
+                            setTimeLimitBanner();
+                            containerShimmer.stopShimmer();
+                            adContainer.setVisibility(View.GONE);
+                            containerShimmer.setVisibility(View.GONE);
+                        }
+                    }
+                });
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else{
+            containerShimmer.stopShimmer();
+            adContainer.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
+        }
+
+    }
+    /*============ end banner log revenue ==================*/
+
     private AdSize getAdSize(Activity mActivity, Boolean useInlineAdaptive) {
         // Step 2 - Determine the screen width (less decorations) to use for the ad width.
         Display display = mActivity.getWindowManager().getDefaultDisplay();
@@ -359,6 +445,7 @@ public class Admod {
                                 interstitialAd.getAdUnitId(),
                                 interstitialAd.getResponseInfo()
                                         .getMediationAdapterClassName());
+                                adListener.onEarnRevenue( (double) adValue.getValueMicros());
                     });
                 }
             }
@@ -406,6 +493,7 @@ public class Admod {
                     mInterstitialSplash.getAdUnitId(),
                     mInterstitialSplash.getResponseInfo()
                             .getMediationAdapterClassName());
+            adListener.onEarnRevenue( (double) adValue.getValueMicros());
         });
 
         if (handlerTimeout != null && rdTimeout != null) {
@@ -552,6 +640,7 @@ public class Admod {
                                         interstitialAd.getAdUnitId(),
                                         interstitialAd.getResponseInfo()
                                                 .getMediationAdapterClassName());
+                                adCallback.onEarnRevenue( (double) adValue.getValueMicros());
                             });
                         }
 
@@ -925,6 +1014,7 @@ public class Admod {
                                             adValue,
                                             id,
                                             "native");
+                                    callback.onEarnRevenue((double) adValue.getValueMicros());
                                 });
                             }
                         })
