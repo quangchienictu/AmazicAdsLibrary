@@ -1,7 +1,5 @@
 package com.amazic.ads.util;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.util.Log;
 
 import androidx.multidex.MultiDexApplication;
@@ -14,7 +12,7 @@ public abstract class AdsMultiDexApplication extends MultiDexApplication {
         super.onCreate();
         AppUtil.BUILD_DEBUG = buildDebug();
         Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG );
-        Admod.getInstance().initAdmod(this, getListTestDeviceId());
+        Admob.getInstance().initAdmod(this, getListTestDeviceId());
         if (enableAdsResume()) {
             AppOpenManager.getInstance().init(this, getOpenAppAdId());
         }

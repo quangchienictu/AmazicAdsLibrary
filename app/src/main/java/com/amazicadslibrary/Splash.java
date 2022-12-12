@@ -5,12 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.BillingListener;
 import com.amazic.ads.callback.InterCallback;
-import com.amazic.ads.util.Admod;
+import com.amazic.ads.util.Admob;
 import com.google.android.gms.ads.LoadAdError;
 
 import java.util.ArrayList;
@@ -25,16 +24,17 @@ public class Splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         String android_id = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-       Admod.getInstance().setShowAllAds(true);
+       Admob.getInstance().iShowAllAds(true);
+        Admob.getInstance().isEventLoadTimeLoadAdsSplash(true);
 
-        // Admod
+        // Admob
         AppPurchase.getInstance().setBillingListener(new BillingListener() {
             @Override
             public void onInitBillingListener(int code) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Admod.getInstance().loadSplashInterAds(Splash.this,"ca-app-pub-3940256099942544/1033173712",25000,5000, new InterCallback(){
+                        Admob.getInstance().loadSplashInterAds(Splash.this,"ca-app-pub-3940256099942544/1033173712",25000,5000, new InterCallback(){
                             @Override
                             public void onAdClosed() {
                                 startActivity(new Intent(Splash.this,MainActivity.class));
