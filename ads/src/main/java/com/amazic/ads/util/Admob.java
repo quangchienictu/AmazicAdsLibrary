@@ -93,10 +93,11 @@ public class Admob {
     private boolean isShowBanner = true;
     private boolean isShowNative = true;
     private boolean logTimeLoadAdsSplash = false;
+    private boolean logLogTimeShowAds= false;
     public static boolean isShowAllAds = true;
     private boolean isFan = false;
     private long currentTime;
-    private long currentTimeEnd;
+    private long currentTimeShowAds;
     public static Admob getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Admob();
@@ -156,7 +157,12 @@ public class Admob {
     public void isEventLoadTimeLoadAdsSplash(boolean logTimeLoadAdsSplash){
         this.logTimeLoadAdsSplash = logTimeLoadAdsSplash;
     }
-
+    /**
+     * Set tắt event log time show splash
+     **/
+    public void isEventLoadTimeShowAdsInter(boolean logLogTimeShowAds){
+        this.logLogTimeShowAds = logLogTimeShowAds;
+    }
 
     public void loadBanner(final Activity mActivity, String id) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
@@ -383,7 +389,6 @@ public class Admob {
         isTimeout = false;
         if(logTimeLoadAdsSplash){
              currentTime =System.currentTimeMillis();
-             currentTimeEnd = System.currentTimeMillis();
         }
         if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
             new Handler().postDelayed(new Runnable() {
@@ -472,6 +477,7 @@ public class Admob {
                         if (i != null)
                             Log.e(TAG, "loadSplashInterstitalAds: load fail " + i.getMessage());
                         adListener.onAdFailedToLoad(i);
+                        adListener.onNextAction();
                     }
                 }
 
@@ -665,6 +671,7 @@ public class Admob {
                             Log.i(TAG, loadAdError.getMessage());
                             if(adCallback!=null)
                                 adCallback.onAdFailedToLoad(loadAdError);
+                                adCallback.onNextAction();
                         }
 
                     });
@@ -684,6 +691,10 @@ public class Admob {
     }
 
     private void showInterAdByTimes(final Context context, InterstitialAd mInterstitialAd, final InterCallback callback, final boolean shouldReloadAds) {
+
+        if(logLogTimeShowAds){
+            currentTimeShowAds =System.currentTimeMillis();
+        }
         Helper.setupAdmodData(context);
         if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
             callback.onAdClosed();
@@ -727,6 +738,8 @@ public class Admob {
             public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                 super.onAdFailedToShowFullScreenContent(adError);
                 Log.e(TAG, "onAdFailedToShowFullScreenContent: " + adError.getMessage());
+
+
                 // Called when fullscreen content failed to show.
                 if (callback != null) {
                     if (!openActivityAfterShowInterAds) {
@@ -744,6 +757,11 @@ public class Admob {
             public void onAdShowedFullScreenContent() {
                 super.onAdShowedFullScreenContent();
                 // Called when fullscreen content is shown.
+                if(logLogTimeShowAds){
+                    long timeLoad = System.currentTimeMillis() -  currentTimeShowAds;
+                    Log.e(TAG, "show ads time :"+timeLoad);
+                    FirebaseUtil.logTimeLoadShowAdsInter(context,(double)timeLoad/1000);
+                }
             }
 
             @Override
@@ -805,7 +823,7 @@ public class Admob {
                             }
                         }, 1500);
                     }
-
+                    Log.e(TAG, "xxxxxx");
                     mInterstitialAd.show((Activity) context);
 
                 }, 800);

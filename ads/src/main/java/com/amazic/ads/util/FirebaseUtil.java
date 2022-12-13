@@ -69,4 +69,13 @@ public class FirebaseUtil {
         FirebaseAnalytics.getInstance(context).logEvent("event_time_load_ads_splash", bundle);
     }
 
+    public static void logTimeLoadShowAdsInter(Context context,double timeLoad){
+        Log.d(TAG, String.format(
+                "Time show ads  %s",
+                timeLoad));
+        Bundle bundle = new Bundle();
+        bundle.putString("time_show", String.valueOf(timeLoad));
+        FirebaseAnalytics.getInstance(context).logEvent("event_time_show_ads_inter", bundle);
+    }
+
 }
