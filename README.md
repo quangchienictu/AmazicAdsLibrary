@@ -68,13 +68,13 @@
 <h4>Load in ativity</h4>
 <pre>
   
-    Admod.getInstance().loadBanner(this,"bannerID");
+    Admob.getInstance().loadBanner(this,"bannerID");
   
 </pre>
 <h4>Load in fragment</h4>
 <pre>
   
-   Admod.getInstance().loadBannerFragment( mActivity, "bannerID",  rootView)
+   Admob.getInstance().loadBannerFragment( mActivity, "bannerID",  rootView)
   
 </pre>
 </div>
@@ -83,7 +83,7 @@
   <h3>- Inter Splash</h3>
   <pre>
     
-      Admod.getInstance().loadSplashInterAds(this,"interstitial_id",25000,5000, new InterCallback(){
+      Admob.getInstance().loadSplashInterAds(this,"interstitial_id",25000,5000, new InterCallback(){
             @Override
             public void onAdClosed() {
                 startActivity(new Intent(Splash.this,MainActivity.class));
@@ -104,7 +104,7 @@
 <pre>
   private InterstitialAd mInterstitialAd;
 
-   Admod.getInstance().loadInterAds(this, "interstitial_id" new InterCallback() {
+   Admob.getInstance().loadInterAds(this, "interstitial_id" new InterCallback() {
             @Override
             public void onInterstitialLoad(InterstitialAd interstitialAd) {
                 super.onInterstitialLoad(interstitialAd);
@@ -114,7 +114,7 @@
 </pre>
 <h4>Show interstitialAds</h4>
 <pre>
-   Admod.getInstance().showInterAds(MainActivity.this, mInterstitialAd, new InterCallback() {
+   Admob.getInstance().showInterAds(MainActivity.this, mInterstitialAd, new InterCallback() {
                     @Override
                     public void onAdClosed() {
                         startActivity(new Intent(MainActivity.this,MainActivity3.class));
@@ -134,10 +134,10 @@
 <h2>- RewardAds</h2>
 <div class="content">
   <h4>Init RewardAds</h4>
-<pre>  Admod.getInstance().initRewardAds(this,reward_id);</pre>
+<pre>  Admob.getInstance().initRewardAds(this,reward_id);</pre>
 <h4>Show RewardAds</h4>
 <pre>
-  Admod.getInstance().showRewardAds(MainActivity.this,new RewardCallback(){
+  Admob.getInstance().showRewardAds(MainActivity.this,new RewardCallback(){
                     @Override
                     public void onEarnedReward(RewardItem rewardItem) {
                         // code here
@@ -176,12 +176,12 @@
      
      native_ads = findViewById(R.id.native_ads);
      
-      Admod.getInstance().loadNativeAd(this, "native_id", new NativeCallback() {
+      Admob.getInstance().loadNativeAd(this, "native_id", new NativeCallback() {
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {
                 NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_native, null);
                 native_ads.addView(adView);
-                Admod.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
             }
         });
            @Override
@@ -194,7 +194,7 @@
 
 <h4>Hide all ads</h4>
 <pre>
- Admod.getInstance().setShowAllAds(true);
+ Admob.getInstance().setShowAllAds(true);
  true - show all ads
  false - hide all ads
 </pre>

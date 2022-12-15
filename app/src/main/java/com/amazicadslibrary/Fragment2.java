@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.amazic.ads.callback.NativeCallback;
-import com.amazic.ads.util.Admod;
+import com.amazic.ads.util.Admob;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 
@@ -22,13 +22,13 @@ public class Fragment2 extends Fragment {
         View view = inflater.inflate(R.layout.fragment2,container,false);
         fr_ads1 = view.findViewById(R.id.fr_ads1);
         try {
-            Admod.getInstance().loadNativeAd(getContext(), getString(R.string.admod_native_id), new NativeCallback() {
+            Admob.getInstance().loadNativeAd(getContext(), getString(R.string.Admob_native_id), new NativeCallback() {
                 @Override
                 public void onNativeAdLoaded(NativeAd nativeAd) {
                     NativeAdView adView = (NativeAdView) LayoutInflater.from(getActivity()).inflate(R.layout.ads_native, null);
                     fr_ads1.removeAllViews();
                     fr_ads1.addView(adView);
-                    Admod.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                    Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
                 }
 
                 @Override
@@ -47,6 +47,6 @@ public class Fragment2 extends Fragment {
     public void onViewCreated(View view,Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-      //  Admod.getInstance().loadNativeFragment(getActivity(),getString(R.string.admod_native_id),view);
+      //  Admob.getInstance().loadNativeFragment(getActivity(),getString(R.string.Admob_native_id),view);
     }
 }

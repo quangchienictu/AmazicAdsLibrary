@@ -26,7 +26,7 @@ public class MyApplication extends AdsApplication {
 
     @Override
     public String getResumeAdId() {
-        return getString(R.string.admod_app_open_ad_id);
+        return getString(R.string.Admob_app_open_ad_id);
     }
 
     @Override

@@ -64,9 +64,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
-public class Admod {
-    private static Admod INSTANCE;
-    private static final String TAG = "Admod";
+public class Admob {
+    private static Admob INSTANCE;
+    private static final String TAG = "Admob";
     private LoadingAdsDialog dialog;
     private int currentClicked = 0;
     private int numShowAds = 3;
@@ -94,14 +94,14 @@ public class Admod {
     public static boolean isShowAllAds = true;
     private boolean isFan = false;
 
-    public static Admod getInstance() {
+    public static Admob getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new Admod();
+            INSTANCE = new Admob();
         }
         return INSTANCE;
     }
 
-    public void initAdmod(Context context, List<String> testDeviceList) {
+    public void initAdmob(Context context, List<String> testDeviceList) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             String processName = Application.getProcessName();
             String packageName = context.getPackageName();
@@ -116,7 +116,7 @@ public class Admod {
         this.context = context;
     }
 
-    public void initAdmod(Context context) {
+    public void initAdmob(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             String processName = Application.getProcessName();
             String packageName = context.getPackageName();
@@ -584,7 +584,7 @@ public class Admod {
     }
 
     private void showInterAdByTimes(final Context context, InterstitialAd mInterstitialAd, final InterCallback callback, final boolean shouldReloadAds) {
-        Helper.setupAdmodData(context);
+        Helper.setupAdmobData(context);
         if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
             callback.onAdClosed();
             callback.onNextAction();
@@ -731,87 +731,87 @@ public class Admod {
      load and show ads inter
      */
     public void loadAndShowInter(AppCompatActivity activity, String idInter, int timeDelay, int timeOut, InterCallback callback){
-            if (!isNetworkConnected()) {
-                callback.onAdClosed();
-                callback.onNextAction();
-                return;
-            }
-            if (AppPurchase.getInstance().isPurchased(context)&&!isShowAllAds&&!isShowInter) {
-                callback.onAdClosed();
-                callback.onNextAction();
-                return;
-            }
+        if (!isNetworkConnected()) {
+            callback.onAdClosed();
+            callback.onNextAction();
+            return;
+        }
+        if (AppPurchase.getInstance().isPurchased(context)&&!isShowAllAds&&!isShowInter) {
+            callback.onAdClosed();
+            callback.onNextAction();
+            return;
+        }
 
-            if (AppOpenManager.getInstance().isInitialized()) {
-                AppOpenManager.getInstance().disableAppResumeWithActivity(activity.getClass());
-            }
-            Dialog dialog2 = new LoadingAdsDialog(activity);
-            dialog2.show();
-            InterstitialAd.load(activity, idInter, getAdRequestTimeOut(timeOut), new InterstitialAdLoadCallback() {
-                @Override
-                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                    super.onAdFailedToLoad(loadAdError);
-                    dialog2.dismiss();
-                    callback.onAdFailedToLoad(loadAdError);
-                    if (AppOpenManager.getInstance().isInitialized()) {
-                        AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                    }
+        if (AppOpenManager.getInstance().isInitialized()) {
+            AppOpenManager.getInstance().disableAppResumeWithActivity(activity.getClass());
+        }
+        Dialog dialog2 = new LoadingAdsDialog(activity);
+        dialog2.show();
+        InterstitialAd.load(activity, idInter, getAdRequestTimeOut(timeOut), new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                dialog2.dismiss();
+                callback.onAdFailedToLoad(loadAdError);
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                 }
+            }
 
-                @Override
-                public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                    super.onAdLoaded(interstitialAd);
-                    if(interstitialAd!=null){
-                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                            interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
-                                @Override
-                                public void onAdDismissedFullScreenContent() {
-                                    dialog2.dismiss();
-                                    callback.onAdClosed();
-                                    callback.onNextAction();
-                                    if (AppOpenManager.getInstance().isInitialized()) {
-                                        AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                                    }
+            @Override
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                super.onAdLoaded(interstitialAd);
+                if(interstitialAd!=null){
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                            @Override
+                            public void onAdDismissedFullScreenContent() {
+                                dialog2.dismiss();
+                                callback.onAdClosed();
+                                callback.onNextAction();
+                                if (AppOpenManager.getInstance().isInitialized()) {
+                                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                                 }
-
-                                @Override
-                                public void onAdFailedToShowFullScreenContent(AdError adError) {
-                                    dialog2.dismiss();
-                                    callback.onAdClosed();
-                                    callback.onNextAction();
-                                    if (AppOpenManager.getInstance().isInitialized()) {
-                                        AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                                    }
-                                }
-
-                                @Override
-                                public void onAdShowedFullScreenContent() {
-                                    Log.d("TAG", "The ad was shown.");
-                                }
-
-                                @Override
-                                public void onAdClicked() {
-                                    super.onAdClicked();
-                                    FirebaseAnalyticsUtil.logClickAdsEventByActivity(activity,FirebaseAnalyticsUtil.INTER);
-                                    FirebaseAnalyticsUtil.logClickAdsEventAdmob(activity);
-                                    if(timeLimitAds>1000){setTimeLimitInter();}
-                                }
-                            });
-                            if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && interstitialAd != null) {
-                                interstitialAd.show(activity);
-                            } else {
-                               if(interstitialAd!=null){
-                                   if (AppOpenManager.getInstance().isInitialized()) {
-                                       AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                                       dialog2.dismiss();
-                                   }
-                               }
-                                // dialog.dismiss();
                             }
-                        },timeDelay);
-                    }
+
+                            @Override
+                            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                dialog2.dismiss();
+                                callback.onAdClosed();
+                                callback.onNextAction();
+                                if (AppOpenManager.getInstance().isInitialized()) {
+                                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                                }
+                            }
+
+                            @Override
+                            public void onAdShowedFullScreenContent() {
+                                Log.d("TAG", "The ad was shown.");
+                            }
+
+                            @Override
+                            public void onAdClicked() {
+                                super.onAdClicked();
+                                FirebaseAnalyticsUtil.logClickAdsEventByActivity(activity,FirebaseAnalyticsUtil.INTER);
+                                FirebaseAnalyticsUtil.logClickAdsEventAdmob(activity);
+                                if(timeLimitAds>1000){setTimeLimitInter();}
+                            }
+                        });
+                        if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && interstitialAd != null) {
+                            interstitialAd.show(activity);
+                        } else {
+                            if(interstitialAd!=null){
+                                if (AppOpenManager.getInstance().isInitialized()) {
+                                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                                    dialog2.dismiss();
+                                }
+                            }
+                            // dialog.dismiss();
+                        }
+                    },timeDelay);
                 }
-            });
+            }
+        });
     }
 
 
@@ -830,7 +830,7 @@ public class Admod {
             adCallback.onAdFailedToShow(0);
             return;
         } else {
-            Admod.this.rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+            Admob.this.rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
                 public void onAdDismissedFullScreenContent() {
                     super.onAdDismissedFullScreenContent();
@@ -883,8 +883,8 @@ public class Admod {
         RewardedAd.load(context, id, getAdRequest(), new RewardedAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
-                Admod.this.rewardedAd = rewardedAd;
-                Admod.this.rewardedAd.setOnPaidEventListener(adValue -> {
+                Admob.this.rewardedAd = rewardedAd;
+                Admob.this.rewardedAd.setOnPaidEventListener(adValue -> {
 
                     Log.d(TAG, "OnPaidEvent Reward:" + adValue.getValueMicros());
                     FirebaseUtil.logPaidAdImpression(context,
@@ -1264,9 +1264,9 @@ public class Admod {
     public void onCheckShowSplashWhenFail(final AppCompatActivity activity, final InterCallback callback, int timeDelay) {
         (new Handler(activity.getMainLooper())).postDelayed(new Runnable() {
             public void run() {
-                if (Admod.this.interstitialSplashLoaded() && !Admod.this.isShowLoadingSplash) {
+                if (Admob.this.interstitialSplashLoaded() && !Admob.this.isShowLoadingSplash) {
                     Log.i("AperoAdmob", "show ad splash when show fail in background");
-                    Admod.getInstance().onShowSplash(activity, callback);
+                    Admob.getInstance().onShowSplash(activity, callback);
                 }
 
             }

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.amazic.ads.callback.InterCallback;
-import com.amazic.ads.util.Admod;
+import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AppIronSource;
 import com.google.android.gms.ads.LoadAdError;
 
@@ -20,7 +20,7 @@ public class SplashIS extends AppCompatActivity {
         AppIronSource.getInstance().setOpenActivityAfterShowInterAds(true);
        /* AppIronSource.getInstance().setTimeLimit(60000);
         AppIronSource.getInstance().setShowAllAds(false);*/
-        Admod.getInstance().setShowAllAds(false);
+        Admob.getInstance().setShowAllAds(false);
         loadAndShowInterAds();
     }
 

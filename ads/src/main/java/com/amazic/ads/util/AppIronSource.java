@@ -120,6 +120,7 @@ public class AppIronSource {
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         if(isShowAllAds){
             destroyBanner();
+            adContainer.removeAllViews();
             loadBanner(mActivity, adContainer, containerShimmer);
         }else{
             adContainer.removeAllViews();

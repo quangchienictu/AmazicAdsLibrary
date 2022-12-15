@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.callback.NativeCallback;
-import com.amazic.ads.util.Admod;
+import com.amazic.ads.util.Admob;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -25,14 +25,14 @@ public class Fragment1 extends Fragment {
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment1,container,false);
-        Admod.getInstance().loadBannerFragment(requireActivity(),getString(R.string.admod_banner_id),view);
+        Admob.getInstance().loadBannerFragment(requireActivity(),getString(R.string.Admob_banner_id),view);
         return view;
 
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        Admod.getInstance().loadInterAds(getContext(),getString(R.string.admod_interstitial_id), new InterCallback(){
+        Admob.getInstance().loadInterAds(getContext(),getString(R.string.Admob_interstitial_id), new InterCallback(){
             @Override
             public void onInterstitialLoad(InterstitialAd interstitialAd) {
                 super.onInterstitialLoad(interstitialAd);
@@ -43,7 +43,7 @@ public class Fragment1 extends Fragment {
         btnclick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Admod.getInstance().showInterAds(getActivity(),mInterstitialAd,new InterCallback(){
+                Admob.getInstance().showInterAds(getActivity(),mInterstitialAd,new InterCallback(){
                     @Override
                     public void onAdClosed() {
                         super.onAdClosed();
