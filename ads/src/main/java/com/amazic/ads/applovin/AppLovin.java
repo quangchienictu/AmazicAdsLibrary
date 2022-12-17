@@ -16,7 +16,9 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.amazic.ads.R;
+import com.amazic.ads.applovin.AppLovinCallback;
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
@@ -112,6 +114,15 @@ public class AppLovin {
         this.context = context;
     }
 
+    public void setNumShowAds(int numShowAds) {
+        this.numShowAds = numShowAds;
+    }
+
+    public void setNumToShowAds(int numShowAds, int currentClicked) {
+        this.numShowAds = numShowAds;
+        this.currentClicked = currentClicked;
+    }
+
     public MaxInterstitialAd getInterstitialSplash() {
         return interstitialSplash;
     }
@@ -129,6 +140,8 @@ public class AppLovin {
     public void loadSplashInterstitialAds(final Context context, String id, long timeOut, long timeDelay, AppLovinCallback adListener) {
         isTimeDelay = false;
         isTimeout = false;
+        AppOpenManager.getInstance().disableAppResume();
+        AppOpenMax.getInstance().disableAppResume();
         Log.i(TAG, "loadSplashInterstitialAds  start time loading:"
                 + Calendar.getInstance().getTimeInMillis()
                 + " ShowLoadingSplash:" + isShowLoadingSplash);
@@ -139,9 +152,7 @@ public class AppLovin {
             }
             return;
         }
-        if (AppOpenManager.getInstance().isInitialized()) {
-            AppOpenManager.getInstance().disableAppResume();
-        }
+
         interstitialSplash = getInterstitialAds(context, id);
         new Handler().postDelayed(() -> {
             //check delay show ad splash
@@ -200,11 +211,13 @@ public class AppLovin {
 
             @Override
             public void onAdClicked(MaxAd ad) {
-
+                FirebaseUtil.logClickAdsEvent(context, ad.getAdUnitId());
             }
 
             @Override
             public void onAdLoadFailed(String adUnitId, MaxError error) {
+                AppOpenManager.getInstance().enableAppResume();
+                AppOpenMax.getInstance().enableAppResume();
                 Log.e(TAG, "onAdLoadFailed: " + error.getMessage());
                 if (isTimeout)
                     return;
@@ -306,21 +319,34 @@ public class AppLovin {
 
             @Override
             public void onAdDisplayed(MaxAd ad) {
-
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().disableAppResume();
+                }
+                AppOpenMax.getInstance().disableAppResume();
             }
 
             @Override
             public void onAdHidden(MaxAd ad) {
-
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().enableAppResume();
+                }
+                AppOpenMax.getInstance().enableAppResume();
             }
 
             @Override
             public void onAdClicked(MaxAd ad) {
-
+                FirebaseUtil.logClickAdsEvent(context, ad.getAdUnitId());
+                if (adListener != null) {
+                    adListener.onAdClicked();
+                }
             }
 
             @Override
             public void onAdLoadFailed(String adUnitId, MaxError error) {
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().enableAppResume();
+                }
+                AppOpenMax.getInstance().enableAppResume();
                 Log.e(TAG, "onAdLoadFailed: " + error.getMessage());
                 if (isTimeout)
                     return;
@@ -363,15 +389,16 @@ public class AppLovin {
             @Override
             public void onAdDisplayed(MaxAd ad) {
                 Log.d(TAG, "onAdDisplayed: ");
-                isShowLoadingSplash = false;
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().disableAppResume();
+                }
+                AppOpenMax.getInstance().disableAppResume();
             }
 
             @Override
             public void onAdHidden(MaxAd ad) {
-                if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().enableAppResume();
-                }
                 Log.d(TAG, "onAdHidden: " + ((AppCompatActivity) activity).getLifecycle().getCurrentState());
+                isShowLoadingSplash = false;
                 if (adListener != null && ((AppCompatActivity) activity).getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                     adListener.onAdClosed();
                     interstitialSplash = null;
@@ -379,11 +406,18 @@ public class AppLovin {
                         dialog.dismiss();
                     }
                 }
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().enableAppResume();
+                }
+                AppOpenMax.getInstance().enableAppResume();
             }
 
             @Override
             public void onAdClicked(MaxAd ad) {
                 FirebaseUtil.logClickAdsEvent(context, interstitialSplash.getAdUnitId());
+                if (adListener != null) {
+                    adListener.onAdClicked();
+                }
             }
 
             @Override
@@ -423,7 +457,6 @@ public class AppLovin {
             new Handler().postDelayed(() -> {
                 if (activity != null && !activity.isDestroyed())
                     interstitialSplash.showAd();
-                isShowLoadingSplash = false;
             }, 800);
         } else {
             Log.e(TAG, "onShowSplash fail ");
@@ -432,14 +465,19 @@ public class AppLovin {
     }
 
     public void onCheckShowSplashWhenFail(Activity activity, AppLovinCallback callback, int timeDelay) {
-        new Handler(activity.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (AppLovin.getInstance().getInterstitialSplash() != null && AppLovin.getInstance().getInterstitialSplash().isReady() && !AppLovin.getInstance().isShowLoadingSplash) {
-                    AppLovin.getInstance().onShowSplash(activity, callback);
+        if (AppLovin.getInstance().getInterstitialSplash() != null && !AppLovin.getInstance().isShowLoadingSplash) {
+            new Handler(activity.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (AppLovin.getInstance().getInterstitialSplash().isReady()) {
+                        Log.i(TAG, "show ad splash when show fail in background");
+                        AppLovin.getInstance().onShowSplash(activity, callback);
+                    } else {
+                        callback.onAdClosed();
+                    }
                 }
-            }
-        }, timeDelay);
+            }, timeDelay);
+        }
     }
 
 
@@ -474,7 +512,7 @@ public class AppLovin {
 
             @Override
             public void onAdClicked(MaxAd ad) {
-
+                FirebaseUtil.logClickAdsEvent(context, ad.getAdUnitId());
             }
 
             @Override
@@ -521,6 +559,11 @@ public class AppLovin {
      */
     public void showInterstitialAdByTimes(final Context context, MaxInterstitialAd interstitialAd, final InterCallback callback, final boolean shouldReloadAds) {
         AppLovinHelper.setupAppLovinData(context);
+        if (AppOpenManager.getInstance().isInitialized()) {
+            AppOpenManager.getInstance().disableAppResume();
+        }
+        AppOpenMax.getInstance().disableAppResume();
+
         if (AppPurchase.getInstance().isPurchased(context)) {
             callback.onAdClosed();
             return;
@@ -535,7 +578,6 @@ public class AppLovin {
         interstitialAd.setListener(new MaxAdListener() {
             @Override
             public void onAdLoaded(MaxAd ad) {
-
             }
 
             @Override
@@ -546,9 +588,6 @@ public class AppLovin {
 
             @Override
             public void onAdHidden(MaxAd ad) {
-                if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().enableAppResume();
-                }
                 if (callback != null && ((AppCompatActivity) context).getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                     callback.onAdClosed();
                     if (shouldReloadAds) {
@@ -559,23 +598,30 @@ public class AppLovin {
                     }
                 }
                 Log.d(TAG, "onAdHidden: " + ((AppCompatActivity) context).getLifecycle().getCurrentState());
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().disableAppResume();
+                }
+                AppOpenMax.getInstance().enableAppResume();
             }
 
             @Override
             public void onAdClicked(MaxAd ad) {
-                FirebaseUtil.logClickAdsEvent(context, interstitialAd.getAdUnitId());
+                FirebaseUtil.logClickAdsEvent(context, ad.getAdUnitId());
+                if (callback != null) {
+                    callback.onAdClicked();
+                }
             }
 
             @Override
             public void onAdLoadFailed(String adUnitId, MaxError error) {
-
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().enableAppResume();
+                }
+                AppOpenMax.getInstance().enableAppResume();
             }
 
             @Override
             public void onAdDisplayFailed(MaxAd ad, MaxError error) {
-                if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().enableAppResume();
-                }
                 Log.e(TAG, "onAdDisplayFailed: " + error.getMessage());
                 if (callback != null) {
                     callback.onAdClosed();
@@ -583,6 +629,10 @@ public class AppLovin {
                         dialog.dismiss();
                     }
                 }
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().enableAppResume();
+                }
+                AppOpenMax.getInstance().enableAppResume();
             }
         });
         if (AppLovinHelper.getNumClickAdsPerDay(context, interstitialAd.getAdUnitId()) < maxClickAds) {
@@ -610,6 +660,7 @@ public class AppLovin {
                         dialog.dismiss();
                     dialog = new LoadingAdsDialog(context);
                     try {
+                        callback.onInterstitialShow();
                         dialog.setCancelable(false);
                         dialog.show();
                     } catch (Exception e) {
@@ -620,15 +671,7 @@ public class AppLovin {
                     dialog = null;
                     e.printStackTrace();
                 }
-
-                new Handler().postDelayed(() -> {
-                    if (AppOpenManager.getInstance().isInitialized()) {
-                        AppOpenManager.getInstance().disableAppResume();
-                    }
-
-                    interstitialAd.showAd();
-
-                }, 800);
+                new Handler().postDelayed(interstitialAd::showAd, 800);
             }
             currentClicked = 0;
         } else if (callback != null) {
@@ -649,6 +692,31 @@ public class AppLovin {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         loadBanner(mActivity, id, adContainer, containerShimmer);
+    }
+
+    public void loadBanner(final Activity mActivity, String id, final InterCallback adCallback) {
+        final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
+        final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        loadBanner(mActivity, id, adContainer, containerShimmer, adCallback);
+    }
+
+    /**
+     * Load Quảng Cáo Banner Trong Fragment
+     *
+     * @param mActivity
+     * @param id
+     * @param rootView
+     */
+    public void loadBannerFragment(final Activity mActivity, String id, final View rootView) {
+        final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
+        final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
+        loadBanner(mActivity, id, adContainer, containerShimmer);
+    }
+
+    public void loadBannerFragment(final Activity mActivity, String id, final View rootView, final InterCallback adCallback) {
+        final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
+        final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
+        loadBanner(mActivity, id, adContainer, containerShimmer, adCallback);
     }
 
     private void loadBanner(final Activity mActivity, String id, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer) {
@@ -695,12 +763,12 @@ public class AppLovin {
 
             @Override
             public void onAdClicked(MaxAd ad) {
-                FirebaseUtil.logClickAdsEvent(context, id);
+                FirebaseUtil.logClickAdsEvent(context, ad.getAdUnitId());
             }
 
             @Override
             public void onAdLoadFailed(String adUnitId, MaxError error) {
-                Log.e(TAG, "onAdLoadFailed: banner " + error.getMessage());
+                Log.e(TAG, "onAdLoadFailed: banner " + error.getMessage() + "   code:" + error.getCode());
                 containerShimmer.stopShimmer();
                 adContainer.setVisibility(View.GONE);
                 containerShimmer.setVisibility(View.GONE);
@@ -714,80 +782,99 @@ public class AppLovin {
         adView.loadAd();
     }
 
+    private void loadBanner(final Activity mActivity, String id, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, final InterCallback adCallback) {
+        if (AppPurchase.getInstance().isPurchased(mActivity)) {
+            containerShimmer.setVisibility(View.GONE);
+            return;
+        }
+        containerShimmer.setVisibility(View.VISIBLE);
+        containerShimmer.startShimmer();
+        MaxAdView adView = new MaxAdView(id, mActivity);
+        int width = ViewGroup.LayoutParams.MATCH_PARENT;
+        // Banner height on phones and tablets is 50 and 90, respectively
+        int heightPx = mActivity.getResources().getDimensionPixelSize(R.dimen.banner_height);
+        adView.setLayoutParams(new FrameLayout.LayoutParams(width, heightPx));
+        adContainer.addView(adView);
+        adView.setListener(new MaxAdViewAdListener() {
+            @Override
+            public void onAdExpanded(MaxAd ad) {
+
+            }
+
+            @Override
+            public void onAdCollapsed(MaxAd ad) {
+
+            }
+
+            @Override
+            public void onAdLoaded(MaxAd ad) {
+                Log.d(TAG, "onAdLoaded: banner");
+                containerShimmer.stopShimmer();
+                containerShimmer.setVisibility(View.GONE);
+                adContainer.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdDisplayed(MaxAd ad) {
+
+            }
+
+            @Override
+            public void onAdHidden(MaxAd ad) {
+
+            }
+
+            @Override
+            public void onAdClicked(MaxAd ad) {
+                FirebaseUtil.logClickAdsEvent(context, ad.getAdUnitId());
+                if (adCallback != null) {
+                    adCallback.onAdClicked();
+                }
+            }
+
+            @Override
+            public void onAdLoadFailed(String adUnitId, MaxError error) {
+                Log.e(TAG, "onAdLoadFailed: banner " + error.getMessage() + "   code:" + error.getCode());
+                containerShimmer.stopShimmer();
+                adContainer.setVisibility(View.GONE);
+                containerShimmer.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdDisplayFailed(MaxAd ad, MaxError error) {
+
+            }
+        });
+        adView.loadAd();
+    }
 
     public void loadNative(final Activity mActivity, String adUnitId) {
         final FrameLayout frameLayout = mActivity.findViewById(R.id.fl_adplaceholder);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_native);
-        loadNativeAd(mActivity, containerShimmer, frameLayout, adUnitId, R.layout.max_native_custom_ad_view);
+        loadNativeAd(mActivity, containerShimmer, frameLayout, adUnitId, R.layout.custom_native_max_free_size);
     }
 
     public void loadNativeSmall(final Activity mActivity, String adUnitId) {
         final FrameLayout frameLayout = mActivity.findViewById(R.id.fl_adplaceholder);
-        final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_small_native);
-        loadNativeAd(mActivity, containerShimmer, frameLayout, adUnitId, R.layout.max_native_custom_ad_small);
+        final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_native);
+        loadNativeAd(mActivity, containerShimmer, frameLayout, adUnitId, R.layout.custom_native_max_medium);
     }
 
     public void loadNativeFragment(final Activity mActivity, String adUnitId, View parent) {
         final FrameLayout frameLayout = parent.findViewById(R.id.fl_adplaceholder);
         final ShimmerFrameLayout containerShimmer = parent.findViewById(R.id.shimmer_container_native);
-        loadNativeAd(mActivity, containerShimmer, frameLayout, adUnitId, R.layout.max_native_custom_ad_view);
+        loadNativeAd(mActivity, containerShimmer, frameLayout, adUnitId, R.layout.custom_native_max_free_size);
     }
 
     public void loadNativeSmallFragment(final Activity mActivity, String adUnitId, View parent) {
         final FrameLayout frameLayout = parent.findViewById(R.id.fl_adplaceholder);
-        final ShimmerFrameLayout containerShimmer = parent.findViewById(R.id.shimmer_container_small_native);
-        loadNativeAd(mActivity, containerShimmer, frameLayout, adUnitId, R.layout.max_native_custom_ad_small);
+        final ShimmerFrameLayout containerShimmer = parent.findViewById(R.id.shimmer_container_native);
+        loadNativeAd(mActivity, containerShimmer, frameLayout, adUnitId, R.layout.custom_native_max_medium);
     }
 
 
-    public void loadNativeAd(Activity activity, FrameLayout nativeAdLayout, String id, int layoutCustomNative) {
-        if (AppPurchase.getInstance().isPurchased(context)) {
-            nativeAdLayout.setVisibility(View.GONE);
-            return;
-        }
-        nativeAdLayout.setVisibility(View.VISIBLE);
-
-        MaxNativeAdViewBinder binder = new MaxNativeAdViewBinder.Builder(layoutCustomNative)
-                .setTitleTextViewId(R.id.ad_headline)
-                .setBodyTextViewId(R.id.ad_body)
-                .setAdvertiserTextViewId(R.id.ad_advertiser)
-                .setIconImageViewId(R.id.ad_app_icon)
-                .setMediaContentViewGroupId(R.id.ad_media)
-                .setOptionsContentViewGroupId(R.id.ad_options_view)
-                .setCallToActionButtonId(R.id.ad_call_to_action)
-                .build();
-
-        nativeAdView = new MaxNativeAdView(binder, activity);
-
-        MaxNativeAdLoader nativeAdLoader = new MaxNativeAdLoader(id, activity);
-        nativeAdLoader.setNativeAdListener(new MaxNativeAdListener() {
-            @Override
-            public void onNativeAdLoaded(final MaxNativeAdView nativeAdView, final MaxAd ad) {
-                Log.d(TAG, "onNativeAdLoaded ");
-                nativeAdLayout.removeAllViews();
-                // Add ad view to view.
-                nativeAdLayout.setVisibility(View.VISIBLE);
-                nativeAdLayout.addView(nativeAdView);
-            }
-
-            @Override
-            public void onNativeAdLoadFailed(final String adUnitId, final MaxError error) {
-                Log.e(TAG, "onAdFailedToLoad: " + error.getMessage());
-                nativeAdLayout.removeAllViews();
-                nativeAdLayout.setVisibility(View.GONE);
-            }
-            @Override
-            public void onNativeAdClicked(final MaxAd ad) {
-                Log.e(TAG, "`onNativeAdClicked`: ");
-                nativeAdLayout.removeAllViews();
-                nativeAdLayout.setVisibility(View.GONE);
-                nativeAdView = new MaxNativeAdView(binder, activity);
-                nativeAdLoader.loadAd(nativeAdView);
-            }
-        });
-        nativeAdLoader.loadAd(nativeAdView);
-    }
     public void loadNativeAd(Activity activity, ShimmerFrameLayout containerShimmer, FrameLayout nativeAdLayout, String id, int layoutCustomNative) {
+
         if (AppPurchase.getInstance().isPurchased(context)) {
             containerShimmer.setVisibility(View.GONE);
             return;
@@ -795,7 +882,8 @@ public class AppLovin {
         containerShimmer.setVisibility(View.VISIBLE);
         containerShimmer.startShimmer();
 
-
+        nativeAdLayout.removeAllViews();
+        nativeAdLayout.setVisibility(View.GONE);
         MaxNativeAdViewBinder binder = new MaxNativeAdViewBinder.Builder(layoutCustomNative)
                 .setTitleTextViewId(R.id.ad_headline)
                 .setBodyTextViewId(R.id.ad_body)
@@ -813,7 +901,6 @@ public class AppLovin {
             @Override
             public void onNativeAdLoaded(final MaxNativeAdView nativeAdView, final MaxAd ad) {
                 Log.d(TAG, "onNativeAdLoaded ");
-                nativeAdLayout.removeAllViews();
                 containerShimmer.stopShimmer();
                 containerShimmer.setVisibility(View.GONE);
                 // Add ad view to view.
@@ -824,11 +911,11 @@ public class AppLovin {
             @Override
             public void onNativeAdLoadFailed(final String adUnitId, final MaxError error) {
                 Log.e(TAG, "onAdFailedToLoad: " + error.getMessage());
-                nativeAdLayout.removeAllViews();
                 containerShimmer.stopShimmer();
                 containerShimmer.setVisibility(View.GONE);
                 nativeAdLayout.setVisibility(View.GONE);
             }
+
             @Override
             public void onNativeAdClicked(final MaxAd ad) {
                 Log.e(TAG, "`onNativeAdClicked`: ");
@@ -836,6 +923,7 @@ public class AppLovin {
                 containerShimmer.startShimmer();
                 nativeAdLayout.removeAllViews();
                 nativeAdLayout.setVisibility(View.GONE);
+
                 nativeAdView = new MaxNativeAdView(binder, activity);
                 nativeAdLoader.loadAd(nativeAdView);
             }
@@ -843,8 +931,8 @@ public class AppLovin {
         nativeAdLoader.loadAd(nativeAdView);
     }
 
-
     public void loadNativeAd(Activity activity, String id, int layoutCustomNative, AppLovinCallback callback) {
+
         if (AppPurchase.getInstance().isPurchased(context)) {
             callback.onAdClosed();
             return;
@@ -861,7 +949,7 @@ public class AppLovin {
                 .build();
 
         nativeAdView = new MaxNativeAdView(binder, activity);
-
+        Log.e(TAG, "load native");
         MaxNativeAdLoader nativeAdLoader = new MaxNativeAdLoader(id, activity);
         nativeAdLoader.setNativeAdListener(new MaxNativeAdListener() {
             @Override
@@ -879,7 +967,9 @@ public class AppLovin {
             @Override
             public void onNativeAdClicked(final MaxAd ad) {
                 Log.e(TAG, "onNativeAdClicked: ");
+                FirebaseUtil.logClickAdsEvent(context, ad.getAdUnitId());
                 callback.onAdClicked();
+
             }
         });
         nativeAdLoader.loadAd(nativeAdView);
@@ -974,6 +1064,7 @@ public class AppLovin {
 
             @Override
             public void onAdClicked(MaxAd ad) {
+                FirebaseUtil.logClickAdsEvent(context, ad.getAdUnitId());
                 callback.onAdClicked();
             }
 
@@ -993,14 +1084,17 @@ public class AppLovin {
         return rewardedAd;
     }
 
-    public MaxRewardedAd getRewardAd(Activity activity, String id ) {
+    public MaxRewardedAd getRewardAd(Activity activity, String id) {
         MaxRewardedAd rewardedAd = MaxRewardedAd.getInstance(id, activity);
         rewardedAd.loadAd();
         return rewardedAd;
     }
 
-    public void showRewardAd(Activity activity, MaxRewardedAd maxRewardedAd,AppLovinCallback callback) {
-        if (maxRewardedAd.isReady()){
+    public void showRewardAd(Activity activity, MaxRewardedAd maxRewardedAd, AppLovinCallback callback) {
+        if (maxRewardedAd.isReady()) {
+            if (AppOpenManager.getInstance().isInitialized()) {
+                AppOpenManager.getInstance().disableAppResume();
+            }
             maxRewardedAd.setListener(new MaxRewardedAdListener() {
                 @Override
                 public void onRewardedVideoStarted(MaxAd ad) {
@@ -1016,6 +1110,10 @@ public class AppLovin {
                 public void onUserRewarded(MaxAd ad, MaxReward reward) {
                     callback.onUserRewarded(reward);
                     Log.d(TAG, "onUserRewarded: ");
+                    if (AppOpenManager.getInstance().isInitialized()) {
+                        AppOpenManager.getInstance().enableAppResume();
+                    }
+                    AppOpenMax.getInstance().enableAppResume();
                 }
 
                 @Override
@@ -1033,10 +1131,15 @@ public class AppLovin {
                 public void onAdHidden(MaxAd ad) {
                     callback.onAdClosed();
                     Log.d(TAG, "onAdHidden: ");
+                    if (AppOpenManager.getInstance().isInitialized()) {
+                        AppOpenManager.getInstance().enableAppResume();
+                    }
+                    AppOpenMax.getInstance().enableAppResume();
                 }
 
                 @Override
                 public void onAdClicked(MaxAd ad) {
+                    FirebaseUtil.logClickAdsEvent(context, ad.getAdUnitId());
                     callback.onAdClicked();
                 }
 
@@ -1044,26 +1147,28 @@ public class AppLovin {
                 public void onAdLoadFailed(String adUnitId, MaxError error) {
                     Log.d(TAG, "onAdLoadFailed: " + error.getMessage());
                     callback.onAdFailedToLoad(error);
+                    callback.onAdClosed();
                 }
 
                 @Override
                 public void onAdDisplayFailed(MaxAd ad, MaxError error) {
                     Log.d(TAG, "onAdDisplayFailed: " + error.getMessage());
                     callback.onAdFailedToShow(error);
+                    callback.onAdClosed();
                 }
             });
             maxRewardedAd.showAd();
-        }else {
-            Log.e(TAG, "showRewardAd error -  reward ad not ready" );
+        } else {
+            Log.e(TAG, "showRewardAd error -  reward ad not ready");
             callback.onAdFailedToShow(null);
         }
     }
 
-    public void showRewardAd(Activity activity, MaxRewardedAd maxRewardedAd ) {
-        if (maxRewardedAd.isReady()){
+    public void showRewardAd(Activity activity, MaxRewardedAd maxRewardedAd) {
+        if (maxRewardedAd.isReady()) {
             maxRewardedAd.showAd();
         } else {
-            Log.e(TAG, "showRewardAd error -  reward ad not ready" );
+            Log.e(TAG, "showRewardAd error -  reward ad not ready");
         }
     }
 }

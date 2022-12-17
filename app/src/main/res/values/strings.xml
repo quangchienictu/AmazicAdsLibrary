@@ -8,11 +8,9 @@
     <string name="admod_app_reward_id">ca-app-pub-3940256099942544/5224354917</string>
 
 
-    <string name="applovin_test_inter">95bbc30d840c2513</string>
-    <!--    <string name="applovin_test_inter">cb0a8303fedc7687</string>-->
-    <string name="applovin_test_banner">3341bc83715b8ea6</string>
-    <!--    <string name="applovin_test_banner">51999ea397c63f9c</string>-->
-    <string name="applovin_test_native">2da3ed7483bec0fc</string>
-    <!--    <string name="applovin_test_native">c810c577b4c36ee5</string>-->
-    <string name="applovin_test_reward">8ba0c02d7f3a3d59</string>
+    <string name="applovin_test_inter">b56cd74f67d2f3a5</string>
+    <string name="applovin_test_banner">142c465bf6559f67</string>
+    <string name="applovin_test_native">762faecb585564aa</string>
+    <string name="applovin_test_reward">fda4c16ab64e3d8c</string>
+    <string name="applovin_test_resume">c0313cbb7f070dc6</string>
 </resources>

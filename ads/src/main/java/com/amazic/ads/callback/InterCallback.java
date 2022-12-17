@@ -24,4 +24,7 @@ public class InterCallback {
     public void onAdClosedByUser(){
 
     }
+    public void onInterstitialShow() {
+
+    }
 }

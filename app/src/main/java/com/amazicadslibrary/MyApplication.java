@@ -1,5 +1,6 @@
 package com.amazicadslibrary;
 
+import com.amazic.ads.applovin.AppOpenMax;
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.AdsApplication;
@@ -12,6 +13,7 @@ public class MyApplication extends AdsApplication {
     public void onCreate() {
         super.onCreate();
         AppOpenManager.getInstance().disableAppResumeWithActivity(Splash.class);
+        AppOpenMax.getInstance().disableAppResumeWithActivity(Splash.class);
     }
 
     @Override
@@ -32,5 +34,10 @@ public class MyApplication extends AdsApplication {
     @Override
     public Boolean buildDebug() {
         return true;
+    }
+
+    @Override
+    public Boolean AppOpenIsAdmob() {
+        return false;
     }
 }

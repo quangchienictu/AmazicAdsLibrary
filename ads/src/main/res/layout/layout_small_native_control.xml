@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_card_ads"
         android:orientation="vertical"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
 
     <include layout="@layout/load_fb_small_native" />

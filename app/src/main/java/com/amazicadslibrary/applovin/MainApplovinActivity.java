@@ -2,17 +2,21 @@ package com.amazicadslibrary.applovin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.amazic.ads.applovin.AppLovin;
 import com.amazic.ads.applovin.AppLovinCallback;
 import com.amazic.ads.callback.InterCallback;
 import com.amazicadslibrary.R;
+import com.applovin.mediation.MaxError;
+import com.applovin.mediation.MaxReward;
 import com.applovin.mediation.ads.MaxInterstitialAd;
 import com.applovin.mediation.ads.MaxRewardedAd;
 import com.applovin.mediation.nativeAds.MaxNativeAdView;
@@ -39,7 +43,18 @@ public class MainApplovinActivity extends AppCompatActivity {
         btnLoadReward = findViewById(R.id.btnLoadReward);
         btnLoadReward.setOnClickListener(view -> {
             if (maxRewardedAd != null && maxRewardedAd.isReady()) {
-                AppLovin.getInstance().showRewardAd(this, maxRewardedAd);
+                AppLovin.getInstance().showRewardAd(this, maxRewardedAd,new AppLovinCallback(){
+                    @Override
+                    public void onAdClosed() {
+                        super.onAdClosed();
+                        startActivity(new Intent(MainApplovinActivity.this, MainActivityApplovin2.class));
+                    }
+
+                    @Override
+                    public void onUserRewarded(MaxReward reward) {
+                        super.onUserRewarded(reward);
+                    }
+                });
             } else {
                 maxRewardedAd = AppLovin.getInstance().getRewardAd(this, getString(R.string.applovin_test_reward), new AppLovinCallback() {
                     @Override
@@ -50,7 +65,7 @@ public class MainApplovinActivity extends AppCompatActivity {
 
                     @Override
                     public void onAdClosed() {
-                        startActivity(new Intent(MainApplovinActivity.this, SimpleListActivity.class));
+                        startActivity(new Intent(MainApplovinActivity.this, MainActivityApplovin2.class));
                     }
                 });
             }
@@ -64,28 +79,26 @@ public class MainApplovinActivity extends AppCompatActivity {
                         @Override
                         public void onAdClosed() {
                             super.onAdClosed();
-                            startActivity(new Intent(MainApplovinActivity.this, SimpleListActivity.class));
+                            startActivity(new Intent(MainApplovinActivity.this, MainActivityApplovin2.class));
                         }
                     }, true);
                 } else {
                     Toast.makeText(MainApplovinActivity.this, "interstitial not loaded", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(MainApplovinActivity.this, SimpleListActivity.class));
+                    startActivity(new Intent(MainApplovinActivity.this, MainActivityApplovin2.class));
                 }
             }
         });
-        //get native and add to view
-/*        AppLovin.getInstance().loadNativeAd(this, "c810c577b4c36ee5", com.ads.control.R.layout.max_native_custom_ad_view, new AppLovinCallback() {
+
+        AppLovin.getInstance().loadNativeAd(this,  getString(R.string.applovin_test_native), R.layout.layout_native_custom, new AppLovinCallback(){
             @Override
             public void onUnifiedNativeAdLoaded(MaxNativeAdView unifiedNativeAd) {
                 super.onUnifiedNativeAdLoaded(unifiedNativeAd);
-                findViewById(R.id.shimmer_container_native).setVisibility(View.GONE);
-                FrameLayout fl = findViewById(R.id.fl_adplaceholder);
-                fl.setVisibility(View.VISIBLE);
-                fl.addView(unifiedNativeAd);
+                frAds.removeAllViews();
+                frAds.addView(unifiedNativeAd);
             }
-        });*/
+        });
 
-        AppLovin.getInstance().loadNativeAd(this, frAds, getString(R.string.applovin_test_native), R.layout.layout_native_custom);
+
 
     }
 
