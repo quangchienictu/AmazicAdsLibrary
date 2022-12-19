@@ -38,6 +38,6 @@ public class MyApplication extends AdsApplication {
 
     @Override
     public Boolean AppOpenIsAdmob() {
-        return false;
+        return true;
     }
 }

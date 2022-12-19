@@ -17,11 +17,12 @@ public abstract class AdsApplication extends Application{
         Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG);
         Admod.getInstance().initAdmod(this, getListTestDeviceId());
         if (enableAdsResume()) {
-            if(AppOpenIsAdmob()){
+            AppOpenManager.getInstance().init(this, getResumeAdId());
+           /* if(AppOpenIsAdmob()){
                 AppOpenManager.getInstance().init(this, getResumeAdId());
             }else{
                 AppOpenMax.getInstance().init(this, getResumeAdId());
-            }
+            }*/
         }
     }
     public abstract boolean enableAdsResume();

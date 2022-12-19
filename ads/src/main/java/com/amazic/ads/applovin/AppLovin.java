@@ -140,7 +140,6 @@ public class AppLovin {
     public void loadSplashInterstitialAds(final Context context, String id, long timeOut, long timeDelay, AppLovinCallback adListener) {
         isTimeDelay = false;
         isTimeout = false;
-        AppOpenManager.getInstance().disableAppResume();
         AppOpenMax.getInstance().disableAppResume();
         Log.i(TAG, "loadSplashInterstitialAds  start time loading:"
                 + Calendar.getInstance().getTimeInMillis()
@@ -319,18 +318,12 @@ public class AppLovin {
 
             @Override
             public void onAdDisplayed(MaxAd ad) {
-                if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().disableAppResume();
-                }
-                AppOpenMax.getInstance().disableAppResume();
+
             }
 
             @Override
             public void onAdHidden(MaxAd ad) {
-                if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().enableAppResume();
-                }
-                AppOpenMax.getInstance().enableAppResume();
+
             }
 
             @Override
@@ -343,10 +336,6 @@ public class AppLovin {
 
             @Override
             public void onAdLoadFailed(String adUnitId, MaxError error) {
-                if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().enableAppResume();
-                }
-                AppOpenMax.getInstance().enableAppResume();
                 Log.e(TAG, "onAdLoadFailed: " + error.getMessage());
                 if (isTimeout)
                     return;
@@ -599,7 +588,7 @@ public class AppLovin {
                 }
                 Log.d(TAG, "onAdHidden: " + ((AppCompatActivity) context).getLifecycle().getCurrentState());
                 if (AppOpenManager.getInstance().isInitialized()) {
-                    AppOpenManager.getInstance().disableAppResume();
+                    AppOpenManager.getInstance().enableAppResume();
                 }
                 AppOpenMax.getInstance().enableAppResume();
             }
