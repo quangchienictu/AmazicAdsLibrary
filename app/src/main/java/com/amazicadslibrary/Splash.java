@@ -27,7 +27,6 @@ public class Splash extends AppCompatActivity {
        Admob.getInstance().iShowAllAds(true);
         Admob.getInstance().isEventLoadTimeLoadAdsSplash(true);
         Admob.getInstance().isEventLoadTimeShowAdsInter(true);
-
         // Admob
         AppPurchase.getInstance().setBillingListener(new BillingListener() {
             @Override

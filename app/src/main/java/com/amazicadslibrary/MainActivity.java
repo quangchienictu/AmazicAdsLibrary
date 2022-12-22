@@ -20,6 +20,9 @@ import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.gms.ads.rewarded.RewardItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private InterstitialAd mInterstitialAd;
     private FrameLayout native_ads;
@@ -164,7 +167,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadAdsNative(){
-        Admob.getInstance().loadNativeAd(this, getString(R.string.admod_native_id), new NativeCallback() {
+        List<String> listID = new ArrayList<>();
+        listID.add("1");
+        listID.add("2");
+        listID.add("3");
+        listID.add("4");
+        listID.add("x");
+        listID.add("6");
+
+        Admob.getInstance().loadNativeAdFloor(this, listID, new NativeCallback() {
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {
                 NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_native, null);

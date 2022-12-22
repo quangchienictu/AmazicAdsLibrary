@@ -1079,8 +1079,40 @@ public class Admob {
         }else{
             callback.onAdFailedToLoad();
         }
+    }
+    /* =============================  Native Ads Floor  ==========================================*/
+    public void loadNativeAdFloor(Context context, List<String> listID, final NativeCallback callback){
+        if(listID.size()==0){
+            callback.onAdFailedToLoad();
+            return;
+        }
+        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
+            callback.onAdFailedToLoad();
+            return;
+        }
+        NativeCallback callback1 = new NativeCallback(){
+            @Override
+            public void onNativeAdLoaded(NativeAd nativeAd) {
+                super.onNativeAdLoaded(nativeAd);
+                callback.onNativeAdLoaded(nativeAd);
+            }
 
-
+            @Override
+            public void onAdFailedToLoad() {
+                super.onAdFailedToLoad();
+                if(listID.size()>0){
+                    listID.remove(0);
+                    loadNativeAdFloor(context,listID,this);
+                }
+            }
+        };
+        if(listID.size()>0){
+            int position = 0;
+            Log.e(TAG,"Load Native ID :"+listID.get(position));
+            loadNativeAd(context,listID.get(position),callback1);
+        }else{
+            callback.onAdFailedToLoad();
+        }
     }
 
     public void pushAdsToViewCustom(NativeAd nativeAd, NativeAdView adView) {
