@@ -44,4 +44,9 @@ public class MyApplication extends AdsApplication {
     public Boolean buildDebug() {
         return true;
     }
+
+    @Override
+    public Boolean enableAdsResumeFloor() {
+        return false;
+    }
 }

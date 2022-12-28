@@ -218,42 +218,42 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
         loadCallback = new AppOpenAd.AppOpenAdLoadCallback() {
 
-                    /**
-                     * Called when an app open ad has loaded.
-                     *
-                     * @param ad the loaded app open ad.
-                     */
+            /**
+             * Called when an app open ad has loaded.
+             *
+             * @param ad the loaded app open ad.
+             */
 
 
-                    @Override
-                    public void onAdLoaded(AppOpenAd ad) {
-                        Log.d(TAG, "onAppOpenAdLoaded: isSplash = " + isSplash);
-                        if (!isSplash) {
-                            AppOpenManager.this.appResumeAd = ad;
-                            AppOpenManager.this.appResumeLoadTime = (new Date()).getTime();
-                        } else {
-                            AppOpenManager.this.splashAd = ad;
-                            AppOpenManager.this.splashLoadTime = (new Date()).getTime();
-                        }
+            @Override
+            public void onAdLoaded(AppOpenAd ad) {
+                Log.d(TAG, "onAppOpenAdLoaded: isSplash = " + isSplash);
+                if (!isSplash) {
+                    AppOpenManager.this.appResumeAd = ad;
+                    AppOpenManager.this.appResumeLoadTime = (new Date()).getTime();
+                } else {
+                    AppOpenManager.this.splashAd = ad;
+                    AppOpenManager.this.splashLoadTime = (new Date()).getTime();
+                }
 
 
-                    }
+            }
 
 
-                    /**
-                     * Called when an app open ad has failed to load.
-                     *
-                     * @param loadAdError the error.
-                     */
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        Log.d(TAG, "onAppOpenAdFailedToLoad: isSplash" + isSplash + " message " + loadAdError.getMessage());
+            /**
+             * Called when an app open ad has failed to load.
+             *
+             * @param loadAdError the error.
+             */
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                Log.d(TAG, "onAppOpenAdFailedToLoad: isSplash" + isSplash + " message " + loadAdError.getMessage());
 //                        if (isSplash && fullScreenContentCallback!=null)
 //                            fullScreenContentCallback.onAdDismissedFullScreenContent();
-                    }
+            }
 
 
-                };
+        };
         if (currentActivity != null) {
             if (AppPurchase.getInstance().isPurchased(currentActivity))
                 return;
@@ -266,6 +266,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
 
     public void fetchAdFloor(boolean isSplash,List<String> listIDFloorx) {
+        Log.e("fetchAdFloorx lisst",listIDFloorx.toString());
         if(listIDFloorx.size()==0){
             return;
         }

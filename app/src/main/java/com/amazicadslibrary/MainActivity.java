@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         listID.add("x");
         listID.add("6");
 
-        Admob.getInstance().loadNativeAdFloor(this, listID, new NativeCallback() {
+        Admob.getInstance().loadNativeAdFloor(this, listID,"", new NativeCallback() {
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {
                 NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_native, null);

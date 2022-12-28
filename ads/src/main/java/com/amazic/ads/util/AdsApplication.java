@@ -12,8 +12,12 @@ public abstract class AdsApplication extends Application{
         AppUtil.BUILD_DEBUG = buildDebug();
         Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG);
         Admob.getInstance().initAdmod(this, getListTestDeviceId());
-        if(enableAdsResume()) {
+        if(!enableAdsResumeFloor()){
+            if(enableAdsResume()) {
                 AppOpenManager.getInstance().init(this, getResumeAdId());
+            }
+        }else{
+            AppOpenManager.getInstance().init(this, "");
         }
     }
     public abstract boolean enableAdsResume();
@@ -22,4 +26,5 @@ public abstract class AdsApplication extends Application{
 
     public abstract String getResumeAdId();
     public abstract Boolean buildDebug();
+    public abstract Boolean enableAdsResumeFloor();
 }

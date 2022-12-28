@@ -104,7 +104,7 @@ public class Admob {
         }
         return INSTANCE;
     }
-    
+
     public void initAdmod(Context context, List<String> testDeviceList) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             String processName = Application.getProcessName();
@@ -245,7 +245,7 @@ public class Admob {
     }
 
 
- /*   ========= Banner log revenue  ================*/
+    /*   ========= Banner log revenue  ================*/
     public void loadBanner(final Activity mActivity, String id, BannerCallBack bannerCallBack) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
@@ -297,7 +297,7 @@ public class Admob {
                                         adView.getAdUnitId(),
                                         adView.getResponseInfo()
                                                 .getMediationAdapterClassName());
-                                        bannerCallBack.onEarnRevenue((double) adValue.getValueMicros());
+                                bannerCallBack.onEarnRevenue((double) adValue.getValueMicros());
                             });
                         }
                     }
@@ -388,7 +388,7 @@ public class Admob {
         isTimeDelay = false;
         isTimeout = false;
         if(logTimeLoadAdsSplash){
-             currentTime =System.currentTimeMillis();
+            currentTime =System.currentTimeMillis();
         }
         if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
             new Handler().postDelayed(new Runnable() {
@@ -526,7 +526,7 @@ public class Admob {
                     long timeLoad = System.currentTimeMillis() -  currentTime;
                     Log.e(TAG, "load ads time :"+timeLoad);
                     FirebaseUtil.logTimeLoadAdsSplash(activity,round1000(timeLoad));
-               }
+                }
             }
 
             @Override
@@ -671,14 +671,14 @@ public class Admob {
                             Log.i(TAG, loadAdError.getMessage());
                             if(adCallback!=null)
                                 adCallback.onAdFailedToLoad(loadAdError);
-                                adCallback.onNextAction();
+                            adCallback.onNextAction();
                         }
 
                     });
         }
     }
     /**
-        Show ads inter
+     Show ads inter
      */
     public void showInterAds(Context context, InterstitialAd mInterstitialAd, final InterCallback callback) {
         showInterAds(context, mInterstitialAd, callback, true);
@@ -768,7 +768,7 @@ public class Admob {
             public void onAdClicked() {
                 super.onAdClicked();
                 if(timeLimitAds>1000)
-                setTimeLimitInter();
+                    setTimeLimitInter();
                 FirebaseUtil.logClickAdsEvent(context, mInterstitialAd.getAdUnitId());
             }
         });
@@ -844,86 +844,86 @@ public class Admob {
      load and show ads inter
      */
     public void loadAndShowInter(AppCompatActivity activity, String idInter, int timeDelay, int timeOut, InterCallback callback){
-            if (!isNetworkConnected()) {
-                callback.onAdClosed();
-                callback.onNextAction();
-                return;
-            }
-            if (AppPurchase.getInstance().isPurchased(context)&&!isShowAllAds&&!isShowInter) {
-                callback.onAdClosed();
-                callback.onNextAction();
-                return;
-            }
+        if (!isNetworkConnected()) {
+            callback.onAdClosed();
+            callback.onNextAction();
+            return;
+        }
+        if (AppPurchase.getInstance().isPurchased(context)&&!isShowAllAds&&!isShowInter) {
+            callback.onAdClosed();
+            callback.onNextAction();
+            return;
+        }
 
-            if (AppOpenManager.getInstance().isInitialized()) {
-                AppOpenManager.getInstance().disableAppResumeWithActivity(activity.getClass());
-            }
-            Dialog dialog2 = new LoadingAdsDialog(activity);
-            dialog2.show();
-            InterstitialAd.load(activity, idInter, getAdRequestTimeOut(timeOut), new InterstitialAdLoadCallback() {
-                @Override
-                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                    super.onAdFailedToLoad(loadAdError);
-                    dialog2.dismiss();
-                    callback.onAdFailedToLoad(loadAdError);
-                    if (AppOpenManager.getInstance().isInitialized()) {
-                        AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                    }
+        if (AppOpenManager.getInstance().isInitialized()) {
+            AppOpenManager.getInstance().disableAppResumeWithActivity(activity.getClass());
+        }
+        Dialog dialog2 = new LoadingAdsDialog(activity);
+        dialog2.show();
+        InterstitialAd.load(activity, idInter, getAdRequestTimeOut(timeOut), new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                dialog2.dismiss();
+                callback.onAdFailedToLoad(loadAdError);
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                 }
+            }
 
-                @Override
-                public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                    super.onAdLoaded(interstitialAd);
-                    if(interstitialAd!=null){
-                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                            interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
-                                @Override
-                                public void onAdDismissedFullScreenContent() {
-                                    dialog2.dismiss();
-                                    callback.onAdClosed();
-                                    callback.onNextAction();
-                                    if (AppOpenManager.getInstance().isInitialized()) {
-                                        AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                                    }
+            @Override
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                super.onAdLoaded(interstitialAd);
+                if(interstitialAd!=null){
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                            @Override
+                            public void onAdDismissedFullScreenContent() {
+                                dialog2.dismiss();
+                                callback.onAdClosed();
+                                callback.onNextAction();
+                                if (AppOpenManager.getInstance().isInitialized()) {
+                                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                                 }
-
-                                @Override
-                                public void onAdFailedToShowFullScreenContent(AdError adError) {
-                                    dialog2.dismiss();
-                                    callback.onAdClosed();
-                                    callback.onNextAction();
-                                    if (AppOpenManager.getInstance().isInitialized()) {
-                                        AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                                    }
-                                }
-
-                                @Override
-                                public void onAdShowedFullScreenContent() {
-                                    Log.d("TAG", "The ad was shown.");
-                                }
-
-                                @Override
-                                public void onAdClicked() {
-                                    super.onAdClicked();
-                                    if(timeLimitAds>1000){setTimeLimitInter();}
-                                    FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
-                                }
-                            });
-                            if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && interstitialAd != null) {
-                                interstitialAd.show(activity);
-                            } else {
-                               if(interstitialAd!=null){
-                                   if (AppOpenManager.getInstance().isInitialized()) {
-                                       AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                                       dialog2.dismiss();
-                                   }
-                               }
-                                // dialog.dismiss();
                             }
-                        },timeDelay);
-                    }
+
+                            @Override
+                            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                dialog2.dismiss();
+                                callback.onAdClosed();
+                                callback.onNextAction();
+                                if (AppOpenManager.getInstance().isInitialized()) {
+                                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                                }
+                            }
+
+                            @Override
+                            public void onAdShowedFullScreenContent() {
+                                Log.d("TAG", "The ad was shown.");
+                            }
+
+                            @Override
+                            public void onAdClicked() {
+                                super.onAdClicked();
+                                if(timeLimitAds>1000){setTimeLimitInter();}
+                                FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
+                            }
+                        });
+                        if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && interstitialAd != null) {
+                            interstitialAd.show(activity);
+                        } else {
+                            if(interstitialAd!=null){
+                                if (AppOpenManager.getInstance().isInitialized()) {
+                                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                                    dialog2.dismiss();
+                                }
+                            }
+                            // dialog.dismiss();
+                        }
+                    },timeDelay);
                 }
-            });
+            }
+        });
     }
 
 
@@ -1081,37 +1081,38 @@ public class Admob {
         }
     }
     /* =============================  Native Ads Floor  ==========================================*/
-    public void loadNativeAdFloor(Context context, List<String> listID, final NativeCallback callback){
-        if(listID.size()==0){
-            callback.onAdFailedToLoad();
-            return;
-        }
-        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
-            callback.onAdFailedToLoad();
-            return;
-        }
-        NativeCallback callback1 = new NativeCallback(){
-            @Override
-            public void onNativeAdLoaded(NativeAd nativeAd) {
-                super.onNativeAdLoaded(nativeAd);
-                callback.onNativeAdLoaded(nativeAd);
-            }
-
-            @Override
-            public void onAdFailedToLoad() {
-                super.onAdFailedToLoad();
-                if(listID.size()>0){
-                    listID.remove(0);
-                    loadNativeAdFloor(context,listID,this);
-                }
-            }
-        };
-        if(listID.size()>0){
-            int position = 0;
-            Log.e(TAG,"Load Native ID :"+listID.get(position));
-            loadNativeAd(context,listID.get(position),callback1);
+    public void loadNativeAdFloor(Context context, List<String> listID, String idDefault, final NativeCallback callback){
+        if(listID==null||listID.size()==0){
+            loadNativeAd(context,idDefault,callback);
+            Log.e(TAG,"Load Native ID Native :"+idDefault);
         }else{
-            callback.onAdFailedToLoad();
+            if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
+                callback.onAdFailedToLoad();
+                return;
+            }
+            NativeCallback callback1 = new NativeCallback(){
+                @Override
+                public void onNativeAdLoaded(NativeAd nativeAd) {
+                    super.onNativeAdLoaded(nativeAd);
+                    callback.onNativeAdLoaded(nativeAd);
+                }
+
+                @Override
+                public void onAdFailedToLoad() {
+                    super.onAdFailedToLoad();
+                    if(listID.size()>0){
+                        listID.remove(0);
+                        loadNativeAdFloor(context,listID,idDefault,this);
+                    }
+                }
+            };
+            if(listID.size()>0){
+                int position = 0;
+                Log.e(TAG,"Load Native ID :"+listID.get(position));
+                loadNativeAd(context,listID.get(position),callback1);
+            }else{
+                callback.onAdFailedToLoad();
+            }
         }
     }
 

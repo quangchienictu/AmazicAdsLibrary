@@ -11,10 +11,14 @@ public abstract class AdsMultiDexApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         AppUtil.BUILD_DEBUG = buildDebug();
-        Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG );
+        Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG);
         Admob.getInstance().initAdmod(this, getListTestDeviceId());
-        if (enableAdsResume()) {
-            AppOpenManager.getInstance().init(this, getOpenAppAdId());
+        if(!enableAdsResumeFloor()){
+            if(enableAdsResume()) {
+                AppOpenManager.getInstance().init(this, getOpenAppAdId());
+            }
+        }else{
+            AppOpenManager.getInstance().init(this, "");
         }
     }
 
@@ -24,5 +28,5 @@ public abstract class AdsMultiDexApplication extends MultiDexApplication {
 
     public abstract String getOpenAppAdId();
     public abstract Boolean buildDebug();
-    
+    public abstract Boolean enableAdsResumeFloor();
 }
