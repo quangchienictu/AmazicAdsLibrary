@@ -22,6 +22,7 @@ import com.amazic.ads.applovin.AppLovinCallback;
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
+import com.amazic.ads.util.Admod;
 import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.FirebaseUtil;
 import com.applovin.mediation.MaxAd;
@@ -141,6 +142,7 @@ public class AppLovin {
         isTimeDelay = false;
         isTimeout = false;
         AppOpenMax.getInstance().disableAppResume();
+        AppOpenManager.getInstance().disableAppResume();
         Log.i(TAG, "loadSplashInterstitialAds  start time loading:"
                 + Calendar.getInstance().getTimeInMillis()
                 + " ShowLoadingSplash:" + isShowLoadingSplash);
@@ -559,6 +561,9 @@ public class AppLovin {
         }
         if (interstitialAd == null || !interstitialAd.isReady()) {
             if (callback != null) {
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().enableAppResume();
+                }
                 callback.onAdClosed();
             }
             return;
