@@ -582,15 +582,15 @@ public class AppLovin {
 
             @Override
             public void onAdHidden(MaxAd ad) {
-                if (callback != null && ((AppCompatActivity) context).getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                    callback.onAdClosed();
-                    if (shouldReloadAds) {
-                        requestInterstitialAds(interstitialAd);
-                    }
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
+                //  if (callback != null && ((AppCompatActivity) context).getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                callback.onAdClosed();
+                if (shouldReloadAds) {
+                    requestInterstitialAds(interstitialAd);
                 }
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+                //    }
                 Log.d(TAG, "onAdHidden: " + ((AppCompatActivity) context).getLifecycle().getCurrentState());
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().enableAppResume();
@@ -654,7 +654,7 @@ public class AppLovin {
                         dialog.dismiss();
                     dialog = new LoadingAdsDialog(context);
                     try {
-                        callback.onInterstitialShow();
+//                        callback.onInterstitialShow();
                         dialog.setCancelable(false);
                         dialog.show();
                     } catch (Exception e) {
