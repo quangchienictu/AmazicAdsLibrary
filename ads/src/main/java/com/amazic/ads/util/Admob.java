@@ -167,7 +167,7 @@ public class Admob {
     public void loadBanner(final Activity mActivity, String id) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
-        if(!isShowAllAds){
+        if(!isShowAllAds||!isNetworkConnected()){
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         }else{
@@ -177,7 +177,7 @@ public class Admob {
 
     private void loadBanner(final Activity mActivity, String id, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, Boolean useInlineAdaptive) {
         if(isShowBanner){
-            if (AppPurchase.getInstance().isPurchased(mActivity)||!isShowAllAds) {
+            if (AppPurchase.getInstance().isPurchased(mActivity)||!isShowAllAds||!isNetworkConnected()) {
                 containerShimmer.setVisibility(View.GONE);
                 return;
             }
@@ -259,7 +259,7 @@ public class Admob {
 
     private void loadBanner(final Activity mActivity, String id, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, Boolean useInlineAdaptive,BannerCallBack bannerCallBack) {
         if(isShowBanner){
-            if (AppPurchase.getInstance().isPurchased(mActivity)||!isShowAllAds) {
+            if (AppPurchase.getInstance().isPurchased(mActivity)||!isShowAllAds||!isNetworkConnected()) {
                 containerShimmer.setVisibility(View.GONE);
                 return;
             }
@@ -353,7 +353,7 @@ public class Admob {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
 
-        if(isShowAllAds){
+        if(isShowAllAds||isNetworkConnected()){
             loadBanner(mActivity, id, adContainer, containerShimmer, false);
         }else{
             adContainer.setVisibility(View.GONE);
@@ -387,10 +387,7 @@ public class Admob {
     public void loadSplashInterAds(final Context context, String id, long timeOut, long timeDelay, final InterCallback adListener) {
         isTimeDelay = false;
         isTimeout = false;
-        if(logTimeLoadAdsSplash){
-            currentTime =System.currentTimeMillis();
-        }
-        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
+        if(!isNetworkConnected()){
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -402,92 +399,108 @@ public class Admob {
                 }
             },3000);
         }else{
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //check delay show ad splash
-                    if (mInterstitialSplash != null) {
-                        Log.d(TAG, "loadSplashInterAds:show ad on delay ");
-                        onShowSplash((Activity) context, adListener);
-                        return;
-                    }
-                    Log.d(TAG, "loadSplashInterAds: delay validate");
-                    isTimeDelay = true;
-                }
-            }, timeDelay);
-            if (timeOut > 0) {
-                handlerTimeout = new Handler();
-                rdTimeout = new Runnable() {
+            if(logTimeLoadAdsSplash){
+                currentTime =System.currentTimeMillis();
+            }
+            if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e(TAG, "loadSplashInterstitalAds: on timeout");
-                        isTimeout = true;
-                        if (mInterstitialSplash != null) {
-                            Log.i(TAG, "loadSplashInterstitalAds:show ad on timeout ");
-                            onShowSplash((Activity) context, adListener);
-                            return;
-                        }
                         if (adListener != null) {
                             adListener.onAdClosed();
                             adListener.onNextAction();
-                            isShowLoadingSplash = false;
                         }
-                    }
-                };
-                handlerTimeout.postDelayed(rdTimeout, timeOut);
-            }
-
-            isShowLoadingSplash = true;
-            loadInterAds(context, id, new InterCallback() {
-                @Override
-                public void onInterstitialLoad(InterstitialAd interstitialAd) {
-                    super.onInterstitialLoad(interstitialAd);
-                    Log.e(TAG, "loadSplashInterstitalAds  end time loading success:" + Calendar.getInstance().getTimeInMillis() + "     time limit:" + isTimeout);
-                    if (isTimeout)
                         return;
-                    if (interstitialAd != null) {
-                        mInterstitialSplash = interstitialAd;
-                        if (isTimeDelay) {
+                    }
+                },3000);
+            }else{
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //check delay show ad splash
+                        if (mInterstitialSplash != null) {
+                            Log.d(TAG, "loadSplashInterAds:show ad on delay ");
                             onShowSplash((Activity) context, adListener);
-                            Log.i(TAG, "loadSplashInterstitalAds:show ad on loaded ");
+                            return;
                         }
+                        Log.d(TAG, "loadSplashInterAds: delay validate");
+                        isTimeDelay = true;
                     }
-                    if (interstitialAd != null) {
-                        interstitialAd.setOnPaidEventListener(adValue -> {
-                            Log.d(TAG, "OnPaidEvent loadInterstitialAds:" + adValue.getValueMicros());
-                            FirebaseUtil.logPaidAdImpression(context,
-                                    adValue,
-                                    interstitialAd.getAdUnitId(),
-                                    interstitialAd.getResponseInfo()
-                                            .getMediationAdapterClassName());
-                        });
-                    }
+                }, timeDelay);
+                if (timeOut > 0) {
+                    handlerTimeout = new Handler();
+                    rdTimeout = new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.e(TAG, "loadSplashInterstitalAds: on timeout");
+                            isTimeout = true;
+                            if (mInterstitialSplash != null) {
+                                Log.i(TAG, "loadSplashInterstitalAds:show ad on timeout ");
+                                onShowSplash((Activity) context, adListener);
+                                return;
+                            }
+                            if (adListener != null) {
+                                adListener.onAdClosed();
+                                adListener.onNextAction();
+                                isShowLoadingSplash = false;
+                            }
+                        }
+                    };
+                    handlerTimeout.postDelayed(rdTimeout, timeOut);
                 }
 
-                @Override
-                public void onAdFailedToLoad(LoadAdError i) {
-                    super.onAdFailedToLoad(i);
-                    Log.e(TAG, "loadSplashInterstitalAds  end time loading error:" + Calendar.getInstance().getTimeInMillis() + "     time limit:" + isTimeout);
-                    if (isTimeout)
-                        return;
-                    if (adListener != null) {
-                        if (handlerTimeout != null && rdTimeout != null) {
-                            handlerTimeout.removeCallbacks(rdTimeout);
+                isShowLoadingSplash = true;
+                loadInterAds(context, id, new InterCallback() {
+                    @Override
+                    public void onInterstitialLoad(InterstitialAd interstitialAd) {
+                        super.onInterstitialLoad(interstitialAd);
+                        Log.e(TAG, "loadSplashInterstitalAds  end time loading success:" + Calendar.getInstance().getTimeInMillis() + "     time limit:" + isTimeout);
+                        if (isTimeout)
+                            return;
+                        if (interstitialAd != null) {
+                            mInterstitialSplash = interstitialAd;
+                            if (isTimeDelay) {
+                                onShowSplash((Activity) context, adListener);
+                                Log.i(TAG, "loadSplashInterstitalAds:show ad on loaded ");
+                            }
                         }
-                        if (i != null)
-                            Log.e(TAG, "loadSplashInterstitalAds: load fail " + i.getMessage());
-                        adListener.onAdFailedToLoad(i);
-                        adListener.onNextAction();
+                        if (interstitialAd != null) {
+                            interstitialAd.setOnPaidEventListener(adValue -> {
+                                Log.d(TAG, "OnPaidEvent loadInterstitialAds:" + adValue.getValueMicros());
+                                FirebaseUtil.logPaidAdImpression(context,
+                                        adValue,
+                                        interstitialAd.getAdUnitId(),
+                                        interstitialAd.getResponseInfo()
+                                                .getMediationAdapterClassName());
+                            });
+                        }
                     }
-                }
 
-                @Override
-                public void onAdClicked() {
-                    super.onAdClicked();
-                    if(timeLimitAds>1000)
-                        setTimeLimitInter();
-                }
-            });
+                    @Override
+                    public void onAdFailedToLoad(LoadAdError i) {
+                        super.onAdFailedToLoad(i);
+                        Log.e(TAG, "loadSplashInterstitalAds  end time loading error:" + Calendar.getInstance().getTimeInMillis() + "     time limit:" + isTimeout);
+                        if (isTimeout)
+                            return;
+                        if (adListener != null) {
+                            if (handlerTimeout != null && rdTimeout != null) {
+                                handlerTimeout.removeCallbacks(rdTimeout);
+                            }
+                            if (i != null)
+                                Log.e(TAG, "loadSplashInterstitalAds: load fail " + i.getMessage());
+                            adListener.onAdFailedToLoad(i);
+                            adListener.onNextAction();
+                        }
+                    }
+
+                    @Override
+                    public void onAdClicked() {
+                        super.onAdClicked();
+                        if(timeLimitAds>1000)
+                            setTimeLimitInter();
+                    }
+                });
+            }
         }
     }
 
@@ -789,6 +802,11 @@ public class Admob {
             callback.onNextAction();
             return;
         }
+        if(!isNetworkConnected()||mInterstitialAd==null){
+            callback.onAdClosed();
+            callback.onNextAction();
+            return;
+        }
         currentClicked++;
         if (currentClicked >= numShowAds && mInterstitialAd != null) {
             if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
@@ -933,7 +951,7 @@ public class Admob {
     /* =============================  Rewarded Ads ==========================================*/
 
     public void showRewardAds(final Activity context, final RewardCallback adCallback) {
-        if (!isShowAllAds) {
+        if (!isShowAllAds||!isNetworkConnected()) {
             adCallback.onAdClosed();
             return;
         }
@@ -1022,7 +1040,7 @@ public class Admob {
     /* =============================  Native Ads ==========================================*/
 
     public void loadNativeAd(Context context, String id, final NativeCallback callback) {
-        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
+        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds||!isNetworkConnected()) {
             callback.onAdFailedToLoad();
             return;
         }
@@ -1400,15 +1418,17 @@ public class Admob {
     }
 
     public void onCheckShowSplashWhenFail(final AppCompatActivity activity, final InterCallback callback, int timeDelay) {
-        (new Handler(activity.getMainLooper())).postDelayed(new Runnable() {
-            public void run() {
-                if (Admob.this.interstitialSplashLoaded() && !Admob.this.isShowLoadingSplash) {
-                    Log.i("AperoAdmob", "show ad splash when show fail in background");
-                    Admob.getInstance().onShowSplash(activity, callback);
-                }
+        if(isNetworkConnected()){
+            (new Handler(activity.getMainLooper())).postDelayed(new Runnable() {
+                public void run() {
+                    if (Admob.this.interstitialSplashLoaded() && !Admob.this.isShowLoadingSplash) {
+                        Log.i("Admob", "show ad splash when show fail in background");
+                        Admob.getInstance().onShowSplash(activity, callback);
+                    }
 
-            }
-        }, (long)timeDelay);
+                }
+            }, (long)timeDelay);
+        }
     }
 
     public int round1000(long time){
