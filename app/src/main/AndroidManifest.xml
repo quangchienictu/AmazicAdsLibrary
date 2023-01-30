@@ -35,7 +35,6 @@
         <activity
             android:name=".applovin.SimpleListActivity"
             android:exported="false" />
-
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-4973559944609228~2346710863" />

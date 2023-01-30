@@ -22,7 +22,10 @@ public class InterCallback {
     public void onAdImpression() {
     }
     public void onAdClosedByUser(){
-
+    }
+    public void onNextAction(){
+    }
+    public void onEarnRevenue(Double Revenue){
     }
     public void onInterstitialShow() {
 

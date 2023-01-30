@@ -6,6 +6,7 @@ import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.AdsApplication;
 import com.amazic.ads.util.AppUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyApplication extends AdsApplication {
@@ -40,4 +41,5 @@ public class MyApplication extends AdsApplication {
     public Boolean AppOpenIsAdmob() {
         return true;
     }
+
 }

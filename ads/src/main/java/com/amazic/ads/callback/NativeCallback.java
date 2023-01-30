@@ -2,7 +2,8 @@ package com.amazic.ads.callback;
 
 import com.google.android.gms.ads.nativead.NativeAd;
 
-public interface NativeCallback {
-    void onNativeAdLoaded(NativeAd nativeAd);
-    void onAdFailedToLoad();
+public class NativeCallback {
+    public void onNativeAdLoaded(NativeAd nativeAd){};
+    public void onAdFailedToLoad(){};
+    public void onEarnRevenue(Double Revenue){}
 }

@@ -18,11 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.amazic.ads.R;
-import com.amazic.ads.applovin.AppLovinCallback;
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
-import com.amazic.ads.util.Admod;
 import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.FirebaseUtil;
 import com.applovin.mediation.MaxAd;
@@ -371,6 +369,7 @@ public class AppLovin {
             adListener.onAdClosed();
             return;
         }
+        interstitialSplash.setRevenueListener(ad ->FirebaseUtil.logPaidAdImpression(context,ad));
         interstitialSplash.setListener(new MaxAdListener() {
             @Override
             public void onAdLoaded(MaxAd ad) {
@@ -568,7 +567,7 @@ public class AppLovin {
             }
             return;
         }
-
+        interstitialAd.setRevenueListener(ad ->FirebaseUtil.logPaidAdImpression(context,ad));
         interstitialAd.setListener(new MaxAdListener() {
             @Override
             public void onAdLoaded(MaxAd ad) {
@@ -721,6 +720,7 @@ public class AppLovin {
         containerShimmer.setVisibility(View.VISIBLE);
         containerShimmer.startShimmer();
         MaxAdView adView = new MaxAdView(id, mActivity);
+        adView.setRevenueListener(ad -> FirebaseUtil.logPaidAdImpression(mActivity,ad));
         int width = ViewGroup.LayoutParams.MATCH_PARENT;
         // Banner height on phones and tablets is 50 and 90, respectively
         int heightPx = mActivity.getResources().getDimensionPixelSize(R.dimen.banner_height);
@@ -784,6 +784,7 @@ public class AppLovin {
         containerShimmer.setVisibility(View.VISIBLE);
         containerShimmer.startShimmer();
         MaxAdView adView = new MaxAdView(id, mActivity);
+        adView.setRevenueListener(ad -> FirebaseUtil.logPaidAdImpression(mActivity,ad));
         int width = ViewGroup.LayoutParams.MATCH_PARENT;
         // Banner height on phones and tablets is 50 and 90, respectively
         int heightPx = mActivity.getResources().getDimensionPixelSize(R.dimen.banner_height);
@@ -873,6 +874,7 @@ public class AppLovin {
             containerShimmer.setVisibility(View.GONE);
             return;
         }
+
         containerShimmer.setVisibility(View.VISIBLE);
         containerShimmer.startShimmer();
 
@@ -891,6 +893,7 @@ public class AppLovin {
         nativeAdView = new MaxNativeAdView(binder, activity);
 
         MaxNativeAdLoader nativeAdLoader = new MaxNativeAdLoader(id, activity);
+        nativeAdLoader.setRevenueListener(ad -> FirebaseUtil.logPaidAdImpression( activity,ad));
         nativeAdLoader.setNativeAdListener(new MaxNativeAdListener() {
             @Override
             public void onNativeAdLoaded(final MaxNativeAdView nativeAdView, final MaxAd ad) {
@@ -945,6 +948,7 @@ public class AppLovin {
         nativeAdView = new MaxNativeAdView(binder, activity);
         Log.e(TAG, "load native");
         MaxNativeAdLoader nativeAdLoader = new MaxNativeAdLoader(id, activity);
+        nativeAdLoader.setRevenueListener(ad -> FirebaseUtil.logPaidAdImpression( activity,ad));
         nativeAdLoader.setNativeAdListener(new MaxNativeAdListener() {
             @Override
             public void onNativeAdLoaded(final MaxNativeAdView nativeAdView, final MaxAd ad) {
@@ -1086,6 +1090,7 @@ public class AppLovin {
 
     public void showRewardAd(Activity activity, MaxRewardedAd maxRewardedAd, AppLovinCallback callback) {
         if (maxRewardedAd.isReady()) {
+            maxRewardedAd.setRevenueListener(ad -> FirebaseUtil.logPaidAdImpression( activity,ad));
             if (AppOpenManager.getInstance().isInitialized()) {
                 AppOpenManager.getInstance().disableAppResume();
             }
@@ -1160,6 +1165,7 @@ public class AppLovin {
 
     public void showRewardAd(Activity activity, MaxRewardedAd maxRewardedAd) {
         if (maxRewardedAd.isReady()) {
+            maxRewardedAd.setRevenueListener(ad -> FirebaseUtil.logPaidAdImpression( activity,ad));
             maxRewardedAd.showAd();
         } else {
             Log.e(TAG, "showRewardAd error -  reward ad not ready");

@@ -3,7 +3,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -14,12 +13,15 @@ import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.PurchaseListioner;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
-import com.amazic.ads.util.Admod;
+import com.amazic.ads.util.Admob;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.gms.ads.rewarded.RewardItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private InterstitialAd mInterstitialAd;
@@ -33,10 +35,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Admod.getInstance().timeLimitAds = 60000;
         native_ads   = findViewById(R.id.native_ads);
-        Admod.getInstance().loadBanner(this, getString(R.string.admod_banner_id));
-        Admod.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
+        Admob.getInstance().loadBanner(this, getString(R.string.admod_banner_id));
+        Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
 
         loadAdInter();
         loadAdsNative();
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnClickInter).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Admod.getInstance().showInterAds(MainActivity.this, mInterstitialAd, new InterCallback() {
+                Admob.getInstance().showInterAds(MainActivity.this, mInterstitialAd, new InterCallback() {
                     @Override
                     public void onAdClosed() {
                         startActivity(new Intent(MainActivity.this,MainActivity3.class));
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnClickReward).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Admod.getInstance().showRewardAds(MainActivity.this,new RewardCallback(){
+                Admob.getInstance().showRewardAds(MainActivity.this,new RewardCallback(){
                     @Override
                     public void onEarnedReward(RewardItem rewardItem) {
                         Toast.makeText(MainActivity.this,"Trả thưởng thành công",Toast.LENGTH_SHORT).show();
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnClickLoadAndShow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Admod.getInstance().loadAndShowInter(MainActivity.this,getString(R.string.admod_interstitial_id),0,10000, new InterCallback(){
+                Admob.getInstance().loadAndShowInter(MainActivity.this,getString(R.string.admod_interstitial_id),0,10000, new InterCallback(){
                     @Override
                     public void onAdClosed() {
                         super.onAdClosed();
@@ -166,12 +167,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadAdsNative(){
-        Admod.getInstance().loadNativeAd(this, getString(R.string.admod_native_id), new NativeCallback() {
+        List<String> listID = new ArrayList<>();
+        listID.add("1");
+        listID.add("2");
+        listID.add("3");
+        listID.add("4");
+        listID.add("x");
+        listID.add("6");
+
+        Admob.getInstance().loadNativeAdFloor(this, listID,"", new NativeCallback() {
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {
                 NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_native, null);
                 native_ads.addView(adView);
-                Admod.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
             }
 
             @Override
@@ -182,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadAdInter() {
-        Admod.getInstance().loadInterAds(this, getString(R.string.admod_interstitial_id), new InterCallback() {
+        Admob.getInstance().loadInterAds(this, getString(R.string.admod_interstitial_id), new InterCallback() {
             @Override
             public void onInterstitialLoad(InterstitialAd interstitialAd) {
                 super.onInterstitialLoad(interstitialAd);
