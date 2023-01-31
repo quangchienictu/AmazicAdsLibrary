@@ -87,6 +87,8 @@ public class Admob {
     private String rewardedId;
     InterstitialAd mInterstitialSplash;
     InterstitialAd interstitialAd;
+    private boolean disableAdResumeWhenClickAds = false;
+
 
     public static long timeLimitAds = 0; // Set > 1000 nếu cần limit ads click
     private boolean isShowInter = true;
@@ -143,6 +145,15 @@ public class Admob {
     }
 
     /* =======================   Banner ================================= */
+    /**
+     * Set tắt ads resume khi click ads
+     *
+     * @param disableAdResumeWhenClickAds
+     */
+    public void setDisableAdResumeWhenClickAds(boolean disableAdResumeWhenClickAds) {
+        this.disableAdResumeWhenClickAds = disableAdResumeWhenClickAds;
+    }
+
 
     /**
      * Set tắt toàn bộ ads trong project
@@ -222,6 +233,8 @@ public class Admob {
                     @Override
                     public void onAdClicked() {
                         super.onAdClicked();
+                        if (disableAdResumeWhenClickAds)
+                            AppOpenManager.getInstance().disableAdResumeByClickAction();
                         FirebaseUtil.logClickAdsEvent(context, id);
                         if(timeLimitAds>1000){
                             setTimeLimitBanner();
@@ -305,6 +318,8 @@ public class Admob {
                     @Override
                     public void onAdClicked() {
                         super.onAdClicked();
+                        if (disableAdResumeWhenClickAds)
+                            AppOpenManager.getInstance().disableAdResumeByClickAction();
                         FirebaseUtil.logClickAdsEvent(context, id);
                         if(timeLimitAds>1000){
                             setTimeLimitBanner();
@@ -495,6 +510,8 @@ public class Admob {
 
                     @Override
                     public void onAdClicked() {
+                        if (disableAdResumeWhenClickAds)
+                            AppOpenManager.getInstance().disableAdResumeByClickAction();
                         super.onAdClicked();
                         if(timeLimitAds>1000)
                             setTimeLimitInter();
@@ -584,6 +601,8 @@ public class Admob {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
+                if (disableAdResumeWhenClickAds)
+                    AppOpenManager.getInstance().disableAdResumeByClickAction();
                 if(timeLimitAds>1000){setTimeLimitInter();}
                 FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
             }
@@ -780,6 +799,8 @@ public class Admob {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
+                if (disableAdResumeWhenClickAds)
+                    AppOpenManager.getInstance().disableAdResumeByClickAction();
                 if(timeLimitAds>1000)
                     setTimeLimitInter();
                 FirebaseUtil.logClickAdsEvent(context, mInterstitialAd.getAdUnitId());
@@ -922,6 +943,8 @@ public class Admob {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
+                                if (disableAdResumeWhenClickAds)
+                                    AppOpenManager.getInstance().disableAdResumeByClickAction();
                                 if(timeLimitAds>1000){setTimeLimitInter();}
                                 FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
                             }
@@ -991,6 +1014,8 @@ public class Admob {
 
                 public void onAdClicked() {
                     super.onAdClicked();
+                    if (disableAdResumeWhenClickAds)
+                        AppOpenManager.getInstance().disableAdResumeByClickAction();
                     FirebaseUtil.logClickAdsEvent(context, rewardedAd.getAdUnitId());
                 }
             });
@@ -1078,6 +1103,8 @@ public class Admob {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
+                                if (disableAdResumeWhenClickAds)
+                                    AppOpenManager.getInstance().disableAdResumeByClickAction();
                                 FirebaseUtil.logClickAdsEvent(context, id);
                                 if(timeLimitAds>1000){
                                     setTimeLimitNative();
@@ -1317,6 +1344,8 @@ public class Admob {
                     @Override
                     public void onAdClicked() {
                         super.onAdClicked();
+                        if (disableAdResumeWhenClickAds)
+                            AppOpenManager.getInstance().disableAdResumeByClickAction();
                         FirebaseUtil.logClickAdsEvent(context, id);
                     }
 
