@@ -147,20 +147,20 @@ public class Admob {
     /**
      * Set tắt toàn bộ ads trong project
      **/
-    public void iShowAllAds(boolean isShowAllAds){
+    public void setOpenShowAllAds(boolean isShowAllAds){
         this.isShowAllAds = isShowAllAds;
     }
 
     /**
      * Set tắt event log time load splash
      **/
-    public void isEventLoadTimeLoadAdsSplash(boolean logTimeLoadAdsSplash){
+    public void setOpenEventLoadTimeLoadAdsSplash(boolean logTimeLoadAdsSplash){
         this.logTimeLoadAdsSplash = logTimeLoadAdsSplash;
     }
     /**
      * Set tắt event log time show splash
      **/
-    public void isEventLoadTimeShowAdsInter(boolean logLogTimeShowAds){
+    public void setOpenEventLoadTimeShowAdsInter(boolean logLogTimeShowAds){
         this.logLogTimeShowAds = logLogTimeShowAds;
     }
 
@@ -841,7 +841,6 @@ public class Admob {
                             }
                         }, 1500);
                     }
-                    Log.e(TAG, "xxxxxx");
                     mInterstitialAd.show((Activity) context);
 
                 }, 800);

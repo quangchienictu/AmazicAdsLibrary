@@ -13,16 +13,6 @@ public class MyApplication extends AdsApplication {
     public void onCreate() {
         super.onCreate();
         AppOpenManager.getInstance().disableAppResumeWithActivity(Splash.class);
-
-        List idResume = new ArrayList();
-        idResume.add("1");
-        idResume.add("2");
-        idResume.add("3");
-        idResume.add("5");
-        idResume.add("ca-app-pub-3940256099942544/3419835294");
-        idResume.add("6");
-        idResume.add("7");
-        AppOpenManager.getInstance().init(this,idResume);
     }
 
     @Override
@@ -37,7 +27,7 @@ public class MyApplication extends AdsApplication {
 
     @Override
     public String getResumeAdId() {
-        return null;
+        return "ca-app-pub-3940256099942544/3419835294";
     }
 
     @Override
@@ -45,8 +35,5 @@ public class MyApplication extends AdsApplication {
         return true;
     }
 
-    @Override
-    public Boolean enableAdsResumeFloor() {
-        return false;
-    }
+
 }

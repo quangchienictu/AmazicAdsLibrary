@@ -1,3 +1,4 @@
 rootProject.name = "AmazicAdsLibrary"
 include ':app'
 include ':ads'
+include ':sdk'

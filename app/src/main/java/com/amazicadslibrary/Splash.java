@@ -24,9 +24,9 @@ public class Splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         String android_id = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-       Admob.getInstance().iShowAllAds(true);
-        Admob.getInstance().isEventLoadTimeLoadAdsSplash(true);
-        Admob.getInstance().isEventLoadTimeShowAdsInter(true);
+       Admob.getInstance().setOpenShowAllAds(true);
+        Admob.getInstance().setOpenEventLoadTimeLoadAdsSplash(true);
+        Admob.getInstance().setOpenEventLoadTimeShowAdsInter(true);
         // Admob
         AppPurchase.getInstance().setBillingListener(new BillingListener() {
             @Override
