@@ -239,7 +239,7 @@ public class AppIronSource {
                                 if (impressionData != null)
                                 {
                                     bannerCallBack.onEarnRevenue(impressionData.getRevenue());
-                                    FirebaseAnalyticsUtil.logEarnRevenue(activity,impressionData);
+                                    FirebaseAnalyticsUtil.logPaidAdImpression(activity,impressionData);
                                 }
                             }
                         });
@@ -375,7 +375,7 @@ public class AppIronSource {
                             if (impressionData != null)
                             {
                                 adListener.onEarnRevenue(impressionData.getRevenue());
-                                FirebaseAnalyticsUtil.logEarnRevenue(activity,impressionData);
+                                FirebaseAnalyticsUtil.logPaidAdImpression(activity,impressionData);
                             }
                         }
                     });
@@ -467,7 +467,7 @@ public class AppIronSource {
                             if (impressionData != null)
                             {
                                 adListener.onEarnRevenue(impressionData.getRevenue());
-                                FirebaseAnalyticsUtil.logEarnRevenue(activity,impressionData);
+                                FirebaseAnalyticsUtil.logPaidAdImpression(activity,impressionData);
                             }
                         }
                     });
@@ -581,7 +581,7 @@ public class AppIronSource {
                                 if (impressionData != null)
                                 {
                                     adListener.onEarnRevenue(impressionData.getRevenue());
-                                    FirebaseAnalyticsUtil.logEarnRevenue(context,impressionData);
+                                    FirebaseAnalyticsUtil.logPaidAdImpression(context,impressionData);
                                 }
                             }
                         });
