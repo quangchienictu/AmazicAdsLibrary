@@ -22,15 +22,15 @@ public class FirebaseUtil {
 
     public static void logPaidAdImpression(Context context, AdValue adValue, String adUnitId, String mediationAdapterClassName) {
         Log.e("logPaidAdImpression",adValue.getCurrencyCode()+"");
-        logEventWithAds(context, (float) adValue.getValueMicros(), adValue.getPrecisionType(), adUnitId, mediationAdapterClassName);
+        logEventWithAds(context, (float) adValue.getValueMicros(), adValue.getPrecisionType(), adUnitId, mediationAdapterClassName,"");
     }
 
     public static void logPaidAdImpression(Context context, MaxAd adValue) {
-        logEventWithAds(context, (float) adValue.getRevenue(), 0, adValue.getAdUnitId(), adValue.getNetworkName());
+        logEventWithAds(context, (float) adValue.getRevenue(), 0, adValue.getAdUnitId(), adValue.getNetworkName(), String.valueOf(adValue.getFormat()));
     }
 
 
-    private static void logEventWithAds(Context context, float revenue, int precision, String adUnitId, String network) {
+    private static void logEventWithAds(Context context, float revenue, int precision, String adUnitId, String network,String adFormat) {
         Log.d(TAG, String.format(
                 "Paid event of value %.0f microcents in currency USD of precision %s%n occurred for ad unit %s from ad network %s.",
                 revenue,
@@ -38,12 +38,11 @@ public class FirebaseUtil {
                 adUnitId,
                 network));
 
-        Bundle params = new Bundle(); // Log ad value in micros.
-        params.putDouble("valuemicros", revenue/1000000.0);
-        params.putString("currency", "USD");
-        params.putInt("precision", precision);
-        params.putString("adunitid", adUnitId);
-        params.putString("network", network);
+        Bundle params = new Bundle();
+        params.putString(FirebaseAnalytics.Param.AD_PLATFORM, "Max");
+        params.putString(FirebaseAnalytics.Param.AD_FORMAT, adFormat);
+        params.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
+        params.putDouble(FirebaseAnalytics.Param.VALUE,revenue );
 
         // log revenue this a ad
         FirebaseAnalytics.getInstance(context).logEvent("amazic_MAX_paid_ad_impression", params);
@@ -51,6 +50,8 @@ public class FirebaseUtil {
         //update revenue local
         AppUtil.currentTotalRevenue001Ad += revenue;
         SharePreferenceUtils.updateCurrentTotalRevenue001Ad(context, AppUtil.currentTotalRevenue001Ad);
+
+
         logTotalRevenue001Ad(context);
     }
 
@@ -62,7 +63,7 @@ public class FirebaseUtil {
             Bundle bundle = new Bundle();
             bundle.putFloat(FirebaseAnalytics.Param.VALUE, revenue / 1000000);
             bundle.putString(FirebaseAnalytics.Param.CURRENCY, "USD");
-            FirebaseAnalytics.getInstance(context).logEvent("amazic_MAX_daily_ad_revenue", bundle);
+            FirebaseAnalytics.getInstance(context).logEvent("amazic_MAX_daily_ads_revenue", bundle);
         //}
     }
 
