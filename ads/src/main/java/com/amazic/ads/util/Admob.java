@@ -1145,7 +1145,7 @@ public class Admob {
                     super.onAdFailedToLoad();
                     if(listID.size()>0){
                         listID.remove(0);
-                        loadNativeAdFloor(context,listID,this);
+                        loadNativeAdFloor(context,listID,callback);
                     }
                 }
             };

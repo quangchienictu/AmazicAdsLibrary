@@ -171,14 +171,12 @@ public class MainActivity extends AppCompatActivity {
         listID.add("1");
         listID.add("2");
         listID.add("3");
-        listID.add("4");
-        listID.add("x");
-        listID.add("6");
 
         Admob.getInstance().loadNativeAdFloor(this, listID, new NativeCallback() {
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {
-                NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_native, null);
+                NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_native_custom, null);
+                native_ads.removeAllViews();
                 native_ads.addView(adView);
                 Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
             }
