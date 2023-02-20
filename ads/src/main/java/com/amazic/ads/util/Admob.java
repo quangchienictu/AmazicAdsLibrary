@@ -1125,10 +1125,9 @@ public class Admob {
         }
     }
     /* =============================  Native Ads Floor  ==========================================*/
-    public void loadNativeAdFloor(Context context, List<String> listID, String idDefault, final NativeCallback callback){
+    public void loadNativeAdFloor(Context context, List<String> listID, final NativeCallback callback){
         if(listID==null||listID.size()==0){
-            loadNativeAd(context,idDefault,callback);
-            Log.e(TAG,"Load Native ID Native :"+idDefault);
+            callback.onAdFailedToLoad();
         }else{
             if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
                 callback.onAdFailedToLoad();
@@ -1146,7 +1145,7 @@ public class Admob {
                     super.onAdFailedToLoad();
                     if(listID.size()>0){
                         listID.remove(0);
-                        loadNativeAdFloor(context,listID,idDefault,this);
+                        loadNativeAdFloor(context,listID,this);
                     }
                 }
             };
