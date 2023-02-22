@@ -713,7 +713,7 @@ public class Admob {
      Show ads inter
      */
     public void showInterAds(Context context, InterstitialAd mInterstitialAd, final InterCallback callback) {
-        showInterAds(context, mInterstitialAd, callback, true);
+        showInterAds(context, mInterstitialAd, callback, false);
 
     }
 
