@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.amazic.ads.billing.AppPurchase;
+import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.PurchaseListioner;
 import com.amazic.ads.callback.RewardCallback;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         native_ads   = findViewById(R.id.native_ads);
-        Admob.getInstance().loadBanner(this, getString(R.string.admod_banner_id));
+        Admob.getInstance().loadCollapsibleBanner(this, getString(R.string.ads_test_banner),"BOTTOM");
         Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
 
         loadAdInter();
