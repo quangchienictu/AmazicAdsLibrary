@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         native_ads   = findViewById(R.id.native_ads);
-        Admob.getInstance().loadCollapsibleBanner(this, getString(R.string.ads_test_banner), BannerGravity.BannerBottom);
+        Admob.getInstance().loadCollapsibleBanner(this, getString(R.string.ads_test_banner), BannerGravity.bottom);
         Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
 
         loadAdInter();
