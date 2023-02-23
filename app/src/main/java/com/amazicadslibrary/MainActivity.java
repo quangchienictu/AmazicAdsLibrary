@@ -15,6 +15,7 @@ import com.amazic.ads.callback.PurchaseListioner;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admob;
+import com.amazic.ads.util.BannerGravity;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         native_ads   = findViewById(R.id.native_ads);
-        Admob.getInstance().loadCollapsibleBanner(this, getString(R.string.ads_test_banner),"BOTTOM");
+        Admob.getInstance().loadCollapsibleBanner(this, getString(R.string.ads_test_banner), BannerGravity.BannerBottom);
         Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
 
         loadAdInter();
