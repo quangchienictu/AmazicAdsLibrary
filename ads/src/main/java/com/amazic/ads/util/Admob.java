@@ -180,9 +180,6 @@ public class Admob {
 
     /**
      * Load quảng cáo Banner Trong Activity
-     *
-     * @param mActivity
-     * @param id
      */
     public void loadBanner(final Activity mActivity, String id) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
@@ -197,9 +194,6 @@ public class Admob {
 
     /**
      * Load quảng cáo Banner Trong Activity
-     *
-     * @param mActivity
-     * @param id
      */
     public void loadBanner(final Activity mActivity, String id, AdCallback callback) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
@@ -215,12 +209,7 @@ public class Admob {
 
     /**
      * Load quảng cáo Banner Trong Activity set Inline adaptive banners
-     *
-     * @param mActivity
-     * @param id
-     * @deprecated Using loadInlineBanner()
      */
-    @Deprecated
     public void loadBanner(final Activity mActivity, String id, Boolean useInlineAdaptive) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
@@ -234,10 +223,6 @@ public class Admob {
 
     /**
      * Load quảng cáo Banner Trong Activity set Inline adaptive banners
-     *
-     * @param activity
-     * @param id
-     * @param inlineStyle
      */
     public void loadInlineBanner(final Activity activity, String id, String inlineStyle) {
         final FrameLayout adContainer = activity.findViewById(R.id.banner_container);
@@ -247,14 +232,7 @@ public class Admob {
 
     /**
      * Load quảng cáo Banner Trong Activity set Inline adaptive banners
-     *
-     * @param mActivity
-     * @param id
-     * @param callback
-     * @param useInlineAdaptive
-     * @deprecated Using loadInlineBanner() with callback
      */
-    @Deprecated
     public void loadBanner(final Activity mActivity, String id, final AdCallback callback, Boolean useInlineAdaptive) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
@@ -268,11 +246,6 @@ public class Admob {
 
     /**
      * Load quảng cáo Banner Trong Activity set Inline adaptive banners
-     *
-     * @param activity
-     * @param id
-     * @param inlineStyle
-     * @param callback
      */
     public void loadInlineBanner(final Activity activity, String id, String inlineStyle, final AdCallback callback) {
         final FrameLayout adContainer = activity.findViewById(R.id.banner_container);
@@ -287,9 +260,6 @@ public class Admob {
 
     /**
      * Load quảng cáo Collapsible Banner Trong Activity
-     *
-     * @param mActivity
-     * @param id
      */
     public void loadCollapsibleBanner(final Activity mActivity, String id, String gravity) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
@@ -304,10 +274,6 @@ public class Admob {
 
     /**
      * Load Quảng Cáo Banner Trong Fragment
-     *
-     * @param mActivity
-     * @param id
-     * @param rootView
      */
     public void loadBannerFragment(final Activity mActivity, String id, final View rootView) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
@@ -322,10 +288,6 @@ public class Admob {
 
     /**
      * Load Quảng Cáo Banner Trong Fragment
-     *
-     * @param mActivity
-     * @param id
-     * @param rootView
      */
     public void loadBannerFragment(final Activity mActivity, String id, final View rootView, final AdCallback callback) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
@@ -340,13 +302,7 @@ public class Admob {
 
     /**
      * Load Quảng Cáo Banner Trong Fragment set Inline adaptive banners
-     *
-     * @param mActivity
-     * @param id
-     * @param rootView
-     * @deprecated Using loadInlineBannerFragment()
      */
-    @Deprecated
     public void loadBannerFragment(final Activity mActivity, String id, final View rootView, Boolean useInlineAdaptive) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
@@ -360,11 +316,6 @@ public class Admob {
 
     /**
      * Load Quảng Cáo Banner Trong Fragment set Inline adaptive banners
-     *
-     * @param activity
-     * @param id
-     * @param rootView
-     * @param inlineStyle
      */
     public void loadInlineBannerFragment(final Activity activity, String id, final View rootView, String inlineStyle) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
@@ -379,15 +330,7 @@ public class Admob {
 
     /**
      * Load Quảng Cáo Banner Trong Fragment set Inline adaptive banners
-     *
-     * @param mActivity
-     * @param id
-     * @param rootView
-     * @param callback
-     * @param useInlineAdaptive
-     * @deprecated Using loadInlineBannerFragment() with callback
      */
-    @Deprecated
     public void loadBannerFragment(final Activity mActivity, String id, final View rootView, final AdCallback callback, Boolean useInlineAdaptive) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
@@ -401,12 +344,6 @@ public class Admob {
 
     /**
      * Load Quảng Cáo Banner Trong Fragment set Inline adaptive banners
-     *
-     * @param activity
-     * @param id
-     * @param rootView
-     * @param inlineStyle
-     * @param callback
      */
     public void loadInlineBannerFragment(final Activity activity, String id, final View rootView, String inlineStyle, final AdCallback callback) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
@@ -421,11 +358,6 @@ public class Admob {
 
     /**
      * Load quảng cáo Collapsible Banner Trong Fragment
-     *
-     * @param mActivity
-     * @param id
-     * @param rootView
-     * @param gravity
      */
     public void loadCollapsibleBannerFragment(final Activity mActivity, String id, final View rootView, String gravity) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
