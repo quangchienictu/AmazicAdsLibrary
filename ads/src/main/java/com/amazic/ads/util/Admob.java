@@ -34,6 +34,7 @@ import com.amazic.ads.BuildConfig;
 import com.amazic.ads.R;
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.AdCallback;
+import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.RewardCallback;
@@ -65,6 +66,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -92,7 +94,8 @@ public class Admob {
     private boolean disableAdResumeWhenClickAds = false;
     public static final String BANNER_INLINE_SMALL_STYLE = "BANNER_INLINE_SMALL_STYLE";
     public static final String BANNER_INLINE_LARGE_STYLE = "BANNER_INLINE_LARGE_STYLE";
-    private final int MAX_SMALL_INLINE_BANNER_HEIGHT = 50;
+    private static int MAX_SMALL_INLINE_BANNER_HEIGHT = 50;
+
     public static long timeLimitAds = 0; // Set > 1000 nếu cần limit ads click
     private boolean isShowInter = true;
     private boolean isShowBanner = true;
@@ -150,8 +153,6 @@ public class Admob {
     /* =======================   Banner ================================= */
     /**
      * Set tắt ads resume khi click ads
-     *
-     * @param disableAdResumeWhenClickAds
      */
     public void setDisableAdResumeWhenClickAds(boolean disableAdResumeWhenClickAds) {
         this.disableAdResumeWhenClickAds = disableAdResumeWhenClickAds;
@@ -178,9 +179,13 @@ public class Admob {
         this.logLogTimeShowAds = logLogTimeShowAds;
     }
 
-    /**
-     * Load quảng cáo Banner Trong Activity
-     */
+    /*=================================Banner ======================================/
+ /**
+      * Load quảng cáo Banner Trong Activity
+      *
+      * @param mActivity
+      * @param id
+      */
     public void loadBanner(final Activity mActivity, String id) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
@@ -365,9 +370,7 @@ public class Admob {
         loadCollapsibleBanner(mActivity, id, gravity, adContainer, containerShimmer);
     }
 
-    private void loadBanner(final Activity mActivity, String id,
-                            final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer,
-                            final AdCallback callback, Boolean useInlineAdaptive, String inlineStyle) {
+    private void loadBanner(final Activity mActivity, String id, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, final AdCallback callback, Boolean useInlineAdaptive, String inlineStyle) {
 
         if (AppPurchase.getInstance().isPurchased(mActivity)) {
             containerShimmer.setVisibility(View.GONE);
@@ -423,19 +426,12 @@ public class Admob {
                     super.onAdClicked();
                     if (disableAdResumeWhenClickAds)
                         AppOpenManager.getInstance().disableAdResumeByClickAction();
-                    if (callback != null) {
-                        callback.onAdClicked();
-                        Log.d(TAG, "onAdClicked");
-                    }
                     FirebaseUtil.logClickAdsEvent(context, id);
                 }
 
                 @Override
                 public void onAdImpression() {
                     super.onAdImpression();
-                    if (callback != null) {
-                        callback.onAdImpression();
-                    }
                 }
             });
 
