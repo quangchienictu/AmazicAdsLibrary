@@ -370,6 +370,7 @@ public class Admob {
         loadCollapsibleBanner(mActivity, id, gravity, adContainer, containerShimmer);
     }
 
+
     private void loadBanner(final Activity mActivity, String id, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, final AdCallback callback, Boolean useInlineAdaptive, String inlineStyle) {
 
         if (AppPurchase.getInstance().isPurchased(mActivity)) {
@@ -549,7 +550,9 @@ public class Admob {
     /* ==========================  Inter Splash============================================== */
 
 
-
+    public RewardedAd getRewardedAd() {
+        return this.rewardedAd;
+    }
 
 
     /**
