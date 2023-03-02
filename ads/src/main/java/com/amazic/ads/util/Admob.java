@@ -1297,6 +1297,14 @@ public class Admob {
                 public void onNativeAdLoaded(NativeAd nativeAd) {
                     super.onNativeAdLoaded(nativeAd);
                     callback.onNativeAdLoaded(nativeAd);
+                    nativeAd.setOnPaidEventListener(adValue -> {
+                        Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
+                        FirebaseUtil.logPaidAdImpression(context,
+                                adValue,
+                                listID.get(0),
+                                "native");
+                        callback.onEarnRevenue((double) adValue.getValueMicros());
+                    });
                 }
 
                 @Override
@@ -1469,7 +1477,6 @@ public class Admob {
 
         AdLoader adLoader = new AdLoader.Builder(context, id)
                 .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
-
                     @Override
                     public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
                         containerShimmer.stopShimmer();
@@ -1480,13 +1487,7 @@ public class Admob {
                         pushAdsToViewCustom(nativeAd, adView);
                         frameLayout.removeAllViews();
                         frameLayout.addView(adView);
-                        nativeAd.setOnPaidEventListener(adValue -> {
-                            Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
-                            FirebaseUtil.logPaidAdImpression(context,
-                                    adValue,
-                                    id,
-                                    "native");
-                        });
+
                     }
 
 
