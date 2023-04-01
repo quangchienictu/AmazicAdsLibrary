@@ -710,7 +710,7 @@ public class Admob {
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().disableAppResume();
                         }
-                        isShowLoadingSplash = false;
+                        isShowLoadingSplash = true;
                         if(logTimeLoadAdsSplash){
                             long timeLoad = System.currentTimeMillis() -  currentTime;
                             Log.e(TAG, "load ads time :"+timeLoad);
@@ -738,7 +738,7 @@ public class Admob {
 
                         }
                         mInterstitialSplash = null;
-                        isShowLoadingSplash = false;
+                        isShowLoadingSplash = true;
                     }
 
                     @Override
