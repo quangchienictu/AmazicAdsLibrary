@@ -686,6 +686,7 @@ public class Admob {
                 }
             },3000);
         }else{
+            mInterstitialSplash = null;
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -696,62 +697,7 @@ public class Admob {
                                     super.onAdLoaded(interstitialAd);
                                     mInterstitialSplash = interstitialAd;
                                     AppOpenManager.getInstance().disableAppResume();
-                                    mInterstitialSplash.setFullScreenContentCallback(new FullScreenContentCallback() {
-                                        @Override
-                                        public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-                                            super.onAdFailedToShowFullScreenContent(adError);
-                                            isShowLoadingSplash = false;
-                                        }
-
-                                        @Override
-                                        public void onAdShowedFullScreenContent() {
-                                            super.onAdShowedFullScreenContent();
-                                            mInterstitialSplash = null;
-                                        }
-
-                                        @Override
-                                        public void onAdDismissedFullScreenContent() {
-                                            super.onAdDismissedFullScreenContent();
-                                            if (AppOpenManager.getInstance().isInitialized()) {
-                                                AppOpenManager.getInstance().enableAppResume();
-                                            }
-                                            if (dialog != null && dialog.isShowing()) {
-                                                dialog.dismiss();
-                                            }
-                                            if(!openActivityAfterShowInterAds){
-                                                adListener.onNextAction();
-                                                adListener.onAdClosed();
-                                            }
-                                            adListener.onAdClosedByUser();
-                                            Log.e("TAG", "onAdDismissedFullScreenContent: ");
-                                        }
-                                    });
-                                    if(openActivityAfterShowInterAds){
-                                        adListener.onNextAction();
-                                        adListener.onAdClosed();
-                                    }
-                                    try {
-                                        if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                                            try {
-                                                if (dialog != null && dialog.isShowing())
-                                                    dialog.dismiss();
-                                                dialog = new LoadingAdsDialog(context);
-                                                try {
-                                                    dialog.show();
-                                                } catch (Exception e) {
-                                                    dialog.dismiss();
-                                                    return;
-                                                }
-                                            } catch (Exception e) {
-                                                dialog = null;
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }catch (Exception e){}
-                                    mInterstitialSplash.show((Activity) context);
-
-
-                                    Log.e("TAG", "onAdLoaded: 0");
+                                    onShowSplash((Activity) context, adListener);
                                 }
 
                                 @Override
@@ -1044,7 +990,7 @@ public class Admob {
                     adListener.onNextAction();
                     isShowLoadingSplash = false;
                 }
-            }, 800);
+            }, 500);
         }else{
             isShowLoadingSplash = false;
             Log.e(TAG, "onShowSplash: fail on background");
