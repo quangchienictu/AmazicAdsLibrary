@@ -700,6 +700,7 @@ public class Admob {
                                         @Override
                                         public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                                             super.onAdFailedToShowFullScreenContent(adError);
+                                            isShowLoadingSplash = false;
                                         }
 
                                         @Override
@@ -717,12 +718,18 @@ public class Admob {
                                             if (dialog != null && dialog.isShowing()) {
                                                 dialog.dismiss();
                                             }
+                                            if(!openActivityAfterShowInterAds){
+                                                adListener.onNextAction();
+                                                adListener.onAdClosed();
+                                            }
                                             adListener.onAdClosedByUser();
                                             Log.e("TAG", "onAdDismissedFullScreenContent: ");
                                         }
                                     });
-                                    adListener.onNextAction();
-                                    adListener.onAdClosed();
+                                    if(openActivityAfterShowInterAds){
+                                        adListener.onNextAction();
+                                        adListener.onAdClosed();
+                                    }
                                     try {
                                         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                                             try {
