@@ -56,7 +56,7 @@ public class AppLovin {
     private Runnable rdTimeout;
     private LoadingAdsDialog dialog;
     private boolean isTimeout; // xử lý timeout show ads
-
+    private boolean openActivityAfterShowInterAds = true;
     public boolean isShowLoadingSplash = false;  //kiểm tra trạng thái ad splash, ko cho load, show khi đang show loading ads splash
     boolean isTimeDelay = false; //xử lý delay time show ads, = true mới show ads
     private Context context;
@@ -121,6 +121,9 @@ public class AppLovin {
         this.numShowAds = numShowAds;
         this.currentClicked = currentClicked;
     }
+    public void setOpenActivityAfterShowInterAds(boolean openActivityAfterShowInterAds) {
+        this.openActivityAfterShowInterAds = openActivityAfterShowInterAds;
+    }
 
     public MaxInterstitialAd getInterstitialSplash() {
         return interstitialSplash;
@@ -173,6 +176,8 @@ public class AppLovin {
                     Log.i(TAG, "loadSplashInterstitialAds:show ad on timeout ");
                     onShowSplash((Activity) context, adListener);
                     return;
+                }else{
+                    isShowLoadingSplash = false;
                 }
                 if (adListener != null) {
                     adListener.onAdClosed();
@@ -235,7 +240,73 @@ public class AppLovin {
             }
         });
     }
+    public void loadSplashInterstitialAds(final Context context, String id, long timeDelay, AppLovinCallback adListener){
+        AppOpenManager.getInstance().disableAppResume();
+        interstitialSplash = getInterstitialAds(context, id);
+        new Handler().postDelayed(() -> {
+            if (interstitialSplash != null && interstitialSplash.isReady()) {
+                Log.i(TAG, "loadSplashInterstitialAds:show ad on timeout ");
+                onShowSplash((Activity) context, adListener);
+                return;
+            }else{
+                if (adListener != null) {
+                    adListener.onAdClosed();
+                    isShowLoadingSplash = false;
+                }
+            }
+        }, timeDelay);
+        isShowLoadingSplash = true;
+        interstitialSplash.setListener(new MaxAdListener() {
+            @Override
+            public void onAdLoaded(MaxAd ad) {
+                Log.e(TAG, "loadSplashInterstitialAds end time loading success: "
+                        + Calendar.getInstance().getTimeInMillis()
+                        + " time limit:" + isTimeout);
+                if (isTimeout)
+                    return;
+                if (isTimeDelay) {
+                    onShowSplash((Activity) context, adListener);
+                    Log.i(TAG, "loadSplashInterstitialAds: show ad on loaded ");
+                }
+            }
 
+            @Override
+            public void onAdDisplayed(MaxAd ad) {
+                Log.e(TAG, "onAdDisplayed");
+            }
+
+            @Override
+            public void onAdHidden(MaxAd ad) {
+
+            }
+
+            @Override
+            public void onAdClicked(MaxAd ad) {
+                FirebaseUtil.logClickAdsEvent(context, ad.getAdUnitId());
+            }
+
+            @Override
+            public void onAdLoadFailed(String adUnitId, MaxError error) {
+                AppOpenManager.getInstance().enableAppResume();
+                AppOpenMax.getInstance().enableAppResume();
+                Log.e(TAG, "onAdLoadFailed: " + error.getMessage());
+                if (isTimeout)
+                    return;
+                if (adListener != null) {
+                    if (handlerTimeout != null && rdTimeout != null) {
+                        handlerTimeout.removeCallbacks(rdTimeout);
+                    }
+                    Log.e(TAG, "loadSplashInterstitialAds: load fail " + error.getMessage());
+                    adListener.onAdFailedToLoad(error);
+                }
+            }
+
+            @Override
+            public void onAdDisplayFailed(MaxAd ad, MaxError error) {
+
+            }
+        });
+    }
     /**
      * Load quảng cáo Full tại màn SplashActivity
      * Sau khoảng thời gian timeout thì load ads và callback về cho View
@@ -355,18 +426,18 @@ public class AppLovin {
         });
     }
 
-    public void onShowSplash(Activity activity, AppLovinCallback adListener) {
+    public void onShowSplash(Activity activity, AppLovinCallback callback) {
         isShowLoadingSplash = true;
         Log.d(TAG, "onShowSplash: ");
         if (handlerTimeout != null && rdTimeout != null) {
             handlerTimeout.removeCallbacks(rdTimeout);
         }
 
-        if (adListener != null) {
-            adListener.onAdLoaded();
+        if (callback != null) {
+            callback.onAdLoaded();
         }
         if (interstitialSplash == null) {
-            adListener.onAdClosed();
+            callback.onAdClosed();
             return;
         }
         interstitialSplash.setRevenueListener(ad ->FirebaseUtil.logPaidAdImpression(context,ad));
@@ -383,14 +454,15 @@ public class AppLovin {
                     AppOpenManager.getInstance().disableAppResume();
                 }
                 AppOpenMax.getInstance().disableAppResume();
+                isShowLoadingSplash = true;
             }
 
             @Override
             public void onAdHidden(MaxAd ad) {
                 Log.d(TAG, "onAdHidden: " + ((AppCompatActivity) activity).getLifecycle().getCurrentState());
                 isShowLoadingSplash = false;
-                if (adListener != null && ((AppCompatActivity) activity).getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                    adListener.onAdClosed();
+                if (callback != null && ((AppCompatActivity) activity).getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                    callback.onAdClosed();
                     interstitialSplash = null;
                     if (dialog != null) {
                         dialog.dismiss();
@@ -405,23 +477,23 @@ public class AppLovin {
             @Override
             public void onAdClicked(MaxAd ad) {
                 FirebaseUtil.logClickAdsEvent(context, interstitialSplash.getAdUnitId());
-                if (adListener != null) {
-                    adListener.onAdClicked();
+                if (callback != null) {
+                    callback.onAdClicked();
                 }
             }
 
             @Override
             public void onAdLoadFailed(String adUnitId, MaxError error) {
-
+                Log.d(TAG, "onAdLoadFailed: ");
             }
 
             @Override
             public void onAdDisplayFailed(MaxAd ad, MaxError error) {
-                Log.d(TAG, "onAdDisplayFailed: " + error.getMessage());
+                Log.e(TAG, "onAdDisplayFailed: " + error.getMessage());
                 interstitialSplash = null;
                 isShowLoadingSplash = false;
-                if (adListener != null) {
-                    adListener.onAdFailedToShow(error);
+                if (callback != null) {
+                    callback.onAdFailedToShow(error);
                     if (dialog != null) {
                         dialog.dismiss();
                     }
@@ -430,7 +502,7 @@ public class AppLovin {
         });
 
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-            try {
+            /*try {
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
                 dialog = new LoadingAdsDialog(activity);
@@ -441,13 +513,22 @@ public class AppLovin {
             } catch (Exception e) {
                 dialog = null;
                 e.printStackTrace();
-                adListener.onAdClosed();
-                return;
-            }
+             //   callback.onAdClosed();
+            }*/
             new Handler().postDelayed(() -> {
+                if (openActivityAfterShowInterAds && callback != null) {
+                    callback.onAdClosed();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (dialog != null && dialog.isShowing() && !((Activity) context).isDestroyed())
+                                dialog.dismiss();
+                        }
+                    }, 1500);
+                }
                 if (activity != null && !activity.isDestroyed())
                     interstitialSplash.showAd();
-            }, 800);
+            }, 300);
         } else {
             Log.e(TAG, "onShowSplash fail ");
             isShowLoadingSplash = false;
@@ -462,8 +543,6 @@ public class AppLovin {
                     if (AppLovin.getInstance().getInterstitialSplash().isReady()) {
                         Log.i(TAG, "show ad splash when show fail in background");
                         AppLovin.getInstance().onShowSplash(activity, callback);
-                    } else {
-                        callback.onAdClosed();
                     }
                 }
             }, timeDelay);
@@ -582,7 +661,7 @@ public class AppLovin {
             @Override
             public void onAdHidden(MaxAd ad) {
                 //  if (callback != null && ((AppCompatActivity) context).getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-                callback.onAdClosed();
+                if(!openActivityAfterShowInterAds){callback.onAdClosed();}
                 if (shouldReloadAds) {
                     requestInterstitialAds(interstitialAd);
                 }
@@ -641,12 +720,11 @@ public class AppLovin {
      * Kiểm tra và hiện thị ads
      *
      * @param context
-     * @param interstitialAd
      * @param callback
      */
-    private void showInterstitialAd(Context context, MaxInterstitialAd interstitialAd, InterCallback callback) {
+    private void showInterstitialAd(Context context, MaxInterstitialAd mInterstitialAd, InterCallback callback) {
         currentClicked++;
-        if (currentClicked >= numShowAds && interstitialAd != null) {
+        if (currentClicked >= numShowAds && mInterstitialAd != null) {
             if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
                 try {
                     if (dialog != null && dialog.isShowing())
@@ -664,7 +742,26 @@ public class AppLovin {
                     dialog = null;
                     e.printStackTrace();
                 }
-                new Handler().postDelayed(interstitialAd::showAd, 800);
+          //      new Handler().postDelayed(mInterstitialAd::showAd, 800);
+                new Handler().postDelayed(() -> {
+                    if (AppOpenManager.getInstance().isInitialized()) {
+                        AppOpenManager.getInstance().disableAppResume();
+                    }
+
+                    if (openActivityAfterShowInterAds && callback != null) {
+                        callback.onAdClosed();
+                        callback.onNextAction();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (dialog != null && dialog.isShowing() && !((Activity) context).isDestroyed())
+                                    dialog.dismiss();
+                            }
+                        }, 1500);
+                    }
+                    mInterstitialAd.showAd();
+                }, 800);
+
             }
             currentClicked = 0;
         } else if (callback != null) {
@@ -941,7 +1038,7 @@ public class AppLovin {
                 .setAdvertiserTextViewId(R.id.ad_advertiser)
                 .setIconImageViewId(R.id.ad_app_icon)
                 .setMediaContentViewGroupId(R.id.ad_media)
-                .setOptionsContentViewGroupId(R.id.options_view)
+                .setOptionsContentViewGroupId(R.id.ad_options_view)
                 .setCallToActionButtonId(R.id.ad_call_to_action)
                 .build();
 

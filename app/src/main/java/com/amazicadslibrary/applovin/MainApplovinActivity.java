@@ -41,7 +41,7 @@ public class MainApplovinActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_applovin);
         frAds = findViewById(R.id.fr_ads);
         shimmerFrameLayout = findViewById(R.id.shimmer_container_native);
-        interstitialAd = AppLovin.getInstance().getInterstitialAds(this, getString(R.string.admod_interstitial_id));
+        interstitialAd = AppLovin.getInstance().getInterstitialAds(this, getString(R.string.applovin_test_inter));
         AppLovin.getInstance().loadBanner(this, getString(R.string.applovin_test_banner));
 
         //load reward ad

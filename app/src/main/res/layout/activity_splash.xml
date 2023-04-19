@@ -9,11 +9,10 @@
     <ImageView
         android:layout_marginBottom="100dp"
         android:id="@+id/icon"
-       android:layout_centerInParent="true"
+        android:layout_centerInParent="true"
         android:src="@mipmap/ic_launcher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

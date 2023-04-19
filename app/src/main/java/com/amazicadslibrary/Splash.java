@@ -13,7 +13,7 @@ import com.amazic.ads.callback.BillingListener;
 import com.amazic.ads.callback.InterCallback;
 import com.amazicadslibrary.applovin.MainApplovinActivity;
 import com.applovin.mediation.MaxError;
-import com.google.android.gms.ads.LoadAdError;
+import com.applovin.sdk.AppLovinSdk;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +21,14 @@ import java.util.List;
 public class Splash extends AppCompatActivity {
     private static final String TAG = "SplashActivity";
     public static String PRODUCT_ID_MONTH = "android.test.purchased";
+    public AppLovinCallback appLovinCallback;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         String android_id = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        AppLovin.getInstance().loadSplashInterstitialAds(Splash.this, getString(R.string.applovin_test_inter),25000,5000, new AppLovinCallback(){
+        appLovinCallback= new AppLovinCallback(){
             @Override
             public void onAdClosed() {
                 startActivity(new Intent(Splash.this, MainApplovinActivity.class));
@@ -40,8 +41,22 @@ public class Splash extends AppCompatActivity {
                 startActivity(new Intent(Splash.this,MainApplovinActivity.class));
                 finish();
             }
+        };
+        AppLovin.getInstance().setOpenActivityAfterShowInterAds(true);
+        AppLovin.getInstance().init(this,new AppLovinCallback(){
+            @Override
+            public void initAppLovinSuccess() {
+                super.initAppLovinSuccess();
+                AppLovin.getInstance().loadSplashInterstitialAds(Splash.this, getString(R.string.applovin_test_inter),2000, appLovinCallback);
+            }
         });
         initBilling();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppLovin.getInstance().onCheckShowSplashWhenFail(this,appLovinCallback,1000);
     }
 
     private void initBilling() {
