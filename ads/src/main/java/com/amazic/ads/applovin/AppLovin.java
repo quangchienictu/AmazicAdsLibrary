@@ -56,7 +56,7 @@ public class AppLovin {
     private Runnable rdTimeout;
     private LoadingAdsDialog dialog;
     private boolean isTimeout; // xử lý timeout show ads
-    private boolean openActivityAfterShowInterAds = true;
+    private boolean openActivityAfterShowInterAds = false;
     public boolean isShowLoadingSplash = false;  //kiểm tra trạng thái ad splash, ko cho load, show khi đang show loading ads splash
     boolean isTimeDelay = false; //xử lý delay time show ads, = true mới show ads
     private Context context;
@@ -502,33 +502,48 @@ public class AppLovin {
         });
 
         if (ProcessLifecycleOwner.get().getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
-            /*try {
+            try {
                 if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
                 dialog = new LoadingAdsDialog(activity);
-                if (activity != null && !activity.isDestroyed()) {
-                    dialog.setCancelable(false);
+                try {
                     dialog.show();
+                } catch (Exception e) {
+                    callback.onAdClosed();
+                    return;
                 }
             } catch (Exception e) {
                 dialog = null;
                 e.printStackTrace();
-             //   callback.onAdClosed();
-            }*/
+            }
             new Handler().postDelayed(() -> {
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().disableAppResume();
+                }
+
                 if (openActivityAfterShowInterAds && callback != null) {
                     callback.onAdClosed();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (dialog != null && dialog.isShowing() && !((Activity) context).isDestroyed())
+                            if (dialog != null && dialog.isShowing() && !activity.isDestroyed())
                                 dialog.dismiss();
                         }
                     }, 1500);
                 }
-                if (activity != null && !activity.isDestroyed())
+
+                if(activity!=null){
                     interstitialSplash.showAd();
-            }, 300);
+                    Log.e(TAG, "onShowSplash: mInterstitialSplash.show");
+                    isShowLoadingSplash = false;
+                }else if (callback != null) {
+                    if (dialog != null) {
+                        dialog.dismiss();
+                    }
+                    callback.onAdClosed();
+                    isShowLoadingSplash = false;
+                }
+            }, 500);
         } else {
             Log.e(TAG, "onShowSplash fail ");
             isShowLoadingSplash = false;
