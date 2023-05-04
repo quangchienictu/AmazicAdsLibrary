@@ -31,7 +31,7 @@ public class Splash extends AppCompatActivity {
         // Admob
         AppPurchase.getInstance().setBillingListener(new BillingListener() {
             @Override
-            public void onInitBillingListener(int code) {
+            public void onInitBillingFinished(int resultCode) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

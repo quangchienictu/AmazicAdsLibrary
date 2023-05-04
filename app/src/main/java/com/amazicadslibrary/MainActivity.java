@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.NativeCallback;
+import com.amazic.ads.callback.PurchaseListener;
 import com.amazic.ads.callback.PurchaseListioner;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
@@ -50,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
+        AppPurchase.getInstance().setPurchaseTest(true);
         findViewById(R.id.btnClickInter).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        AppPurchase.getInstance().setPurchaseListioner(new PurchaseListioner() {
+        AppPurchase.getInstance().setPurchaseListener(new PurchaseListener() {
             @Override
             public void onProductPurchased(String productId,String transactionDetails) {
                Toast.makeText(MainActivity.this,"Purchase success",Toast.LENGTH_SHORT).show();
