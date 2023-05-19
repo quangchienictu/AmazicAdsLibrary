@@ -1,4 +1,4 @@
-<h1>AmazicAdsLibraty</h1>
+<h1>nlbnAdsLibraty</h1>
 <h3><li>Adding the library to your project: Add the following in your root build.gradle at the end of repositories:</br></h3>
 
 <pre>
@@ -13,7 +13,7 @@
 <pre>
  dependencies {
     implementation 'com.github.quangchienictu:AmazicAdsLibrary:{version}'
-    implementation 'com.google.android.gms:play-services-ads:20.5.0'
+    implementation 'com.google.android.gms:play-services-ads:22.1.0'
     //multidex
     implementation "androidx.multidex:multidex:2.0.1"
   }
@@ -67,14 +67,12 @@
  </pre>
 <h4>Load in ativity</h4>
 <pre>
-  
-    Admod.getInstance().loadBanner(this,"bannerID");
-  
+    Admob.getInstance().loadBanner(this,"bannerID");
 </pre>
 <h4>Load in fragment</h4>
 <pre>
   
-   Admod.getInstance().loadBannerFragment( mActivity, "bannerID",  rootView)
+   Admob.getInstance().loadBannerFragment( mActivity, "bannerID",  rootView)
   
 </pre>
 </div>
@@ -82,21 +80,19 @@
 <div class="content">
   <h3>- Inter Splash</h3>
   <pre>
-    
-      Admod.getInstance().loadSplashInterAds(this,"interstitial_id",25000,5000, new InterCallback(){
+      public InterCallback interCallback;
+      interCallback = new InterCallback(){
             @Override
-            public void onAdClosed() {
+            public void onNextAction() {
+                super.onNextAction();
                 startActivity(new Intent(Splash.this,MainActivity.class));
                 finish();
             }
+      };
+      Admob.getInstance().loadSplashInterAds2(this,"interstitial_id",3000,interCallback);
 
-            @Override
-            public void onAdFailedToLoad(LoadAdError i) {
-                super.onAdFailedToLoad(i);
-                startActivity(new Intent(Splash.this,MainActivity.class));
-                finish();
-            }
-        });
+     onresume
+     Admob.getInstance().onCheckShowSplashWhenFail(this,interCallback,1000);
     
   </pre>
 <h3>- InterstitialAds</h3>
@@ -104,7 +100,7 @@
 <pre>
   private InterstitialAd mInterstitialAd;
 
-   Admod.getInstance().loadInterAds(this, "interstitial_id" new InterCallback() {
+   Admob.getInstance().loadInterAds(this, "interstitial_id" new InterCallback() {
             @Override
             public void onInterstitialLoad(InterstitialAd interstitialAd) {
                 super.onInterstitialLoad(interstitialAd);
@@ -114,30 +110,22 @@
 </pre>
 <h4>Show interstitialAds</h4>
 <pre>
-   Admod.getInstance().showInterAds(MainActivity.this, mInterstitialAd, new InterCallback() {
+   Admob.getInstance().showInterAds(MainActivity.this, mInterstitialAd, new InterCallback() {
                     @Override
-                    public void onAdClosed() {
+                    public void onNextAction() {
                         startActivity(new Intent(MainActivity.this,MainActivity3.class));
                         // Create and load interstitialAds (when not finish activity ) 
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(LoadAdError i) {
-                        startActivity(new Intent(MainActivity.this,MainActivity3.class));
-                         // Create and load interstitialAds (when not finish activity) 
-                    }
-
-                });
+                    }});
 </pre>
 </div>
 
 <h2>- RewardAds</h2>
 <div class="content">
   <h4>Init RewardAds</h4>
-<pre>  Admod.getInstance().initRewardAds(this,reward_id);</pre>
+<pre>  Admob.getInstance().initRewardAds(this,reward_id);</pre>
 <h4>Show RewardAds</h4>
 <pre>
-  Admod.getInstance().showRewardAds(MainActivity.this,new RewardCallback(){
+  Admob.getInstance().showRewardAds(MainActivity.this,new RewardCallback(){
                     @Override
                     public void onEarnedReward(RewardItem rewardItem) {
                         // code here
@@ -176,12 +164,12 @@
      
      native_ads = findViewById(R.id.native_ads);
      
-      Admod.getInstance().loadNativeAd(this, "native_id", new NativeCallback() {
+      Admob.getInstance().loadNativeAd(this, "native_id", new NativeCallback() {
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {
                 NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_native, null);
                 native_ads.addView(adView);
-                Admod.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
             }
         });
            @Override
@@ -194,7 +182,7 @@
 
 <h4>Hide all ads</h4>
 <pre>
- Admod.getInstance().setShowAllAds(true);
+ Admob.getInstance().setShowAllAds(true);
  true - show all ads
  false - hide all ads
 </pre>
