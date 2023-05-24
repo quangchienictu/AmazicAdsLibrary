@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.provider.Settings;
 
 import com.amazic.ads.billing.AppPurchase;
+import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.BillingListener;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admob;
+import com.amazic.ads.util.AppOpenManager;
 import com.google.android.gms.ads.LoadAdError;
 
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class Splash extends AppCompatActivity {
         Admob.getInstance().setOpenEventLoadTimeLoadAdsSplash(true);
         Admob.getInstance().setOpenEventLoadTimeShowAdsInter(true);
         // Admob
-        AppPurchase.getInstance().setBillingListener(new BillingListener() {
+      /*  AppPurchase.getInstance().setBillingListener(new BillingListener() {
             @Override
             public void onInitBillingListener(int code) {
                 runOnUiThread(new Runnable() {
@@ -52,7 +54,17 @@ public class Splash extends AppCompatActivity {
                     }
                 });
             }
-        }, 5000);
+        }, 5000);*/
+        List<String> listID = new ArrayList<>();
+        listID.add("ca-app-pub-3940256099942544/3419835294");
+        AppOpenManager.getInstance().loadOpenAppAdSplashFloor(this,listID,true,new AdCallback(){
+            @Override
+            public void onNextAction() {
+                super.onNextAction();
+                startActivity(new Intent(Splash.this,MainActivity.class));
+                finish();
+            }
+        });
 
         initBilling();
     }
