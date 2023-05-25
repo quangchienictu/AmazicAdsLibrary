@@ -19,6 +19,7 @@ import java.util.List;
 
 public class Splash extends AppCompatActivity {
     private static final String TAG = "SplashActivity";
+    AdCallback adCallback;
     public static String PRODUCT_ID_MONTH = "android.test.purchased";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +58,15 @@ public class Splash extends AppCompatActivity {
         }, 5000);*/
         List<String> listID = new ArrayList<>();
         listID.add("ca-app-pub-3940256099942544/3419835294");
-        AppOpenManager.getInstance().loadOpenAppAdSplashFloor(this,listID,true,new AdCallback(){
+        adCallback = new AdCallback(){
             @Override
             public void onNextAction() {
                 super.onNextAction();
                 startActivity(new Intent(Splash.this,MainActivity.class));
                 finish();
             }
-        });
+        };
+        AppOpenManager.getInstance().loadOpenAppAdSplashFloor(this,listID,true,adCallback);
 
         initBilling();
     }
@@ -75,5 +77,11 @@ public class Splash extends AppCompatActivity {
         List<String> listSubsId = new ArrayList<>();
         AppPurchase.getInstance().initBilling(getApplication(),listINAPId,listSubsId);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AppOpenManager.getInstance().onCheckShowSplashWhenFail(this,adCallback,1000);
     }
 }
