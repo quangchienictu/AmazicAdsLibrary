@@ -20,7 +20,6 @@ public class SplashIS extends AppCompatActivity {
         AppIronSource.getInstance().setOpenActivityAfterShowInterAds(true);
        /* AppIronSource.getInstance().setTimeLimit(60000);
         AppIronSource.getInstance().setShowAllAds(false);*/
-        Admob.getInstance().setShowAllAds(false);
         loadAndShowInterAds();
     }
 
