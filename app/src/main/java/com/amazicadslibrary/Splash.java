@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.AdCallback;
@@ -62,6 +63,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onNextAction() {
                 super.onNextAction();
+                Log.e("xxx","onNextAction");
                 startActivity(new Intent(Splash.this,MainActivity.class));
                 finish();
             }
