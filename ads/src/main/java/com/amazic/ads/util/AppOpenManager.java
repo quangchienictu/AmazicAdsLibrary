@@ -772,7 +772,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     public void loadOpenAppAdSplash(Context context, String idResumeSplash, long timeDelay, long timeOut, boolean isShowAdIfReady, AdCallback adCallback) {
         this.splashAdId = idResumeSplash;
-        if(!isNetworkConnected(context)&&2==33){
+        if(!isNetworkConnected(context)){
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
