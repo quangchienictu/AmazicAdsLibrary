@@ -66,7 +66,7 @@ public class Splash extends AppCompatActivity {
                 finish();
             }
         };
-        AppOpenManager.getInstance().loadOpenAppAdSplashFloor(this,listID,true,adCallback);
+        AppOpenManager.getInstance().loadOpenAppAdSplash(this,"ca-app-pub-3940256099942544/3419835294",3000,10000,true,adCallback);
 
         initBilling();
     }
