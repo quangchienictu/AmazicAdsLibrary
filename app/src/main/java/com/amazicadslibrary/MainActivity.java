@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static String PRODUCT_ID_YEAR = "android.test.purchased";
     public static String PRODUCT_ID_MONTH = "android.test.purchased";
+    public static  List<String> listID;
 
 
     @Override
@@ -37,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         native_ads   = findViewById(R.id.native_ads);
-        Admob.getInstance().loadCollapsibleBanner(this, getString(R.string.admod_banner_collap_id), BannerGravity.bottom);
+        listID = new ArrayList<>();
+        listID.add(getString(R.string.ads_test_inter));
+        listID.add(getString(R.string.ads_test_inter));
+        listID.add(getString(R.string.admod_banner_collap_id));
+        Admob.getInstance().loadCollapsibleBannerFloor(this, listID, BannerGravity.bottom);
         Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
 
         loadAdInter();

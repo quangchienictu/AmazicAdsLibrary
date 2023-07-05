@@ -63,7 +63,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onNextAction() {
                 super.onNextAction();
-                Log.e("xxx","onNextAction");
+                Log.e("xxx","onNextActionfba");
                 startActivity(new Intent(Splash.this,MainActivity.class));
                 finish();
             }
