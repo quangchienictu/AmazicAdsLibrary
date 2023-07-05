@@ -198,6 +198,31 @@ public class Admob {
         }
     }
 
+    public void loadBannerFloor(final Activity mActivity, List<String> listID) {
+        final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
+        final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        if(!isShowAllAds||!isNetworkConnected()){
+            adContainer.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
+        }else{
+            if(listID==null){
+                adContainer.setVisibility(View.GONE);
+                containerShimmer.setVisibility(View.GONE);
+                return;
+            }
+            if(listID.size()==0){
+                adContainer.setVisibility(View.GONE);
+                containerShimmer.setVisibility(View.GONE);
+                return;
+            }
+            List idNew  = new ArrayList();
+            for (String id :listID){
+                idNew.add(id);
+            }
+            loadBannerFloor(mActivity, idNew, adContainer, containerShimmer, null, false, BANNER_INLINE_LARGE_STYLE);
+        }
+    }
+
 
     /**
      * Load quảng cáo Banner Trong Activity
@@ -422,7 +447,6 @@ public class Admob {
     }
 
     private void loadBanner(final Activity mActivity, String id, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, final AdCallback callback, Boolean useInlineAdaptive, String inlineStyle) {
-
         if (AppPurchase.getInstance().isPurchased(mActivity)) {
             containerShimmer.setVisibility(View.GONE);
             return;
@@ -476,6 +500,80 @@ public class Admob {
                     if (disableAdResumeWhenClickAds)
                         AppOpenManager.getInstance().disableAdResumeByClickAction();
                     FirebaseUtil.logClickAdsEvent(context, id);
+                }
+
+                @Override
+                public void onAdImpression() {
+                    super.onAdImpression();
+                }
+            });
+
+            adView.loadAd(getAdRequest());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadBannerFloor(final Activity mActivity, List<String> listID, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, final AdCallback callback, Boolean useInlineAdaptive, String inlineStyle) {
+        if (AppPurchase.getInstance().isPurchased(mActivity)) {
+            containerShimmer.stopShimmer();
+            adContainer.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
+            return;
+        }
+        if (listID.size()==0) {
+            containerShimmer.stopShimmer();
+            adContainer.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
+            return;
+        }
+        Log.e("Admob","load banner ID : "+listID.get(0));
+        containerShimmer.setVisibility(View.VISIBLE);
+        containerShimmer.startShimmer();
+        try {
+            AdView adView = new AdView(mActivity);
+            adView.setAdUnitId(listID.get(0));
+            adContainer.addView(adView);
+            AdSize adSize = getAdSize(mActivity, useInlineAdaptive, inlineStyle);
+            int adHeight;
+            if (useInlineAdaptive && inlineStyle.equalsIgnoreCase(BANNER_INLINE_SMALL_STYLE)) {
+                adHeight = MAX_SMALL_INLINE_BANNER_HEIGHT;
+            } else {
+                adHeight = adSize.getHeight();
+            }
+            containerShimmer.getLayoutParams().height = (int) (adHeight * Resources.getSystem().getDisplayMetrics().density + 0.5f);
+            adView.setAdSize(adSize);
+            adView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    listID.remove(0);
+                    loadBannerFloor(mActivity,listID,adContainer,containerShimmer,callback,useInlineAdaptive,inlineStyle);
+                }
+
+
+                @Override
+                public void onAdLoaded() {
+                    Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
+                    containerShimmer.stopShimmer();
+                    containerShimmer.setVisibility(View.GONE);
+                    adContainer.setVisibility(View.VISIBLE);
+                    if (adView != null) {
+                        adView.setOnPaidEventListener(adValue -> {
+                            Log.d(TAG, "OnPaidEvent banner:" + adValue.getValueMicros());
+
+                            FirebaseUtil.logPaidAdImpression(context,
+                                    adValue,
+                                    adView.getAdUnitId(),"banner");
+                        });
+                    }
+                }
+
+                @Override
+                public void onAdClicked() {
+                    super.onAdClicked();
+                    if (disableAdResumeWhenClickAds)
+                        AppOpenManager.getInstance().disableAdResumeByClickAction();
+                    FirebaseUtil.logClickAdsEvent(context, listID.get(0));
                 }
 
                 @Override
@@ -1150,6 +1248,64 @@ public class Admob {
                             if(adCallback!=null)
                                 adCallback.onAdFailedToLoad(loadAdError);
                             adCallback.onNextAction();
+                        }
+
+                    });
+        }
+    }
+    public void loadInterAdsFloor(Context context, List<String> listID, InterCallback adCallback){
+        if(listID==null){
+            adCallback.onAdFailedToLoad(null);
+            adCallback.onNextAction();
+            return;
+        }
+        if(listID.size()<1){
+            adCallback.onAdFailedToLoad(null);
+            adCallback.onNextAction();
+            return;
+        }
+        List<String> listIDNew = new ArrayList<>();
+        for (String idNew:listID){
+            listIDNew.add(idNew);
+        }
+        loadInterAdsFloorByList(context,listIDNew,adCallback);
+    }
+    private void loadInterAdsFloorByList(Context context, List<String> listID, InterCallback adCallback) {
+        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
+            adCallback.onInterstitialLoad(null);
+            return;
+        }
+        if(listID.size()==0){
+            adCallback.onAdFailedToLoad(null);
+            adCallback.onNextAction();
+            return;
+        }
+        Log.e("Admob","load Inter ID : "+listID.get(0));
+        if(isShowInter){
+            isTimeout = false;
+            interstitialAd = null;
+            InterstitialAd.load(context, listID.get(0), getAdRequest(),
+                    new InterstitialAdLoadCallback() {
+                        @Override
+                        public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                            if(adCallback!=null){
+                                adCallback.onInterstitialLoad(interstitialAd);
+                            }
+
+                            //tracking adjust
+                            interstitialAd.setOnPaidEventListener(adValue -> {
+                                Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
+                                FirebaseUtil.logPaidAdImpression(context,
+                                        adValue,
+                                        interstitialAd.getAdUnitId(), "inter");
+                                adCallback.onEarnRevenue( (double) adValue.getValueMicros());
+                            });
+                        }
+
+                        @Override
+                        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                            listID.remove(0);
+                            loadInterAdsFloorByList(context,listID,adCallback);
                         }
 
                     });

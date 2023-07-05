@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
         native_ads   = findViewById(R.id.native_ads);
         listID = new ArrayList<>();
         listID.add(getString(R.string.ads_test_inter));
-        listID.add(getString(R.string.ads_test_inter));
+        listID.add(getString(R.string.ads_test_banner));
         listID.add(getString(R.string.admod_banner_collap_id));
-        Admob.getInstance().loadCollapsibleBannerFloor(this, listID, BannerGravity.bottom);
+        Admob.getInstance().loadBannerFloor(this, listID);
         Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
 
         loadAdInter();
@@ -195,7 +195,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadAdInter() {
-        Admob.getInstance().loadInterAds(this, getString(R.string.admod_interstitial_id), new InterCallback() {
+        List<String> listID = new ArrayList<>();
+        listID.add("1");
+        listID.add("2");
+        listID.add(getString(R.string.admod_interstitial_id));
+        Admob.getInstance().loadInterAdsFloor(this,listID , new InterCallback() {
             @Override
             public void onInterstitialLoad(InterstitialAd interstitialAd) {
                 super.onInterstitialLoad(interstitialAd);
