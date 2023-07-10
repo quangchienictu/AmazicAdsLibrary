@@ -1,4 +1,4 @@
-package com.amazic.ads.util;
+package com.amazic.ads.event;
 
 import android.content.Context;
 import android.os.Bundle;

@@ -5,12 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.BillingListener;
 import com.amazic.ads.callback.InterCallback;
+import com.amazic.ads.event.AppsflyerEvent;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AppOpenManager;
 import com.google.android.gms.ads.LoadAdError;
@@ -63,7 +63,6 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onNextAction() {
                 super.onNextAction();
-                Log.e("xxx","onNextActionfba");
                 startActivity(new Intent(Splash.this,MainActivity.class));
                 finish();
             }

@@ -74,9 +74,10 @@ dependencies {
     implementation "androidx.core:core-ktx:1.6.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
 
-//fb sdk
     implementation 'com.facebook.android:facebook-android-sdk:15.2.0'
-
+    // appsflyer
+    implementation 'com.appsflyer:af-android-sdk:6.8.2'
+    implementation 'com.appsflyer:adrevenue:6.4.3'
 
     implementation 'com.airbnb.android:lottie:5.0.2'
 

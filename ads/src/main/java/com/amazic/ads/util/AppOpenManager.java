@@ -3,21 +3,14 @@ package com.amazic.ads.util;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -25,9 +18,10 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.AdCallback;
-import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.amazic.ads.dialog.ResumeLoadingDialog;
+import com.amazic.ads.event.AdType;
+import com.amazic.ads.event.FirebaseUtil;
 import com.google.android.gms.ads.AdActivity;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
@@ -36,7 +30,6 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.appopen.AppOpenAd;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -239,8 +232,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                                 FirebaseUtil.logPaidAdImpression(myApplication.getApplicationContext(),
                                         adValue,
                                         ad.getAdUnitId(),
-                                        ad.getResponseInfo()
-                                                .getMediationAdapterClassName());
+                                        AdType.APP_OPEN);
                             });
                             AppOpenManager.this.splashLoadTime = (new Date()).getTime();
                         }
@@ -582,8 +574,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                                 FirebaseUtil.logPaidAdImpression(myApplication.getApplicationContext(),
                                         adValue,
                                         appOpenAd.getAdUnitId(),
-                                        appOpenAd.getResponseInfo()
-                                                .getMediationAdapterClassName());
+                                        AdType.APP_OPEN);
                             });
 
                             showAdIfAvailable(true);
@@ -802,7 +793,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                         adCallback.onAdFailedToLoad(null);
                         adCallback.onNextAction();
                     }
-
                     @Override
                     public void onAdLoaded(@NonNull AppOpenAd appOpenAd) {
                         super.onAdLoaded(appOpenAd);
@@ -810,6 +800,12 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                         AppOpenManager.this.splashAd = appOpenAd;
                         AppOpenManager.this.splashAd.setOnPaidEventListener((adValue) -> {
                             //log value
+                        });
+                        appOpenAd.setOnPaidEventListener(adValue -> {
+                            FirebaseUtil.logPaidAdImpression(myApplication.getApplicationContext(),
+                                    adValue,
+                                    appOpenAd.getAdUnitId(),
+                                    AdType.APP_OPEN);
                         });
                         if (isShowAdIfReady) {
                             long elapsedTime = System.currentTimeMillis() - currentTimeMillis;
@@ -878,7 +874,10 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                         super.onAdLoaded(appOpenAd);
                         AppOpenManager.this.splashAd = appOpenAd;
                         AppOpenManager.this.splashAd.setOnPaidEventListener((adValue) -> {
-                            //log value
+                            FirebaseUtil.logPaidAdImpression(myApplication.getApplicationContext(),
+                                    adValue,
+                                    appOpenAd.getAdUnitId(),
+                                    AdType.APP_OPEN);
                         });
                         if (isShowAdIfReady) {
                             AppOpenManager.this.showAppOpenSplash(context, adCallback);

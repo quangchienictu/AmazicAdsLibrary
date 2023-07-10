@@ -1,10 +1,11 @@
-package com.amazic.ads.util;
+package com.amazic.ads.event;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.facebook.appevents.AppEventsLogger;
+import com.amazic.ads.util.AppUtil;
+import com.amazic.ads.util.SharePreferenceUtils;
 import com.google.android.gms.ads.AdValue;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -21,9 +22,10 @@ public class FirebaseUtil {
         FacebookEventUtils.logClickAdsEvent(context, bundle);
     }
 
-    public static void logPaidAdImpression(Context context, AdValue adValue, String adUnitId, String mediationAdapterClassName) {
+    public static void logPaidAdImpression(Context context, AdValue adValue, String adUnitId, AdType adType) {
         Log.e("logPaidAdImpression",adValue.getCurrencyCode()+"");
-        logEventWithAds(context, (float) adValue.getValueMicros(), adValue.getPrecisionType(), adUnitId, mediationAdapterClassName,adValue.getCurrencyCode());
+        AppsflyerEvent.getInstance().pushTrackEventAdmob(adValue,adUnitId,adType);
+        logEventWithAds(context, (float) adValue.getValueMicros(), adValue.getPrecisionType(), adUnitId, adType.toString(),adValue.getCurrencyCode());
     }
 
     private static void logEventWithAds(Context context, float revenue, int precision, String adUnitId, String network, String  mediationProvider) {

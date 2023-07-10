@@ -1,6 +1,7 @@
 package com.amazicadslibrary;
 
 import com.amazic.ads.billing.AppPurchase;
+import com.amazic.ads.event.AppsflyerEvent;
 import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.AdsApplication;
 import com.amazic.ads.util.AppUtil;
@@ -13,6 +14,8 @@ public class MyApplication extends AdsApplication {
     public void onCreate() {
         super.onCreate();
         AppOpenManager.getInstance().disableAppResumeWithActivity(Splash.class);
+        AppsflyerEvent.getInstance().init(this, "1233",true);
+
     }
 
     @Override
