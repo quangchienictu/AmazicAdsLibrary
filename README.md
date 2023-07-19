@@ -99,6 +99,24 @@
         });
     
   </pre>
+
+  <h2>IntertitialAds</h2>
+<div class="content">
+  <h3>- Open Splash</h3>
+  <pre>
+    AdCallback adCallback;
+    adCallback = new AdCallback(){
+            @Override
+            public void onNextAction() {
+                super.onNextAction();
+                .....
+            }
+        };
+       AppOpenManager.getInstance().loadOpenAppAdSplashFloor(this,data,true,adCallback);
+    -------
+    onResume()
+    AppOpenManager.getInstance().onCheckShowSplashWhenFail(this,adCallback,1000);
+  </pre>
 <h3>- InterstitialAds</h3>
   <h4>Create and load interstitialAds</h4>
 <pre>
