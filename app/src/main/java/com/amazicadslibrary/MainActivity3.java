@@ -11,6 +11,9 @@ import com.amazic.ads.util.Admob;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity3 extends AppCompatActivity {
    FrameLayout fr_ads;
     @Override
@@ -18,7 +21,11 @@ public class MainActivity3 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
         fr_ads = findViewById(R.id.fr_ads);
-        Admob.getInstance().loadBanner(this, getString(R.string.admod_banner_id));
+        List<String> listID = new ArrayList<>();
+        listID.add("getString(R.string.ads_test_inter)");
+        listID.add(getString(R.string.ads_test_banner));
+        listID.add("getString(R.string.admod_banner_collap_id)");
+        Admob.getInstance().loadBannerFloor(this, listID);
         Admob.getInstance().loadNativeAd(this, getString(R.string.admod_native_id), new NativeCallback(){
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {

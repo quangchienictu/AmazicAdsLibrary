@@ -107,6 +107,8 @@ public class Admob {
     private boolean isFan = false;
     private long currentTime;
     private long currentTimeShowAds;
+    private boolean checkLoadBanner = false;
+    private boolean checkLoadBannerCollap = false;
     public static Admob getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Admob();
@@ -199,6 +201,7 @@ public class Admob {
     }
 
     public void loadBannerFloor(final Activity mActivity, List<String> listID) {
+        Log.e("Admob","Load Native ID Floor");
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         if(!isShowAllAds||!isNetworkConnected()){
@@ -219,6 +222,7 @@ public class Admob {
             for (String id :listID){
                 idNew.add(id);
             }
+            checkLoadBanner = false;
             loadBannerFloor(mActivity, idNew, adContainer, containerShimmer, null, false, BANNER_INLINE_LARGE_STYLE);
         }
     }
@@ -324,6 +328,7 @@ public class Admob {
             for (String id :listID){
                 idNew.add(id);
             }
+            checkLoadBannerCollap = false;
             loadCollapsibleBannerFloor(mActivity, idNew, gravity, adContainer, containerShimmer);
         }
 
@@ -442,6 +447,7 @@ public class Admob {
             for (String id :listID){
                 idNew.add(id);
             }
+            checkLoadBannerCollap = false;
             loadCollapsibleBannerFloor(mActivity, idNew, gravity, adContainer, containerShimmer);
         }
     }
@@ -513,6 +519,9 @@ public class Admob {
         }
     }
     private void loadBannerFloor(final Activity mActivity, List<String> listID, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, final AdCallback callback, Boolean useInlineAdaptive, String inlineStyle) {
+        if(checkLoadBanner){
+            return;
+        }
         if (AppPurchase.getInstance().isPurchased(mActivity)) {
             containerShimmer.stopShimmer();
             adContainer.setVisibility(View.GONE);
@@ -552,6 +561,7 @@ public class Admob {
 
                 @Override
                 public void onAdLoaded() {
+                    checkLoadBanner = true;
                     Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
                     containerShimmer.stopShimmer();
                     containerShimmer.setVisibility(View.GONE);
@@ -588,7 +598,6 @@ public class Admob {
     }
 
     private void loadCollapsibleBanner(final Activity mActivity, String id, String gravity, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer) {
-
         if (AppPurchase.getInstance().isPurchased(mActivity)) {
             containerShimmer.setVisibility(View.GONE);
             return;
@@ -644,6 +653,9 @@ public class Admob {
         }
     }
     private void loadCollapsibleBannerFloor(final Activity mActivity, List<String > listId, String gravity, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer) {
+        if(checkLoadBannerCollap){
+            return;
+        }
         if (AppPurchase.getInstance().isPurchased(mActivity)) {
             containerShimmer.setVisibility(View.GONE);
             return;
@@ -665,6 +677,7 @@ public class Admob {
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
+                    Log.e("Admob","load failed collap banner ID : "+listId.get(0));
                     if(listId.size()>0){
                         listId.remove(0);
                         loadCollapsibleBannerFloor(mActivity,listId,gravity,adContainer,containerShimmer);
@@ -678,6 +691,7 @@ public class Admob {
 
                 @Override
                 public void onAdLoaded() {
+                    checkLoadBannerCollap = true;
                     Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
                     containerShimmer.stopShimmer();
                     containerShimmer.setVisibility(View.GONE);

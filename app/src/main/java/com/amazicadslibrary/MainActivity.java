@@ -39,12 +39,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         native_ads   = findViewById(R.id.native_ads);
         listID = new ArrayList<>();
-        listID.add(getString(R.string.ads_test_inter));
-        listID.add(getString(R.string.ads_test_banner));
+        listID.add("getString(R.string.ads_test_inter)");
+        listID.add("getString(R.string.ads_test_banner)");
         listID.add(getString(R.string.admod_banner_collap_id));
-        Admob.getInstance().loadBannerFloor(this, listID);
+        Admob.getInstance().loadCollapsibleBannerFloor(this, listID,BannerGravity.bottom);
         Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
-
         loadAdInter();
         loadAdsNative();
 
