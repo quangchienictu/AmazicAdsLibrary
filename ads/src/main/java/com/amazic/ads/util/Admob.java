@@ -1738,6 +1738,66 @@ public class Admob {
             callback.onAdFailedToLoad();
         }
     }
+    public void loadNativeAd(Context context, String id, FrameLayout frameLayout,int layoutNative) {
+        if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds||!isNetworkConnected()) {
+            frameLayout.removeAllViews();
+            return;
+        }
+        if(isShowNative){
+            if(isNetworkConnected()){
+                VideoOptions videoOptions = new VideoOptions.Builder()
+                        .setStartMuted(true)
+                        .build();
+
+                NativeAdOptions adOptions = new NativeAdOptions.Builder()
+                        .setVideoOptions(videoOptions)
+                        .build();
+                AdLoader adLoader = new AdLoader.Builder(context, id)
+                        .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+
+                            @Override
+                            public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+                                NativeAdView adView = (NativeAdView) LayoutInflater.from(context).inflate(layoutNative, null);
+                                frameLayout.removeAllViews();
+                                frameLayout.addView(adView);
+                                Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                                nativeAd.setOnPaidEventListener(adValue -> {
+                                    Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
+                                    FirebaseUtil.logPaidAdImpression(context,
+                                            adValue,
+                                            id,
+                                            AdType.NATIVE);
+                                });
+                            }
+                        })
+                        .withAdListener(new AdListener() {
+                            @Override
+                            public void onAdFailedToLoad(LoadAdError error) {
+                                Log.e(TAG, "NativeAd onAdFailedToLoad: " + error.getMessage());
+                                frameLayout.removeAllViews();
+                            }
+
+                            @Override
+                            public void onAdClicked() {
+                                super.onAdClicked();
+                                if (disableAdResumeWhenClickAds)
+                                    AppOpenManager.getInstance().disableAdResumeByClickAction();
+                                FirebaseUtil.logClickAdsEvent(context, id);
+                                if(timeLimitAds>1000){
+                                    setTimeLimitNative();
+                                }
+                            }
+                        })
+                        .withNativeAdOptions(adOptions)
+                        .build();
+                adLoader.loadAd(getAdRequest());
+            }else{
+                frameLayout.removeAllViews();
+            }
+        }else{
+            frameLayout.removeAllViews();
+        }
+    }
     /* =============================  Native Ads Floor  ==========================================*/
     public void loadNativeAdFloor(Context context, List<String> listID, final NativeCallback callback){
         if(listID==null||listID.size()==0){
@@ -1777,6 +1837,49 @@ public class Admob {
                 loadNativeAd(context,listID.get(position),callback1);
             }else{
                 callback.onAdFailedToLoad();
+            }
+        }
+    }
+    public void loadNativeAdFloor(Context context, List<String> listID, FrameLayout frameLayout,int layoutNative){
+        if(listID==null||listID.size()==0){
+            frameLayout.removeAllViews();
+        }else{
+            if (AppPurchase.getInstance().isPurchased(context)||!isShowAllAds) {
+                frameLayout.removeAllViews();
+                return;
+            }
+            NativeCallback callback1 = new NativeCallback(){
+                @Override
+                public void onNativeAdLoaded(NativeAd nativeAd) {
+                    super.onNativeAdLoaded(nativeAd);
+                    NativeAdView adView = (NativeAdView) LayoutInflater.from(context).inflate(layoutNative, null);
+                    frameLayout.removeAllViews();
+                    frameLayout.addView(adView);
+                    Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                    nativeAd.setOnPaidEventListener(adValue -> {
+                        Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
+                        FirebaseUtil.logPaidAdImpression(context,
+                                adValue,
+                                listID.get(0),
+                                AdType.NATIVE);
+                    });
+                }
+
+                @Override
+                public void onAdFailedToLoad() {
+                    super.onAdFailedToLoad();
+                    if(listID.size()>0){
+                        listID.remove(0);
+                        loadNativeAdFloor(context,listID,frameLayout,layoutNative);
+                    }
+                }
+            };
+            if(listID.size()>0){
+                int position = 0;
+                Log.e(TAG,"Load Native ID :"+listID.get(position));
+                loadNativeAd(context,listID.get(position),callback1);
+            }else{
+                frameLayout.removeAllViews();
             }
         }
     }
@@ -1904,8 +2007,6 @@ public class Admob {
         adView.setNativeAd(nativeAd);
 
     }
-
-
     public void loadNativeFragment(final Activity mActivity, String id, View parent) {
         final FrameLayout frameLayout = parent.findViewById(R.id.fl_load_native);
         final ShimmerFrameLayout containerShimmer = parent.findViewById(R.id.shimmer_container_native);

@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         listID.add("getString(R.string.ads_test_inter)");
         listID.add("getString(R.string.ads_test_banner)");
         listID.add(getString(R.string.admod_banner_collap_id));
-        Admob.getInstance().loadCollapsibleBannerFloor(this, listID,BannerGravity.bottom);
+        Admob.getInstance().loadInlineBanner(this, getString(R.string.ads_test_banner),Admob.BANNER_INLINE_LARGE_STYLE);
         Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
         loadAdInter();
         loadAdsNative();
@@ -175,22 +175,9 @@ public class MainActivity extends AppCompatActivity {
         List<String> listID = new ArrayList<>();
         listID.add("1");
         listID.add("2");
-        listID.add("3");
+        listID.add(getString(R.string.ads_test_native));
 
-        Admob.getInstance().loadNativeAdFloor(this, listID, new NativeCallback() {
-            @Override
-            public void onNativeAdLoaded(NativeAd nativeAd) {
-                NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.layout_native_custom, null);
-                native_ads.removeAllViews();
-                native_ads.addView(adView);
-                Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
-            }
-
-            @Override
-            public void onAdFailedToLoad() {
-                native_ads.setVisibility(View.GONE);
-            }
-        });
+        Admob.getInstance().loadNativeAdFloor(this, listID, native_ads,R.layout.ads_native);
     }
 
     private void loadAdInter() {
