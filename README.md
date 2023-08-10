@@ -1,6 +1,5 @@
 <h1>nlbnAdsLibraty</h1>
 <h3><li>Adding the library to your project: Add the following in your root build.gradle at the end of repositories:</br></h3>
-
 <pre>
   allprojects {
     repositories {
@@ -185,4 +184,28 @@
  Admob.getInstance().setShowAllAds(true);
  true - show all ads
  false - hide all ads
+</pre>
+
+<h4>Call API</h4>
+<pre>
+Để link server null nếu chưa biết link server build AdmobApi.getInstance().init(getString(R.string.linkServer),getString(R.string.appID),new ApiCallBack(){
+            @Override
+            public void onReady() {
+                super.onReady();
+                AppOpenManager.getInstance().loadOpenAppAdSplashFloor(Splash.this, AdmobApi.getInstance().getListIDOpenSplash(),true,adCallback);
+            }
+        });
+        
+ getListIDNativeLanguage() : list ID language
+ getListIDNativeIntro() : list ID Intro
+ getListIDNativePersimmon() : list ID Permission
+getListIDNativeAll() : list ID Native done 
+getListIDInterAll() : list ID Inter All
+getListIDBannerAll() : list ID banner All
+getListIDCollapseBannerAll() : list ID Banner callap
+getListIDInterIntro(): list ID Inter Intro
+
+Trong trường hợp ko có list nào trong các list trên thì tạo list custom , vd : native_home
+AdmobApi.getInstance().setListIDOther("native_home");
+Khi nào cần lấy thì gọi getListIDOther()
 </pre>
