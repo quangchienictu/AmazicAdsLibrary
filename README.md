@@ -256,4 +256,21 @@ getListIDInterIntro(): list ID Inter Intro
 Trong trường hợp ko có list nào trong các list trên thì tạo list custom , vd : native_home
 AdmobApi.getInstance().setListIDOther("native_home"); // trước khi init()
 Khi nào cần lấy thì gọi getListIDOther()
+
+<b>Load and show banner API banner all (new) :  </b>
+AdmobApi.getInstance().loadBanner(this)
+AdmobApi.getInstance().loadBanner(this)
+
+<b>Load inter all API ở main(new) :  </b>
+AdmobApi.getInstance().loadInterAll(this);
+<b>Show inter all Api :  </b>
+// ko cần load lại ads sau khi show
+AdmobApi.getInstance().showInterAll(MainActivity.this, new InterCallback() {
+      @Override
+      public void onNextAction() {
+          super.onNextAction();
+          startActivity(new Intent(MainActivity.this,MainActivity3.class));
+      }
+
+  });
 </pre>
