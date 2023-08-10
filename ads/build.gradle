@@ -61,18 +61,14 @@ dependencies {
     implementation "androidx.multidex:multidex:$multidex_version"
     def billing_version = "4.0.0"
     implementation "com.android.billingclient:billing:$billing_version"
-    implementation 'com.google.android.gms:play-services-ads-identifier:17.1.0'
 
-
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     implementation platform('com.google.firebase:firebase-bom:31.2.0')
     implementation 'com.google.firebase:firebase-analytics'
-    implementation "androidx.core:core-ktx:1.6.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
-    implementation 'com.google.android.gms:play-services-ads:21.4.0'
+    implementation 'com.google.android.gms:play-services-ads:22.2.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
-    implementation 'com.google.android.gms:play-services-basement:17.1.1'
+    implementation 'com.google.android.gms:play-services-basement:18.2.0'
     implementation "androidx.core:core-ktx:1.6.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
 
     implementation 'com.facebook.android:facebook-android-sdk:15.2.0'
     // appsflyer
