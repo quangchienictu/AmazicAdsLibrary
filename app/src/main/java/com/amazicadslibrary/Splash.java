@@ -4,13 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.AdCallback;
+import com.amazic.ads.callback.ApiCallBack;
 import com.amazic.ads.callback.BillingListener;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.event.AppsflyerEvent;
+import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AppOpenManager;
 import com.google.android.gms.ads.LoadAdError;
@@ -57,8 +61,7 @@ public class Splash extends AppCompatActivity {
                 });
             }
         }, 5000);*/
-        List<String> listID = new ArrayList<>();
-        listID.add("ca-app-pub-3940256099942544/3419835294");
+
         adCallback = new AdCallback(){
             @Override
             public void onNextAction() {
@@ -67,7 +70,16 @@ public class Splash extends AppCompatActivity {
                 finish();
             }
         };
-        AppOpenManager.getInstance().loadOpenAppAdSplash(this,"ca-app-pub-3940256099942544/3419835294",3000,10000,true,adCallback);
+
+        AdmobApi.getInstance().init(getString(R.string.linkServer),"ca-app-pub-3940256099942544~3347511713",new ApiCallBack(){
+            @Override
+            public void onReady() {
+                super.onReady();
+                AppOpenManager.getInstance().loadOpenAppAdSplashFloor(Splash.this, AdmobApi.getInstance().getListIDOpenSplash(),true,adCallback);
+            }
+        });
+
+
 
         initBilling();
     }

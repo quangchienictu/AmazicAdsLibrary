@@ -19,9 +19,7 @@ public abstract class AdsMultiDexApplication extends MultiDexApplication {
     }
 
     public abstract boolean enableAdsResume();
-
     public abstract List<String> getListTestDeviceId();
-
     public abstract String getOpenAppAdId();
     public abstract Boolean buildDebug();
 }

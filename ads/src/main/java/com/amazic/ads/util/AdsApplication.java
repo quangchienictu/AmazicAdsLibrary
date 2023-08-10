@@ -3,6 +3,8 @@ package com.amazic.ads.util;
 import android.app.Application;
 import android.util.Log;
 
+import com.amazic.ads.service.AdmobApi;
+
 import java.util.List;
 
 public abstract class AdsApplication extends Application{

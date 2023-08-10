@@ -7,4 +7,5 @@
     <string name="admod_interstitial_id">ca-app-pub-3940256099942544/1033173712</string>
     <string name="admod_app_open_ad_id">ca-app-pub-3940256099942544/3419835294</string>
     <string name="admod_app_reward_id">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="linkServer">http://45.77.170.169</string>
 </resources>

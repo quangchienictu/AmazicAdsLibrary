@@ -554,8 +554,14 @@ public class Admob {
             adView.setAdListener(new AdListener() {
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                    listID.remove(0);
-                    loadBannerFloor(mActivity,listID,adContainer,containerShimmer,callback,useInlineAdaptive,inlineStyle);
+                    if(listID.size()>0){
+                        listID.remove(0);
+                        loadBannerFloor(mActivity,listID,adContainer,containerShimmer,callback,useInlineAdaptive,inlineStyle);
+                    }else{
+                        containerShimmer.stopShimmer();
+                        adContainer.setVisibility(View.GONE);
+                        containerShimmer.setVisibility(View.GONE);
+                    }
                 }
 
 
@@ -621,7 +627,6 @@ public class Admob {
                     containerShimmer.stopShimmer();
                     adContainer.setVisibility(View.GONE);
                     containerShimmer.setVisibility(View.GONE);
-
                 }
 
                 @Override

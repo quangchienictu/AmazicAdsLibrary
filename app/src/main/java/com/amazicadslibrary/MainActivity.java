@@ -178,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
         listID.add(getString(R.string.ads_test_native));
 
         Admob.getInstance().loadNativeAdFloor(this, listID, native_ads,R.layout.ads_native);
+        Admob.getInstance().loadNativeAd(this, "id native", native_ads,R.layout.ads_native);
     }
 
     private void loadAdInter() {
