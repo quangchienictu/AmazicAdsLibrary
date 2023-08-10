@@ -197,10 +197,12 @@ AdmobApi.getInstance().init(getString(R.string.linkServer),getString(R.string.ap
                 AppOpenManager.getInstance().loadOpenAppAdSplashFloor(Splash.this, AdmobApi.getInstance().getListIDOpenSplash(),true,adCallback);
             }
         });
-        
- getListIDNativeLanguage() : list ID language
- getListIDNativeIntro() : list ID Intro
- getListIDNativePersimmon() : list ID Permission
+
+
+ ==================== thông tin các list trả về  =====================================
+getListIDNativeLanguage() : list ID language
+getListIDNativeIntro() : list ID Intro
+getListIDNativePersimmon() : list ID Permission
 getListIDNativeAll() : list ID Native All 
 getListIDInterAll() : list ID Inter All
 getListIDBannerAll() : list ID banner All
