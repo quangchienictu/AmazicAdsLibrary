@@ -13,6 +13,7 @@ import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.PurchaseListioner;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
+import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.BannerGravity;
 import com.google.android.gms.ads.LoadAdError;
@@ -59,17 +60,11 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnClickInter).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Admob.getInstance().showInterAds(MainActivity.this, mInterstitialAd, new InterCallback() {
+                AdmobApi.getInstance().showInterAll(MainActivity.this, new InterCallback() {
                     @Override
-                    public void onAdClosed() {
+                    public void onNextAction() {
+                        super.onNextAction();
                         startActivity(new Intent(MainActivity.this,MainActivity3.class));
-                        loadAdInter();
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(LoadAdError i) {
-                        startActivity(new Intent(MainActivity.this,MainActivity3.class));
-                        loadAdInter();
                     }
 
                 });
@@ -177,21 +172,11 @@ public class MainActivity extends AppCompatActivity {
         listID.add("2");
         listID.add(getString(R.string.ads_test_native));
 
-        Admob.getInstance().loadNativeAdFloor(this, listID, native_ads,R.layout.ads_native);
+        Admob.getInstance().loadNativeAdFloor(this, listID, native_ads,R.layout.ads_native_btn_ads_top);
         Admob.getInstance().loadNativeAd(this, "id native", native_ads,R.layout.ads_native);
     }
 
     private void loadAdInter() {
-        List<String> listID = new ArrayList<>();
-        listID.add("1");
-        listID.add("2");
-        listID.add(getString(R.string.admod_interstitial_id));
-        Admob.getInstance().loadInterAdsFloor(this,listID , new InterCallback() {
-            @Override
-            public void onInterstitialLoad(InterstitialAd interstitialAd) {
-                super.onInterstitialLoad(interstitialAd);
-                mInterstitialAd = interstitialAd;
-            }
-        });
+        AdmobApi.getInstance().loadInterAll(this);
     }
 }

@@ -1,13 +1,19 @@
 package com.amazic.ads.service;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.util.Log;
 
 import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.amazic.ads.callback.ApiCallBack;
+import com.amazic.ads.callback.InterCallback;
+import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AppOpenManager;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -23,24 +29,26 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
 public class AdmobApi {
-    private String TAG =  "AdmobApi";
+    private String TAG = "AdmobApi";
     private ApiService apiService;
     private boolean debug = true;
     private String linkServer = "http://language-master.top";
     public static String appIDRelease = "ca-app-pub-4973559944609228~2346710863";
     private static volatile AdmobApi INSTANCE;
+    private Context context;
 
 
-    private  List<String> listIDOpenSplash= new ArrayList<>();
-    private  List<String> listIDNativeLanguage = new ArrayList<>();
-    private  List<String> listIDNativeIntro = new ArrayList<>();
-    private  List<String> listIDNativePersimmon = new ArrayList<>();
-    private  List<String> listIDNativeAll = new ArrayList<>();
-    private  List<String> listIDInterAll = new ArrayList<>();
-    private  List<String> listIDBannerAll = new ArrayList<>();
-    private  List<String> listIDCollapseBannerAll = new ArrayList<>();
-    private  List<String> listIDInterIntro= new ArrayList<>();
-    private  List<String> listIDOther = new ArrayList<>();
+    private List<String> listIDOpenSplash = new ArrayList<>();
+    private List<String> listIDNativeLanguage = new ArrayList<>();
+    private List<String> listIDNativeIntro = new ArrayList<>();
+    private List<String> listIDNativePersimmon = new ArrayList<>();
+    private List<String> listIDNativeAll = new ArrayList<>();
+    private List<String> listIDInterAll = new ArrayList<>();
+    private List<String> listIDBannerAll = new ArrayList<>();
+    private List<String> listIDCollapseBannerAll = new ArrayList<>();
+    private List<String> listIDInterIntro = new ArrayList<>();
+    private List<String> listIDOther = new ArrayList<>();
+    private InterstitialAd interAll = null;
 
     public List<String> getListIDOpenSplash() {
         return listIDOpenSplash;
@@ -95,32 +103,39 @@ public class AdmobApi {
         return INSTANCE;
     }
 
-    public void init(String linkServerRelease, String AppID, ApiCallBack callBack) {
-        if(linkServerRelease!=null&AppID!=null){
+    public void init(Context context, String linkServerRelease, String AppID, ApiCallBack callBack) {
+        this.context = context;
+        if (linkServerRelease != null & AppID != null) {
             this.linkServer = linkServerRelease;
             this.appIDRelease = AppID;
         }
 
         String baseUrl = linkServer + "/api/";
-         apiService = new Retrofit.Builder()
+        apiService = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
                 .create(ApiService.class);
 
-        Log.i(TAG, "link Server:" +baseUrl);
-        fetchData(callBack);
+        Log.i(TAG, "link Server:" + baseUrl);
+
+        if (isNetworkConnected()) {
+            fetchData(callBack);
+        } else {
+            new Handler().postDelayed(() -> callBack.onReady(), 2000);
+        }
+
     }
 
 
     private void fetchData(ApiCallBack callBack) {
-        Log.e(TAG, "fetchData: " );
+        Log.e(TAG, "fetchData: ");
         try {
             apiService.callAds(appIDRelease).enqueue(new Callback<List<AdsModel>>() {
                 @Override
                 public void onResponse(Call<List<AdsModel>> call, Response<List<AdsModel>> response) {
-                    if(response.body() == null){
-                        callBack.onReady();
+                    if (response.body() == null) {
+                        new Handler().postDelayed(() -> callBack.onReady(), 2000);
                         return;
                     }
                     if (response.body().size() != 0 && response.body() != null) {
@@ -129,52 +144,86 @@ public class AdmobApi {
                                 listIDOpenSplash.add(ads.getAds_id());
                             } else if (ads.getName().equals("native_language")) {
                                 listIDNativeLanguage.add(ads.getAds_id());
-                            } else  if (ads.getName().equals("inter_all")) {
+                            } else if (ads.getName().equals("inter_all")) {
                                 listIDInterAll.add(ads.getAds_id());
-                            }else  if (ads.getName().equals("native_intro")) {
+                            } else if (ads.getName().equals("native_intro")) {
                                 listIDNativeIntro.add(ads.getAds_id());
-                            }else if (ads.getName().equals("banner_all")) {
+                            } else if (ads.getName().equals("banner_all")) {
                                 listIDBannerAll.add(ads.getAds_id());
-                            }else if (ads.getName().equals("native_permission")) {
+                            } else if (ads.getName().equals("native_permission")) {
                                 listIDNativePersimmon.add(ads.getAds_id());
-                            }else if (ads.getName().equals("native_all")) {
+                            } else if (ads.getName().equals("native_all")) {
                                 listIDNativeAll.add(ads.getAds_id());
-                            }else if (ads.getName().equals("inter_intro")) {
+                            } else if (ads.getName().equals("inter_intro")) {
                                 listIDInterIntro.add(ads.getAds_id());
-                            }else if (ads.getName().equals("collapse_banner")) {
+                            } else if (ads.getName().equals("collapse_banner")) {
                                 listIDCollapseBannerAll.add(ads.getAds_id());
-                            }else if (ads.getName().equals(nameIDOther)) {
+                            } else if (ads.getName().equals(nameIDOther)) {
                                 listIDOther.add(ads.getAds_id());
                             }
 
                         }
 
-                        Log.i(TAG, "listIDOpenSplash: "+listIDOpenSplash.toString());
-                        Log.i(TAG, "listIDNativeLanguage: "+listIDNativeLanguage.toString());
-                        Log.i(TAG, "listIDInterAll: "+listIDInterAll.toString());
-                        Log.i(TAG, "listIDNativeIntro: "+listIDNativeIntro.toString());
-                        Log.i(TAG, "listIDBannerAll: "+listIDBannerAll.toString());
-                        Log.i(TAG, "listIDNativeAll: "+listIDNativeAll.toString());
-                        Log.i(TAG, "listIDNativePersimmon: "+listIDNativePersimmon.toString());
-                        Log.i(TAG, "listIDInterIntro: "+listIDInterIntro.toString());
-                        Log.i(TAG, "listIDCollapseBannerAll: "+listIDCollapseBannerAll.toString());
-                        Log.i(TAG, "listIDOther: "+listIDOther.toString());
+                        Log.i(TAG, "listIDOpenSplash: " + listIDOpenSplash.toString());
+                        Log.i(TAG, "listIDNativeLanguage: " + listIDNativeLanguage.toString());
+                        Log.i(TAG, "listIDInterAll: " + listIDInterAll.toString());
+                        Log.i(TAG, "listIDNativeIntro: " + listIDNativeIntro.toString());
+                        Log.i(TAG, "listIDBannerAll: " + listIDBannerAll.toString());
+                        Log.i(TAG, "listIDNativeAll: " + listIDNativeAll.toString());
+                        Log.i(TAG, "listIDNativePersimmon: " + listIDNativePersimmon.toString());
+                        Log.i(TAG, "listIDInterIntro: " + listIDInterIntro.toString());
+                        Log.i(TAG, "listIDCollapseBannerAll: " + listIDCollapseBannerAll.toString());
+                        Log.i(TAG, "listIDOther: " + listIDOther.toString());
                         callBack.onReady();
                     }
                 }
+
                 @Override
                 public void onFailure(Call<List<AdsModel>> call, Throwable t) {
-                    Log.e(TAG, "onFailure: "+t.toString());
-                    callBack.onReady();
+                    Log.e(TAG, "onFailure: " + t.toString());
+                    new Handler().postDelayed(() -> callBack.onReady(), 2000);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
-            callBack.onReady();
+            new Handler().postDelayed(() -> callBack.onReady(), 2000);
         }
     }
 
-    public void setListIDOther(String nameIDOther){
+    public void setListIDOther(String nameIDOther) {
         this.nameIDOther = nameIDOther;
     }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
+    public void loadBanner(final Activity activity) {
+        Admob.getInstance().loadBannerFloor(activity, getListIDBannerAll());
+    }
+    public void loadCollapsibleBanner(final Activity activity) {
+        Admob.getInstance().loadCollapsibleBannerFloor(activity, getListIDCollapseBannerAll(), "bottom");
+    }
+    public void loadInterAll(final Activity activity) {
+        if (interAll == null)
+            Admob.getInstance().loadInterAdsFloor(activity, getListIDInterAll(), new InterCallback() {
+                @Override
+                public void onInterstitialLoad(InterstitialAd interstitialAd) {
+                    super.onInterstitialLoad(interstitialAd);
+                    interAll = interstitialAd;
+                }
+            });
+    }
+    public void showInterAll(final Activity activity, InterCallback interCallback) {
+        Admob.getInstance().showInterAds(activity, this.interAll, new InterCallback() {
+            @Override
+            public void onNextAction() {
+                super.onNextAction();
+                interCallback.onNextAction();
+                interAll = null;
+                loadInterAll(activity);
+            }
+        });
+    }
+
 }

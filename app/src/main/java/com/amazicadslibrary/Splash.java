@@ -70,8 +70,8 @@ public class Splash extends AppCompatActivity {
                 finish();
             }
         };
-
-        AdmobApi.getInstance().init(getString(R.string.linkServer),"ca-app-pub-3940256099942544~3347511713",new ApiCallBack(){
+        AdmobApi.getInstance().setListIDOther("native_home");
+        AdmobApi.getInstance().init(this,getString(R.string.linkServer),"ca-app-pub-3940256099942544~3347511713",new ApiCallBack(){
             @Override
             public void onReady() {
                 super.onReady();

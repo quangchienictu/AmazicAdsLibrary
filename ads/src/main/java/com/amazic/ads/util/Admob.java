@@ -226,8 +226,6 @@ public class Admob {
             loadBannerFloor(mActivity, idNew, adContainer, containerShimmer, null, false, BANNER_INLINE_LARGE_STYLE);
         }
     }
-
-
     /**
      * Load quảng cáo Banner Trong Activity
      */
