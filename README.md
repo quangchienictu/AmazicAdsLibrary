@@ -259,7 +259,7 @@ Khi nào cần lấy thì gọi getListIDOther()
 
 <b>Load and show banner API banner all (new) :  </b>
 AdmobApi.getInstance().loadBanner(this)
-AdmobApi.getInstance().loadBanner(this)
+AdmobApi.getInstance().loadCollapsibleBanner(this)
 
 <b>Load inter all API ở main(new) :  </b>
 AdmobApi.getInstance().loadInterAll(this);
