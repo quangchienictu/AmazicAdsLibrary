@@ -208,6 +208,6 @@ getListIDCollapseBannerAll() : list ID Banner callap
 getListIDInterIntro(): list ID Inter Intro
 
 Trong trường hợp ko có list nào trong các list trên thì tạo list custom , vd : native_home
-AdmobApi.getInstance().setListIDOther("native_home");
+AdmobApi.getInstance().setListIDOther("native_home"); // trước khi init()
 Khi nào cần lấy thì gọi getListIDOther()
 </pre>
