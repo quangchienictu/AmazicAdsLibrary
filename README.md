@@ -188,7 +188,9 @@
 
 <h4>Call API</h4>
 <pre>
-Để link server null nếu chưa biết link server build AdmobApi.getInstance().init(getString(R.string.linkServer),getString(R.string.appID),new ApiCallBack(){
+Để link server null nếu chưa biết link server build 
+<pre>
+AdmobApi.getInstance().init(getString(R.string.linkServer),getString(R.string.appID),new ApiCallBack(){
             @Override
             public void onReady() {
                 super.onReady();
