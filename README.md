@@ -201,7 +201,7 @@ AdmobApi.getInstance().init(getString(R.string.linkServer),getString(R.string.ap
  getListIDNativeLanguage() : list ID language
  getListIDNativeIntro() : list ID Intro
  getListIDNativePersimmon() : list ID Permission
-getListIDNativeAll() : list ID Native done 
+getListIDNativeAll() : list ID Native All 
 getListIDInterAll() : list ID Inter All
 getListIDBannerAll() : list ID banner All
 getListIDCollapseBannerAll() : list ID Banner callap
