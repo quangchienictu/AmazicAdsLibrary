@@ -59,7 +59,7 @@ dependencies {
 
     def multidex_version = "2.0.1"
     implementation "androidx.multidex:multidex:$multidex_version"
-    def billing_version = "4.0.0"
+    def billing_version = "5.1.0"
     implementation "com.android.billingclient:billing:$billing_version"
 
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
@@ -78,7 +78,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
-
+    implementation "com.google.guava:guava:27.1-android"
     implementation 'com.airbnb.android:lottie:5.0.2'
 
 }
