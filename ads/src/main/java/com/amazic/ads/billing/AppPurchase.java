@@ -1,6 +1,5 @@
 package com.amazic.ads.billing;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -46,10 +45,8 @@ public class AppPurchase {
     private static final String TAG = "PurchaseEG";
 
     public static final String PRODUCT_ID_TEST = "android.test.purchased";
-    @SuppressLint("StaticFieldLeak")
     private static AppPurchase instance;
 
-    @SuppressLint("StaticFieldLeak")
     private String price = "1.49$";
     private String oldPrice = "2.99$";
 
@@ -547,7 +544,7 @@ public class AppPurchase {
         if (AppUtil.BUILD_DEBUG) {
             // Auto using id purchase test in variant dev
             productId = PRODUCT_ID_TEST;
-            PurchaseDevBottomSheet purchaseDevBottomSheet = new PurchaseDevBottomSheet(TYPE_IAP.PURCHASE,productDetails,activity,purchaseListener);
+            PurchaseBottomSheet purchaseDevBottomSheet = new PurchaseBottomSheet(TYPE_IAP.PURCHASE,productDetails,activity,purchaseListener);
             purchaseDevBottomSheet.show();
             return "";
         }

@@ -1,5 +1,6 @@
 package com.amazic.ads.billing;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -12,8 +13,7 @@ import com.amazic.ads.callback.PurchaseListener;
 import com.android.billingclient.api.ProductDetails;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-
-public class PurchaseDevBottomSheet extends BottomSheetDialog {
+public class PurchaseBottomSheet extends BottomSheetDialog {
     private ProductDetails productDetails;
     private int typeIap;
     private TextView txtTitle;
@@ -23,7 +23,7 @@ public class PurchaseDevBottomSheet extends BottomSheetDialog {
     private TextView txtContinuePurchase;
     private PurchaseListener purchaseListener;
 
-    public PurchaseDevBottomSheet(int typeIap, ProductDetails productDetails, @NonNull Context context, PurchaseListener purchaseListener) {
+    public PurchaseBottomSheet(int typeIap, ProductDetails productDetails, @NonNull Context context, PurchaseListener purchaseListener) {
         super(context);
         this.productDetails = productDetails;
         this.typeIap = typeIap;
