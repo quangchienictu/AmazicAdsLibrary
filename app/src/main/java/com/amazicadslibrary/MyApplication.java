@@ -1,12 +1,9 @@
 package com.amazicadslibrary;
 
-import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.event.AppsflyerEvent;
 import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.AdsApplication;
-import com.amazic.ads.util.AppUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MyApplication extends AdsApplication {

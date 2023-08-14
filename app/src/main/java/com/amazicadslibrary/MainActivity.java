@@ -3,23 +3,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.amazic.ads.billing.AppPurchase;
-import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.PurchaseListioner;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
-import com.amazic.ads.util.BannerGravity;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.nativead.NativeAd;
-import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.gms.ads.rewarded.RewardItem;
 
 import java.util.ArrayList;
@@ -121,15 +115,15 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnBilding).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppPurchase.getInstance().consumePurchase(PRODUCT_ID_MONTH);
-                 AppPurchase.getInstance().purchase(MainActivity.this, PRODUCT_ID_MONTH);
+              /*  AppPurchase.getInstance().consumePurchase(PRODUCT_ID_MONTH);
+                 AppPurchase.getInstance().purchase(MainActivity.this, PRODUCT_ID_MONTH);*/
                 //real
                // AppPurchase.getInstance().subscribe(MainActivity.this, SubID);
             }
         });
 
 
-        AppPurchase.getInstance().setPurchaseListioner(new PurchaseListioner() {
+       /* AppPurchase.getInstance().setPurchaseListioner(new PurchaseListioner() {
             @Override
             public void onProductPurchased(String productId,String transactionDetails) {
                Toast.makeText(MainActivity.this,"Purchase success",Toast.LENGTH_SHORT).show();
@@ -144,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Toast.makeText(MainActivity.this,"Purchase cancel",Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
         // reset pay Purchase
        /*AppPurchase.getInstance().consumePurchase(Constants.PRODUCT_ID_MONTH);
         AppPurchase.getInstance().consumePurchase(Constants.PRODUCT_ID_YEAR);
