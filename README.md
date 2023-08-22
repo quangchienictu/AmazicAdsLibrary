@@ -11,7 +11,7 @@
 <h5>Implement library in your app level build.gradle:</h5>
 <pre>
  dependencies {
-    implementation 'com.github.quangchienictu:AmazicAdsLibrary:2.2.2'
+    implementation 'com.github.quangchienictu:AmazicAdsLibrary:2.2.6'
     implementation 'com.google.android.gms:play-services-ads:22.1.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     //multidex
