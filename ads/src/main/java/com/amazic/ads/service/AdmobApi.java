@@ -13,6 +13,7 @@ import com.amazic.ads.callback.ApiCallBack;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AppOpenManager;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,7 +42,7 @@ public class AdmobApi {
     private List<String> listIDOpenSplash = new ArrayList<>();
     private List<String> listIDNativeLanguage = new ArrayList<>();
     private List<String> listIDNativeIntro = new ArrayList<>();
-    private List<String> listIDNativePersimmon = new ArrayList<>();
+    private List<String> listIDNativePermission = new ArrayList<>();
     private List<String> listIDNativeAll = new ArrayList<>();
     private List<String> listIDInterAll = new ArrayList<>();
     private List<String> listIDBannerAll = new ArrayList<>();
@@ -63,7 +64,7 @@ public class AdmobApi {
     }
 
     public List<String> getListIDNativePersimmon() {
-        return listIDNativePersimmon;
+        return listIDNativePermission;
     }
 
     public List<String> getListIDNativeAll() {
@@ -151,7 +152,7 @@ public class AdmobApi {
                             } else if (ads.getName().equals("banner_all")) {
                                 listIDBannerAll.add(ads.getAds_id());
                             } else if (ads.getName().equals("native_permission")) {
-                                listIDNativePersimmon.add(ads.getAds_id());
+                                listIDNativePermission.add(ads.getAds_id());
                             } else if (ads.getName().equals("native_all")) {
                                 listIDNativeAll.add(ads.getAds_id());
                             } else if (ads.getName().equals("inter_intro")) {
@@ -170,7 +171,7 @@ public class AdmobApi {
                         Log.i(TAG, "listIDNativeIntro: " + listIDNativeIntro.toString());
                         Log.i(TAG, "listIDBannerAll: " + listIDBannerAll.toString());
                         Log.i(TAG, "listIDNativeAll: " + listIDNativeAll.toString());
-                        Log.i(TAG, "listIDNativePersimmon: " + listIDNativePersimmon.toString());
+                        Log.i(TAG, "listIDNativePersimmon: " + listIDNativePermission.toString());
                         Log.i(TAG, "listIDInterIntro: " + listIDInterIntro.toString());
                         Log.i(TAG, "listIDCollapseBannerAll: " + listIDCollapseBannerAll.toString());
                         Log.i(TAG, "listIDOther: " + listIDOther.toString());
@@ -220,6 +221,22 @@ public class AdmobApi {
             public void onNextAction() {
                 super.onNextAction();
                 interCallback.onNextAction();
+                interAll = null;
+                loadInterAll(activity);
+            }
+
+            @Override
+            public void onAdClosedByUser() {
+                super.onAdClosedByUser();
+                interCallback.onAdClosedByUser();
+                interAll = null;
+                loadInterAll(activity);
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError i) {
+                super.onAdFailedToLoad(i);
+                interCallback.onAdFailedToLoad(i);
                 interAll = null;
                 loadInterAll(activity);
             }

@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         listID.add("getString(R.string.ads_test_inter)");
         listID.add("getString(R.string.ads_test_banner)");
         listID.add(getString(R.string.admod_banner_collap_id));
-        Admob.getInstance().loadInlineBanner(this, getString(R.string.ads_test_banner),Admob.BANNER_INLINE_LARGE_STYLE);
+        Admob.getInstance().loadBanner(this, getString(R.string.ads_test_banner));
         Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
         loadAdInter();
         loadAdsNative();

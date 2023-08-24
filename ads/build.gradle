@@ -3,12 +3,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         minSdkVersion 17
-        targetSdkVersion 32
+        //noinspection EditedTargetSdkVersion
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -24,10 +25,6 @@ android {
         }
     }
     repositories {
-        maven {
-            //IronSource
-            url "https://android-sdk.is.com/"
-        }
         mavenCentral()
     }
     compileOptions {
@@ -40,17 +37,11 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
-
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
     implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
-
 
     def lifecycle_version = "2.0.0"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
@@ -68,9 +59,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:22.2.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation 'com.google.android.gms:play-services-basement:18.2.0'
-    implementation "androidx.core:core-ktx:1.6.0"
 
-    implementation 'com.facebook.android:facebook-android-sdk:15.2.0'
+    implementation 'com.facebook.android:facebook-android-sdk:16.0.1'
     // appsflyer
     implementation 'com.appsflyer:af-android-sdk:6.8.2'
     implementation 'com.appsflyer:adrevenue:6.4.3'
