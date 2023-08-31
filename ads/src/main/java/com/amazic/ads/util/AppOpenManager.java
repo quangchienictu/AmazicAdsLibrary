@@ -839,6 +839,11 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                 adCallback.onNextAction();
                 return;
             }
+            if (listIDResume.isEmpty()) {
+                adCallback.onAdFailedToLoad(null);
+                adCallback.onNextAction();
+                return;
+            }
             if(listIDResume.size()>0){
                 Log.e("AppOpenManager", "load ID :" + listIDResume.get(0));
             }

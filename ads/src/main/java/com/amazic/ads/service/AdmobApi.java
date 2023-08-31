@@ -229,6 +229,7 @@ public class AdmobApi {
             public void onAdClosedByUser() {
                 super.onAdClosedByUser();
                 interCallback.onAdClosedByUser();
+                interCallback.onAdClosedByUser();
                 interAll = null;
                 loadInterAll(activity);
             }
