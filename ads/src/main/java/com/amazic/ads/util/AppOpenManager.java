@@ -21,6 +21,7 @@ import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.amazic.ads.dialog.ResumeLoadingDialog;
 import com.amazic.ads.event.AdType;
 import com.amazic.ads.event.FirebaseUtil;
+import com.amazic.ads.service.AdmobApi;
 import com.google.android.gms.ads.AdActivity;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
@@ -664,7 +665,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void onStop() {
         Log.d(TAG, "onStop: app stop");
-
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
@@ -762,7 +762,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     public void loadOpenAppAdSplash(Context context, String idResumeSplash, long timeDelay, long timeOut, boolean isShowAdIfReady, AdCallback adCallback) {
         this.splashAdId = idResumeSplash;
-        if(!isNetworkConnected(context)){
+        if(!isNetworkConnected(context)||!Admob.isShowAllAds){
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -825,7 +825,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     }
 
     public void loadOpenAppAdSplashFloor(Context context, List<String> listIDResume, boolean isShowAdIfReady, AdCallback adCallback) {
-        if(!isNetworkConnected(context)){
+        if(!isNetworkConnected(context)||!Admob.isShowAllAds){
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

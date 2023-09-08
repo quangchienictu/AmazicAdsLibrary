@@ -6,9 +6,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 import androidx.lifecycle.ProcessLifecycleOwner;
 
+import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.ApiCallBack;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admob;
@@ -34,6 +36,7 @@ public class AdmobApi {
     private ApiService apiService;
     private boolean debug = true;
     private String linkServer = "http://language-master.top";
+    private String packageName = "";
     public static String appIDRelease = "ca-app-pub-4973559944609228~2346710863";
     private static volatile AdmobApi INSTANCE;
     private Context context;
@@ -106,19 +109,22 @@ public class AdmobApi {
 
     public void init(Context context, String linkServerRelease, String AppID, ApiCallBack callBack) {
         this.context = context;
-        if (linkServerRelease != null & AppID != null) {
-            this.linkServer = linkServerRelease;
-            this.appIDRelease = AppID;
+        this.packageName = context.getPackageName();
+        if (linkServerRelease != null && AppID != null ) {
+            if(!linkServerRelease.trim().equals("")){
+                this.linkServer = linkServerRelease.trim();
+                this.appIDRelease = AppID.trim();
+            }
         }
 
-        String baseUrl = linkServer + "/api/";
+        String baseURL = linkServer + "/api/";
         apiService = new Retrofit.Builder()
-                .baseUrl(baseUrl)
+                .baseUrl(baseURL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
                 .create(ApiService.class);
 
-        Log.i(TAG, "link Server:" + baseUrl);
+        Log.i(TAG, "link Server:" + baseURL);
 
         if (isNetworkConnected()) {
             fetchData(callBack);
@@ -132,10 +138,15 @@ public class AdmobApi {
     private void fetchData(ApiCallBack callBack) {
         Log.e(TAG, "fetchData: ");
         try {
-            apiService.callAds(appIDRelease).enqueue(new Callback<List<AdsModel>>() {
+            String appID_package = appIDRelease+"+"+packageName;
+            apiService.callAds(appID_package).enqueue(new Callback<List<AdsModel>>() {
                 @Override
                 public void onResponse(Call<List<AdsModel>> call, Response<List<AdsModel>> response) {
                     if (response.body() == null) {
+                        new Handler().postDelayed(() -> callBack.onReady(), 2000);
+                        return;
+                    }
+                    if (response.body().size() == 0) {
                         new Handler().postDelayed(() -> callBack.onReady(), 2000);
                         return;
                     }
@@ -243,5 +254,14 @@ public class AdmobApi {
             }
         });
     }
-
+    public void loadOpenAppAdSplashFloor(final Activity activity, AdCallback adCallback){AppOpenManager.getInstance().loadOpenAppAdSplashFloor(activity,getListIDOpenSplash(),true,adCallback);}
+    public void loadNativeIntro(final Activity activity, FrameLayout frameLayout, int layoutNative){
+        Admob.getInstance().loadNativeAdFloor(activity, getListIDNativeIntro(), frameLayout,layoutNative);
+    }
+    public void loadNativeLanguage(final Activity activity, FrameLayout frameLayout, int layoutNative){
+        Admob.getInstance().loadNativeAdFloor(activity, getListIDNativeLanguage(), frameLayout,layoutNative);
+    }
+    public void loadNativePermission(final Activity activity, FrameLayout frameLayout, int layoutNative){
+        Admob.getInstance().loadNativeAdFloor(activity, getListIDNativePersimmon(), frameLayout,layoutNative);
+    }
 }

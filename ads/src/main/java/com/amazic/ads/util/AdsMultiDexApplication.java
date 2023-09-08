@@ -14,12 +14,12 @@ public abstract class AdsMultiDexApplication extends MultiDexApplication {
         Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG);
         Admob.getInstance().initAdmod(this, getListTestDeviceId());
         if(enableAdsResume()) {
-            AppOpenManager.getInstance().init(this, getOpenAppAdId());
+            AppOpenManager.getInstance().init(this, getResumeAdId());
         }
     }
 
     public abstract boolean enableAdsResume();
     public abstract List<String> getListTestDeviceId();
-    public abstract String getOpenAppAdId();
+    public abstract String getResumeAdId();
     public abstract Boolean buildDebug();
 }

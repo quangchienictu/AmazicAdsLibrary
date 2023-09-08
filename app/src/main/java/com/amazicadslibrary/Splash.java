@@ -64,11 +64,11 @@ public class Splash extends AppCompatActivity {
             }
         };
         AdmobApi.getInstance().setListIDOther("native_home");
-        AdmobApi.getInstance().init(this,getString(R.string.linkServer),"ca-app-pub-3940256099942544~3347511713",new ApiCallBack(){
+        AdmobApi.getInstance().init(this,getString(R.string.linkServer),getString(R.string.app_id),new ApiCallBack(){
             @Override
             public void onReady() {
                 super.onReady();
-                AppOpenManager.getInstance().loadOpenAppAdSplashFloor(Splash.this, AdmobApi.getInstance().getListIDOpenSplash(),true,adCallback);
+                AdmobApi.getInstance().loadOpenAppAdSplashFloor(Splash.this,adCallback);
             }
         });
 

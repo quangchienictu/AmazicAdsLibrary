@@ -48,7 +48,7 @@ dependencies {
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
     def multidex_version = "2.0.1"
-    implementation "androidx.multidex:multidex:$multidex_version"
+    implementation 'com.android.support:multidex:2.0.1'
     def billing_version = "5.1.0"
     implementation "com.android.billingclient:billing:$billing_version"
 

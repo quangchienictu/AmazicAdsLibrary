@@ -1,12 +1,15 @@
 package com.amazicadslibrary;
 
+import androidx.multidex.MultiDexApplication;
+
 import com.amazic.ads.event.AppsflyerEvent;
+import com.amazic.ads.util.AdsMultiDexApplication;
 import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.AdsApplication;
 
 import java.util.List;
 
-public class MyApplication extends AdsApplication {
+public class MyApplication extends AdsMultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -24,6 +27,7 @@ public class MyApplication extends AdsApplication {
     public List<String> getListTestDeviceId() {
         return null;
     }
+
 
     @Override
     public String getResumeAdId() {

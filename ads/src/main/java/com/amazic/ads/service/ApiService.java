@@ -14,7 +14,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface ApiService {
-    @GET("getid/{param}")
+    @GET("getidv2/{param}")
     Call<List<AdsModel>> 
     callAds(@Path("param") String parameterValue);
 }
