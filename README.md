@@ -246,7 +246,7 @@ AdmobApi.getInstance().init(this,getString(R.string.linkServer),getString(R.stri
 <pre>
 <string name="linkServer"></string>
 <string name="app_id">ca-app-pub-3940256099942544~3347511713</string>
-</pre>pre>
+</pre>
  ==================== thông tin các list trả về  =====================================
 
 getListIDNativeLanguage() : list ID language
