@@ -66,7 +66,7 @@ public class AdmobApi {
         return listIDNativeIntro;
     }
 
-    public List<String> getListIDNativePersimmon() {
+    public List<String> getListIDNativePermission() {
         return listIDNativePermission;
     }
 
@@ -139,6 +139,7 @@ public class AdmobApi {
         Log.e(TAG, "fetchData: ");
         try {
             String appID_package = appIDRelease+"+"+packageName;
+            Log.i(TAG, "link Server query :" + linkServer + "/api/"+ appID_package);
             apiService.callAds(appID_package).enqueue(new Callback<List<AdsModel>>() {
                 @Override
                 public void onResponse(Call<List<AdsModel>> call, Response<List<AdsModel>> response) {
@@ -254,7 +255,10 @@ public class AdmobApi {
             }
         });
     }
-    public void loadOpenAppAdSplashFloor(final Activity activity, AdCallback adCallback){AppOpenManager.getInstance().loadOpenAppAdSplashFloor(activity,getListIDOpenSplash(),true,adCallback);}
+    public void loadOpenAppAdSplashFloor(final Activity activity, AdCallback adCallback){
+        List listIdNew = new ArrayList();for (String id : getListIDOpenSplash()) {listIdNew.add(id);}
+        AppOpenManager.getInstance().loadOpenAppAdSplashFloor(activity,listIdNew,true,adCallback);
+    }
     public void loadNativeIntro(final Activity activity, FrameLayout frameLayout, int layoutNative){
         Admob.getInstance().loadNativeAdFloor(activity, getListIDNativeIntro(), frameLayout,layoutNative);
     }
@@ -262,6 +266,6 @@ public class AdmobApi {
         Admob.getInstance().loadNativeAdFloor(activity, getListIDNativeLanguage(), frameLayout,layoutNative);
     }
     public void loadNativePermission(final Activity activity, FrameLayout frameLayout, int layoutNative){
-        Admob.getInstance().loadNativeAdFloor(activity, getListIDNativePersimmon(), frameLayout,layoutNative);
+        Admob.getInstance().loadNativeAdFloor(activity, getListIDNativePermission(), frameLayout,layoutNative);
     }
 }

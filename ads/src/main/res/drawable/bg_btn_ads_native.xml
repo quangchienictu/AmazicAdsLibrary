@@ -6,6 +6,6 @@
         android:startColor="@color/native_bg_btn"
         android:endColor="@color/native_bg_btn"/>
 
-    <corners android:radius="@dimen/_15sdp"/>
+    <corners android:radius="@dimen/_10sdp"/>
 
 </shape>
