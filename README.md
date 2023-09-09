@@ -243,8 +243,8 @@ AdmobApi.getInstance().init(this,getString(R.string.linkServer),getString(R.stri
                 AdmobApi.getInstance().loadOpenAppAdSplashFloor(Splash.this,adCallback);
             }
         });
-<p>XML Element: &lt;string name="linkServer"&gt;&lt;/string&gt;</p>
-        <p>XML Element: &lt;string name="app_id"&gt;ca-app-pub-3940256099942544~3347511713&lt;/string&gt;</p>
+&lt;string name="linkServer"&gt;&lt;/string&gt;
+&lt;string name="app_id"&gt;ca-app-pub-3940256099942544~3347511713&lt;/string&gt;</p>
  ==================== thông tin các list trả về  =====================================
 
 getListIDNativeLanguage() : list ID language
