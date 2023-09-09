@@ -18,9 +18,9 @@
     implementation "androidx.multidex:multidex:2.0.1"
   }
 
-  defaultConfig {
-    multiDexEnabled true
-  }
+defaultConfig {
+multiDexEnabled true
+}
 </pre>
 <h3><li>Add app id in Manifest:</br></h3>
 <pre>
@@ -63,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:layout_constraintBottom_toBottomOf="parent" /> 
-   
+
  </pre>
 <h4>Load in ativity</h4>
 <pre>
@@ -71,9 +71,9 @@
 </pre>
 <h4>Load in fragment</h4>
 <pre>
-  
-   Admob.getInstance().loadBannerFragment( mActivity, "bannerID",  rootView)
-  
+
+Admob.getInstance().loadBannerFragment( mActivity, "bannerID",  rootView)
+
 </pre>
 </div>
 <h2>IntertitialAds</h2>
@@ -93,20 +93,20 @@
 
      onresume
      Admob.getInstance().onCheckShowSplashWhenFail(this,interCallback,1000);
-    
+
   </pre>
 <h3>- InterstitialAds</h3>
   <h4>Create and load interstitialAds</h4>
 <pre>
   private InterstitialAd mInterstitialAd;
 
-   Admob.getInstance().loadInterAds(this, "interstitial_id" new InterCallback() {
-            @Override
-            public void onInterstitialLoad(InterstitialAd interstitialAd) {
-                super.onInterstitialLoad(interstitialAd);
-                mInterstitialAd = interstitialAd;
-            }
-        });
+Admob.getInstance().loadInterAds(this, "interstitial_id" new InterCallback() {
+@Override
+public void onInterstitialLoad(InterstitialAd interstitialAd) {
+super.onInterstitialLoad(interstitialAd);
+mInterstitialAd = interstitialAd;
+}
+});
 </pre>
 <h4>Show interstitialAds</h4>
 <pre>
@@ -185,7 +185,7 @@
 <div class="content">
   <h4>View xml</h4>
 <pre>
-  
+
     <FrameLayout
         android:id="@+id/native_ads"
         android:layout_width="match_parent"
@@ -193,11 +193,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
         <include layout="@layout/ads_native_shimer" />
-  
+
 </pre>
 <h4>Create and show nativeAds</h4>
 <pre>
-  
+
      private FrameLayout native_ads;
      
      native_ads = findViewById(R.id.native_ads);
@@ -230,20 +230,25 @@
  true - show all ads
  false - hide all ads
 </pre>
+
+
 <h4>Call API</h4>
 <pre>
-Để link server null nếu chưa biết link server build 
+Để link server "" nếu chưa biết link server build 
 <pre>
-AdmobApi.getInstance().init(getString(R.string.linkServer),getString(R.string.appID),new ApiCallBack(){
+AdmobApi.getInstance().init(this,getPackageName(),getString(R.string.linkServer),getString(R.string.app_id),new ApiCallBack(){
             @Override
             public void onReady() {
                 super.onReady();
-                AppOpenManager.getInstance().loadOpenAppAdSplashFloor(Splash.this, AdmobApi.getInstance().getListIDOpenSplash(),true,adCallback);
+                AdmobApi.getInstance().loadOpenAppAdSplashFloor(Splash.this,adCallback);
             }
         });
 
+<string name="linkServer"></string>
+<string name="app_id">ca-app-pub-3940256099942544~3347511713</string>
 
  ==================== thông tin các list trả về  =====================================
+
 getListIDNativeLanguage() : list ID language
 getListIDNativeIntro() : list ID Intro
 getListIDNativePersimmon() : list ID Permission
@@ -273,4 +278,26 @@ AdmobApi.getInstance().showInterAll(MainActivity.this, new InterCallback() {
       }
 
   });
+
+<b>Load inter all API ở main(new) :  </b>
+AdmobApi.getInstance().loadInterAll(this);
+<b>Show inter all Api :  </b>
+// ko cần load lại ads sau khi show
+AdmobApi.getInstance().showInterAll(MainActivity.this, new InterCallback() {
+      @Override
+      public void onNextAction() {
+          super.onNextAction();
+          startActivity(new Intent(MainActivity.this,MainActivity3.class));
+      }
+
+  });
+
+
+<b>Native language  </b>
+AdmobApi.getInstance().loadNativeLanguage(this, native_ads,R.layout.ads_native_btn_ads_top);
+<b>Native permission  </b>
+AdmobApi.getInstance().loadNativePermission(this, native_ads,R.layout.ads_native_btn_ads_top);
+<b>Native intro  </b>
+AdmobApi.getInstance().loadNativeIntro(this, listID,R.layout.ads_native_btn_ads_top);
+
 </pre>
