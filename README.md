@@ -236,7 +236,7 @@ mInterstitialAd = interstitialAd;
 <pre>
 Để link server "" nếu chưa biết link server build 
 <pre>
-AdmobApi.getInstance().init(this,getPackageName(),getString(R.string.linkServer),getString(R.string.app_id),new ApiCallBack(){
+AdmobApi.getInstance().init(this,getString(R.string.linkServer),getString(R.string.app_id),new ApiCallBack(){
             @Override
             public void onReady() {
                 super.onReady();
