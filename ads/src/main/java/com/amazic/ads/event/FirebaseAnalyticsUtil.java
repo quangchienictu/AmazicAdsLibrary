@@ -16,7 +16,6 @@ public class FirebaseAnalyticsUtil {
         logEventWithAds(context, (float) adValue.getRevenue(), 0, adValue.getAdUnitId(), adValue.getNetworkName());
     }
 */
-
     public static void logEventWithAds(Context context, Bundle params) {
         FirebaseAnalytics.getInstance(context).logEvent("amazic_admob_paid_ad_impression", params);
     }
@@ -26,7 +25,6 @@ public class FirebaseAnalyticsUtil {
     }
 
     public static void logClickAdsEvent(Context context, Bundle bundle) {
-
         FirebaseAnalytics.getInstance(context).logEvent("amazic_admob_event_user_click_ads", bundle);
     }
 

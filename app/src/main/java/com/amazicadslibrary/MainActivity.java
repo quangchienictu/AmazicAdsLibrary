@@ -3,10 +3,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.callback.PurchaseListioner;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
@@ -37,7 +39,31 @@ public class MainActivity extends AppCompatActivity {
         listID.add("getString(R.string.ads_test_inter)");
         listID.add("getString(R.string.ads_test_banner)");
         listID.add(getString(R.string.admod_banner_collap_id));
-        Admob.getInstance().loadBanner(this, getString(R.string.ads_test_banner));
+        Admob.getInstance().loadBanner(this, getString(R.string.ads_test_banner),new BannerCallBack(){
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+                Log.e("xxxx banner","onAdClicked");
+            }
+
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
+                Log.e("xxxx banner","onAdImpression");
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                Log.e("xxxx banner","onAdFailedToLoad");
+            }
+
+            @Override
+            public void onAdLoadSuccess() {
+                super.onAdLoadSuccess();
+                Log.e("xxxx banner","onAdLoadSuccess");
+            }
+        });
         Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
         loadAdInter();
         loadAdsNative();
@@ -61,6 +87,17 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(MainActivity.this,MainActivity3.class));
                     }
 
+                    @Override
+                    public void onAdImpression() {
+                        super.onAdImpression();
+                        Log.e("xxxx","onAdImpression");
+                    }
+
+                    @Override
+                    public void onAdClicked() {
+                        super.onAdClicked();
+                        Log.e("xxxx","onAdClicked");
+                    }
                 });
             }
         });
@@ -173,4 +210,5 @@ public class MainActivity extends AppCompatActivity {
     private void loadAdInter() {
         AdmobApi.getInstance().loadInterAll(this);
     }
+
 }

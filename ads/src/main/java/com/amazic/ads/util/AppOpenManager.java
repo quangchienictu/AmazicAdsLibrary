@@ -20,6 +20,7 @@ import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.amazic.ads.dialog.ResumeLoadingDialog;
 import com.amazic.ads.event.AdType;
+import com.amazic.ads.event.AdmobEvent;
 import com.amazic.ads.event.FirebaseUtil;
 import com.amazic.ads.service.AdmobApi;
 import com.google.android.gms.ads.AdActivity;
@@ -28,6 +29,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +64,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     private boolean disableAdResumeByClickAction = false;
     private final List<Class> disabledAppOpenList;
     private Class splashActivity;
-
+    public static boolean checkLoadResume = false;
     private boolean isTimeout = false;
     private static final int TIMEOUT_MSG = 11;
 
@@ -204,10 +206,18 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
      */
     public void fetchAd(final boolean isSplash) {
         Log.d(TAG, "fetchAd: isSplash = " + isSplash);
-        if (isAdAvailable(isSplash)) {
+        if (isAdAvailable(isSplash)||checkLoadResume) {
             return;
         }
-
+        if (!isSplash) {
+            // Log event admob
+            AdmobEvent.OPEN_POSITION++;
+            Bundle bundle = new Bundle();
+            bundle.putInt("ad_open_position", AdmobEvent.OPEN_POSITION);
+            AdmobEvent.logEvent(myApplication.getApplicationContext(),"ad_open_load",bundle);
+            //end log
+        }
+        checkLoadResume = true;
         loadCallback =
                 new AppOpenAd.AppOpenAdLoadCallback() {
 
@@ -220,8 +230,17 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
                     @Override
                     public void onAdLoaded(AppOpenAd ad) {
+                        checkLoadResume = false;
                         Log.d(TAG, "onAppOpenAdLoaded: isSplash = " + isSplash);
                         if (!isSplash) {
+                            // Log event admob
+                            AdmobEvent.OPEN_POSITION++;
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("ad_open_position", AdmobEvent.OPEN_POSITION);
+                            AdmobEvent.logEvent(myApplication.getApplicationContext(),"ad_open_load_success",bundle);
+                            //end log
+
+
                             AppOpenManager.this.appResumeAd = ad;
                             AppOpenManager.this.appResumeAd.setOnPaidEventListener(adValue -> {
                             });
@@ -248,14 +267,29 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                      */
                     @Override
                     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        checkLoadResume = false;
                         Log.d(TAG, "onAppOpenAdFailedToLoad: isSplash" + isSplash + " message " + loadAdError.getMessage());
 //                        if (isSplash && fullScreenContentCallback!=null)
 //                            fullScreenContentCallback.onAdDismissedFullScreenContent();
                         dismissDialogLoading();
+                        // Log event admob
+                        if (!isSplash){
+                            Bundle bundle = new Bundle();
+                            bundle.putString("ad_open_position",String.valueOf(AdmobEvent.OPEN_POSITION));
+                            bundle.putString("ad_error_domain", String.valueOf(loadAdError.getDomain()));
+                            bundle.putString("ad_error_code", String.valueOf(loadAdError.getCode()));
+                            bundle.putString("ad_error_message", loadAdError.getMessage());
+                            bundle.putString("ad_error_response", String.valueOf(loadAdError.getResponseInfo()));
+                            bundle.putString("internet_status", String.valueOf(isNetworkConnected(myApplication.getApplicationContext())));
+                            AdmobEvent.logEvent(myApplication.getApplicationContext(),"ad_inter_load_failed",bundle);
+                        }
+                        //end log
                     }
 
 
                 };
+
+
         AdRequest request = getAdRequest();
         AppOpenAd.load(
                 myApplication, isSplash ? splashAdId : appResumeAdId, request,
@@ -411,6 +445,12 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
                                 @Override
                                 public void onAdShowedFullScreenContent() {
+                                    // Log event admob
+                                    AdmobEvent.OPEN_POSITION++;
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt("ad_open_position", AdmobEvent.OPEN_POSITION);
+                                    AdmobEvent.logEvent(myApplication.getApplicationContext(),"ad_open_show",bundle);
+                                    //end log
                                     if (fullScreenContentCallback != null && enableScreenContentCallback) {
                                         fullScreenContentCallback.onAdShowedFullScreenContent();
                                     }
@@ -504,6 +544,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
                     @Override
                     public void onAdShowedFullScreenContent() {
+                        if (currentActivity != null) {
+                            AdmobEvent.logEvent(currentActivity,"resume_appopen_view", new Bundle());
+                        }
                         if (fullScreenContentCallback != null && enableScreenContentCallback) {
                             fullScreenContentCallback.onAdShowedFullScreenContent();
                         }
@@ -515,6 +558,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                     public void onAdClicked() {
                         super.onAdClicked();
                         if (currentActivity != null) {
+                            AdmobEvent.logEvent(currentActivity,"resume_appopen_click", new Bundle());
                             FirebaseUtil.logClickAdsEvent(currentActivity, appResumeAdId);
                             if (fullScreenContentCallback != null) {
                                 fullScreenContentCallback.onAdClicked();
@@ -741,6 +785,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                             @Override
                             public void onAdShowedFullScreenContent() {
                                 adCallback.onAdImpression();
+                                AdmobEvent.logEvent(currentActivity,"splash_appopen_view", new Bundle());
                                 AppOpenManager.isShowingAd = true;
                                 AppOpenManager.this.splashAd = null;
                             }
@@ -749,6 +794,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                             public void onAdClicked() {
                                 super.onAdClicked();
                                 adCallback.onAdClicked();
+                                AdmobEvent.logEvent(currentActivity,"splash_appopen_click", new Bundle());
                             }
                         });
 
@@ -857,16 +903,13 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
-                    // adCallback.onAdFailedToLoad(loadAdError);
                     listIDResume.remove(0);
                     if (listIDResume.size() == 0) {
-                        adCallback.onAdFailedToLoad(null);
-                        adCallback.onNextAction();
+                        adCallback.onAdFailedToLoad(loadAdError);
                     } else {
                         loadOpenAppAdSplashFloor(context, listIDResume, isShowAdIfReady, adCallback);
                     }
                 }
-
                 @Override
                 public void onAdLoaded(@NonNull AppOpenAd appOpenAd) {
                     super.onAdLoaded(appOpenAd);

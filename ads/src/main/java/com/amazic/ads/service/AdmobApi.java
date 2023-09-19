@@ -12,6 +12,7 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.ApiCallBack;
+import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AppOpenManager;
@@ -139,7 +140,7 @@ public class AdmobApi {
         Log.e(TAG, "fetchData: ");
         try {
             String appID_package = appIDRelease+"+"+packageName;
-            Log.i(TAG, "link Server query :" + linkServer + "/api/"+ appID_package);
+            Log.i(TAG, "link Server query :" + linkServer + "/api/getidv2"+ appID_package);
             apiService.callAds(appID_package).enqueue(new Callback<List<AdsModel>>() {
                 @Override
                 public void onResponse(Call<List<AdsModel>> call, Response<List<AdsModel>> response) {
@@ -214,6 +215,10 @@ public class AdmobApi {
     public void loadBanner(final Activity activity) {
         Admob.getInstance().loadBannerFloor(activity, getListIDBannerAll());
     }
+    public void loadBanner(final Activity activity, BannerCallBack bannerCallBack) {
+        Admob.getInstance().loadBannerFloor(activity, getListIDBannerAll(),bannerCallBack);
+    }
+
     public void loadCollapsibleBanner(final Activity activity) {
         Admob.getInstance().loadCollapsibleBannerFloor(activity, getListIDCollapseBannerAll(), "bottom");
     }
@@ -221,12 +226,51 @@ public class AdmobApi {
         if (interAll == null)
             Admob.getInstance().loadInterAdsFloor(activity, getListIDInterAll(), new InterCallback() {
                 @Override
-                public void onInterstitialLoad(InterstitialAd interstitialAd) {
-                    super.onInterstitialLoad(interstitialAd);
+                public void onAdLoadSuccess(InterstitialAd interstitialAd) {
+                    super.onAdLoadSuccess(interstitialAd);
                     interAll = interstitialAd;
                 }
             });
     }
+
+    public void loadInterAll(final Activity activity,InterCallback interCallback) {
+        if (interAll == null){
+            Admob.getInstance().loadInterAdsFloor(activity, getListIDInterAll(), new InterCallback() {
+                @Override
+                public void onAdLoadSuccess(InterstitialAd interstitialAd) {
+                    super.onAdLoadSuccess(interstitialAd);
+                    interAll = interstitialAd;
+                    interCallback.onAdLoadSuccess(interstitialAd);
+                }
+
+                @Override
+                public void onAdClicked() {
+                    super.onAdClicked();
+                    interCallback.onAdClicked();
+                }
+                @Override
+                public void onAdFailedToLoad(LoadAdError i) {
+                    super.onAdFailedToLoad(i);
+                    interCallback.onAdFailedToLoad(i);
+                }
+
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                    interCallback.onAdLoaded();
+                }
+
+                @Override
+                public void onAdImpression() {
+                    super.onAdImpression();
+                    interCallback.onAdImpression();
+                }
+            });
+        }
+    }
+
+
+
     public void showInterAll(final Activity activity, InterCallback interCallback) {
         Admob.getInstance().showInterAds(activity, this.interAll, new InterCallback() {
             @Override
@@ -235,6 +279,12 @@ public class AdmobApi {
                 interCallback.onNextAction();
                 interAll = null;
                 loadInterAll(activity);
+            }
+
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+                interCallback.onAdClicked();
             }
 
             @Override
@@ -252,6 +302,12 @@ public class AdmobApi {
                 interCallback.onAdFailedToLoad(i);
                 interAll = null;
                 loadInterAll(activity);
+            }
+
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
+                interCallback.onAdImpression();
             }
         });
     }

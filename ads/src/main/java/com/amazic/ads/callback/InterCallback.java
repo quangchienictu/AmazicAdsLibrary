@@ -15,7 +15,7 @@ public class InterCallback {
     }
     public void onAdLoaded() {
     }
-    public void onInterstitialLoad(InterstitialAd interstitialAd) {
+    public void onAdLoadSuccess(InterstitialAd interstitialAd) {
     }
     public void onAdClicked() {
     }

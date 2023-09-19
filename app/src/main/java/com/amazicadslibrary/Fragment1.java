@@ -28,9 +28,10 @@ public class Fragment1 extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         Admob.getInstance().loadInterAds(getContext(),getString(R.string.admod_interstitial_id), new InterCallback(){
+
             @Override
-            public void onInterstitialLoad(InterstitialAd interstitialAd) {
-                super.onInterstitialLoad(interstitialAd);
+            public void onAdLoadSuccess(InterstitialAd interstitialAd) {
+                super.onAdLoadSuccess(interstitialAd);
                 mInterstitialAd = interstitialAd;
             }
         });
