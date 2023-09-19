@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.amazic.ads.callback.BannerCallBack;
+import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.PurchaseListioner;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
@@ -16,6 +18,8 @@ import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.gms.ads.rewarded.RewardItem;
 
 import java.util.ArrayList;
@@ -36,10 +40,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         native_ads   = findViewById(R.id.native_ads);
         listID = new ArrayList<>();
-        listID.add("getString(R.string.ads_test_inter)");
-        listID.add("getString(R.string.ads_test_banner)");
         listID.add(getString(R.string.admod_banner_collap_id));
-        Admob.getInstance().loadBanner(this, getString(R.string.ads_test_banner),new BannerCallBack(){
+        Admob.getInstance().loadBannerFloor(this, listID,new BannerCallBack(){
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
@@ -120,6 +122,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAdFailedToShow(int codeError) {
                         Toast.makeText(MainActivity.this,"Loa ads err",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onAdImpression() {
+                        Toast.makeText(MainActivity.this,"onAdImpression",Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -203,12 +210,41 @@ public class MainActivity extends AppCompatActivity {
         listID.add("2");
         listID.add(getString(R.string.ads_test_native));
 
-        Admob.getInstance().loadNativeAdFloor(this, listID, native_ads,R.layout.ads_native_btn_ads_top);
+       // Admob.getInstance().loadNativeAdFloor(this, listID, native_ads,R.layout.ads_native_btn_ads_top);
+        Admob.getInstance().loadNativeAd(this,listID, new NativeCallback(){
+            @Override
+            public void onNativeAdLoaded(NativeAd nativeAd) {
+                super.onNativeAdLoaded(nativeAd);
+                NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.ads_native_btn_ads_top, null);
+                native_ads.addView(adView);
+                Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
+            }
+
+            @Override
+            public void onAdFailedToLoad() {
+                super.onAdFailedToLoad();
+                Log.e("xxxx native","onAdFailedToLoad");
+            }
+
+            @Override
+            public void onEarnRevenue(Double Revenue) {
+                super.onEarnRevenue(Revenue);
+                Log.e("xxxx native","onEarnRevenue");
+            }
+
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+                Log.e("xxxx native","onAdClicked");
+            }
+        });
+
+
         Admob.getInstance().loadNativeAd(this, "id native", native_ads,R.layout.ads_native);
     }
 
     private void loadAdInter() {
-        AdmobApi.getInstance().loadInterAll(this);
+        AdmobApi.getInstance().loadInterAll(this,new InterCallback(){});
     }
 
 }

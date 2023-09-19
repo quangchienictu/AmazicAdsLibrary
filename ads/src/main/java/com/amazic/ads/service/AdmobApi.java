@@ -215,6 +215,7 @@ public class AdmobApi {
     public void loadBanner(final Activity activity) {
         Admob.getInstance().loadBannerFloor(activity, getListIDBannerAll());
     }
+
     public void loadBanner(final Activity activity, BannerCallBack bannerCallBack) {
         Admob.getInstance().loadBannerFloor(activity, getListIDBannerAll(),bannerCallBack);
     }
