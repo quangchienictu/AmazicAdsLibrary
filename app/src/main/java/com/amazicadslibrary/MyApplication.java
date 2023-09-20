@@ -1,15 +1,12 @@
 package com.amazicadslibrary;
 
-import androidx.multidex.MultiDexApplication;
-
 import com.amazic.ads.event.AppsflyerEvent;
-import com.amazic.ads.util.AdsMultiDexApplication;
-import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.AdsApplication;
+import com.amazic.ads.util.AppOpenManager;
 
 import java.util.List;
 
-public class MyApplication extends AdsMultiDexApplication {
+public class MyApplication extends AdsApplication {
     @Override
     public void onCreate() {
         super.onCreate();
