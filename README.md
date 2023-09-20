@@ -27,8 +27,7 @@ multiDexEnabled true
       <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/app_id"/>
-        <string name="app_id" translatable="false">ca-app-pub-4973559944609228~2346710863</string>
-</pre>
+      &lt;string name="app_id"&gt;ca-app-pub-3940256099942544~3347511713&lt;/string&gt;</p>  
 <h3><li>Init aplication</br></h3>
 <pre> < application
    android:name=".MyApplication"
