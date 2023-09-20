@@ -24,10 +24,10 @@ multiDexEnabled true
 </pre>
 <h3><li>Add app id in Manifest:</br></h3>
 <pre>
-      <meta-data
+      < meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/app_id"/>
-    ca-app-pub-3940256099942544~3347511713
+    < string name="app_id" translatable="false">ca-app-pub-4973559944609228~2346710863</string>
 <h3><li>Init aplication</br></h3>
 <pre> < application
    android:name=".MyApplication"
