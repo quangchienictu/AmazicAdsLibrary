@@ -223,6 +223,9 @@ public class AdmobApi {
     public void loadCollapsibleBanner(final Activity activity) {
         Admob.getInstance().loadCollapsibleBannerFloor(activity, getListIDCollapseBannerAll(), "bottom");
     }
+    public void loadCollapsibleBanner(final Activity activity,BannerCallBack bannerCallBack) {
+        Admob.getInstance().loadCollapsibleBannerFloor(activity, getListIDCollapseBannerAll(), "bottom",bannerCallBack);
+    }
     public void loadInterAll(final Activity activity) {
         if (interAll == null)
             Admob.getInstance().loadInterAdsFloor(activity, getListIDInterAll(), new InterCallback() {
