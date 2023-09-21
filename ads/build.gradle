@@ -47,8 +47,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
-    def billing_version = "5.1.0"
-    implementation "com.android.billingclient:billing:$billing_version"
+
 
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     implementation platform('com.google.firebase:firebase-bom:31.2.0')
