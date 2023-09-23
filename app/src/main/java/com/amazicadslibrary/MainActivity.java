@@ -41,31 +41,7 @@ public class MainActivity extends AppCompatActivity {
         native_ads   = findViewById(R.id.native_ads);
         listID = new ArrayList<>();
         listID.add(getString(R.string.admod_banner_collap_id));
-        Admob.getInstance().loadBannerFloor(this, listID,new BannerCallBack(){
-            @Override
-            public void onAdClicked() {
-                super.onAdClicked();
-                Log.e("xxxx banner","onAdClicked");
-            }
-
-            @Override
-            public void onAdImpression() {
-                super.onAdImpression();
-                Log.e("xxxx banner","onAdImpression");
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError loadAdError) {
-                super.onAdFailedToLoad(loadAdError);
-                Log.e("xxxx banner","onAdFailedToLoad");
-            }
-
-            @Override
-            public void onAdLoadSuccess() {
-                super.onAdLoadSuccess();
-                Log.e("xxxx banner","onAdLoadSuccess");
-            }
-        });
+        AdmobApi.getInstance().loadBanner(this);
         Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
         loadAdInter();
         loadAdsNative();
