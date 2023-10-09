@@ -193,6 +193,13 @@ public class Admob {
       * @param mActivity
       * @param id
       */
+    public void hideBanner(final Activity mActivity) {
+        final View viewAds = mActivity.findViewById(R.id.ll_ads);
+        if (viewAds != null) {
+            viewAds.setVisibility(View.GONE);
+        }
+    }
+
     public void loadBanner(final Activity mActivity, String id) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);

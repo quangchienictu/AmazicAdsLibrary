@@ -14,11 +14,12 @@
         <item name="android:textSize">11.0sp</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:gravity">center</item>
-        <item name="android:layout_gravity">left</item>
+        <item name="android:layout_gravity">center</item>
         <item name="android:background">@drawable/ads_icon</item>
-        <item name="android:paddingLeft">3.0dip</item>
-        <item name="android:paddingRight">6.0dip</item>
-        <item name="android:paddingBottom">1.0dip</item>
+        <item name="android:paddingStart">6dp</item>
+        <item name="android:paddingEnd">6dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:paddingTop">2dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:minWidth">15.0px</item>
@@ -29,4 +30,31 @@
     <style name="NoTitleDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
     </style>
+
+    <!-- =====================  Layout native ===================== -->
+    <attr name="dotIndicatorStyle" />
+
+    <declare-styleable name="LayoutNative">
+        <attr name="ln_text_header_color" format="color" />
+        <attr name="ln_text_desc_color" format="color" />
+        <attr name="ln_text_btn_color" format="color" />
+        <attr name="ln_icon_background" format="reference" />
+        <attr name="ln_btn_background" format="reference" />
+        <attr name="ln_native_background" format="reference" />
+        <attr name="ln_type" format="enum">
+            <enum name="large" value="0" />
+            <enum name="small" value="1" />
+        </attr>
+    </declare-styleable>
+
+    <style name="LayoutNative">
+        <item name="ln_text_header_color">@color/color_app</item>
+        <item name="ln_text_desc_color">@android:color/black</item>
+        <item name="ln_text_btn_color">@android:color/black</item>
+        <item name="ln_icon_background">@drawable/ads_icon</item>
+        <item name="ln_btn_background">@color/native_bg_btn</item>
+        <item name="ln_native_background">@drawable/bg_native</item>
+        <item name="ln_type">large</item>
+    </style>
+    <!--====================================================-->
 </resources>
