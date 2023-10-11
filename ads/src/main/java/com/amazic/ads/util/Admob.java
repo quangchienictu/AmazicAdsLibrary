@@ -2042,11 +2042,11 @@ public class Admob {
                 @Override
                 public void onAdFailedToLoad() {
                     super.onAdFailedToLoad();
-                    callback.onAdFailedToLoad();
                     if (listIDNew.size() > 1) {
                         listIDNew.remove(0);
                         loadNativeAd(context, listIDNew, callback);
                     }
+                    callback.onAdFailedToLoad();
 
                 }
             });
