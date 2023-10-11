@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <androidx.core.widget.NestedScrollView
-        android:paddingBottom="10dp"
-        android:layout_above="@id/include"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@id/include"
+        android:paddingBottom="10dp"
+        android:visibility="gone">
+
         <RelativeLayout
             android:id="@+id/main"
-            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
 
             <Button
                 android:id="@+id/clickFGM"
@@ -53,6 +56,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <Button
                 android:id="@+id/btnClickLoadAndShow"
                 android:layout_width="wrap_content"
@@ -76,17 +80,33 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <FrameLayout
-                android:layout_below="@+id/btnBilding"
                 android:id="@+id/native_ads"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/btnBilding"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" >
+                app:layout_constraintTop_toTopOf="parent">
+
                 <include layout="@layout/ads_native_shimer" />
             </FrameLayout>
+
         </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <com.amazic.ads.view.NativeAdsView
+        android:id="@+id/fr_ads_new"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:ln_btn_background="@drawable/bg_btn_ads_native"
+        app:ln_icon_background="@drawable/ads_icon"
+        app:ln_native_background="@drawable/bg_card_ads"
+        app:ln_text_btn_color="#FFFFFF"
+        app:ln_text_desc_color="#DCA5A5"
+        app:ln_text_header_color="#AC0000"
+        app:ln_type="small" />
+
     <include
         android:id="@+id/include"
         layout="@layout/layout_banner"
@@ -95,4 +115,4 @@
         android:layout_alignParentBottom="true"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-</RelativeLayout>
+</LinearLayout>

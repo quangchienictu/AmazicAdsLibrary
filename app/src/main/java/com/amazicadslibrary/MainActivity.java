@@ -1,4 +1,5 @@
 package com.amazicadslibrary;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -16,6 +17,7 @@ import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
+import com.amazic.ads.view.NativeAdsView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -31,28 +33,30 @@ public class MainActivity extends AppCompatActivity {
 
     public static String PRODUCT_ID_YEAR = "android.test.purchased";
     public static String PRODUCT_ID_MONTH = "android.test.purchased";
-    public static  List<String> listID;
+    public static List<String> listID;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        native_ads   = findViewById(R.id.native_ads);
+        native_ads = findViewById(R.id.native_ads);
         listID = new ArrayList<>();
         listID.add(getString(R.string.admod_banner_collap_id));
         AdmobApi.getInstance().loadBanner(this);
-        Admob.getInstance().initRewardAds(this,getString(R.string.admod_app_reward_id));
+        Admob.getInstance().initRewardAds(this, getString(R.string.admod_app_reward_id));
         loadAdInter();
         loadAdsNative();
+
+        NativeAdsView nativeAdsView = findViewById(R.id.fr_ads_new);
+        nativeAdsView.loadNative(AdmobApi.getInstance().getListIDNativeAll(), null);
 
         findViewById(R.id.clickFGM).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,MainActivity2.class));
+                startActivity(new Intent(MainActivity.this, MainActivity2.class));
             }
         });
-
 
 
         findViewById(R.id.btnClickInter).setOnClickListener(new View.OnClickListener() {
@@ -62,19 +66,19 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onNextAction() {
                         super.onNextAction();
-                        startActivity(new Intent(MainActivity.this,MainActivity3.class));
+                        startActivity(new Intent(MainActivity.this, MainActivity3.class));
                     }
 
                     @Override
                     public void onAdImpression() {
                         super.onAdImpression();
-                        Log.e("xxxx","onAdImpression");
+                        Log.e("xxxx", "onAdImpression");
                     }
 
                     @Override
                     public void onAdClicked() {
                         super.onAdClicked();
-                        Log.e("xxxx","onAdClicked");
+                        Log.e("xxxx", "onAdClicked");
                     }
                 });
             }
@@ -84,52 +88,49 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnClickReward).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Admob.getInstance().showRewardAds(MainActivity.this,new RewardCallback(){
+                Admob.getInstance().showRewardAds(MainActivity.this, new RewardCallback() {
                     @Override
                     public void onEarnedReward(RewardItem rewardItem) {
-                        Toast.makeText(MainActivity.this,"Trả thưởng thành công",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Trả thưởng thành công", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onAdClosed() {
-                        Toast.makeText(MainActivity.this,"Close ads",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Close ads", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onAdFailedToShow(int codeError) {
-                        Toast.makeText(MainActivity.this,"Loa ads err",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Loa ads err", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onAdImpression() {
-                        Toast.makeText(MainActivity.this,"onAdImpression",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "onAdImpression", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
-
-
 
 
         findViewById(R.id.btnClickLoadAndShow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Admob.getInstance().loadAndShowInter(MainActivity.this,getString(R.string.admod_interstitial_id),0,10000, new InterCallback(){
+                Admob.getInstance().loadAndShowInter(MainActivity.this, getString(R.string.admod_interstitial_id), 0, 10000, new InterCallback() {
                     @Override
                     public void onAdClosed() {
                         super.onAdClosed();
-                        startActivity(new Intent(MainActivity.this,MainActivity2.class));
+                        startActivity(new Intent(MainActivity.this, MainActivity2.class));
                     }
 
                     @Override
                     public void onAdFailedToLoad(LoadAdError i) {
                         super.onAdFailedToLoad(i);
-                        startActivity(new Intent(MainActivity.this,MainActivity2.class));
+                        startActivity(new Intent(MainActivity.this, MainActivity2.class));
                     }
                 });
             }
         });
-
 
 
         findViewById(R.id.btnBilding).setOnClickListener(new View.OnClickListener() {
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
               /*  AppPurchase.getInstance().consumePurchase(PRODUCT_ID_MONTH);
                  AppPurchase.getInstance().purchase(MainActivity.this, PRODUCT_ID_MONTH);*/
                 //real
-               // AppPurchase.getInstance().subscribe(MainActivity.this, SubID);
+                // AppPurchase.getInstance().subscribe(MainActivity.this, SubID);
             }
         });
 
@@ -180,18 +181,18 @@ public class MainActivity extends AppCompatActivity {
         });*/
     }
 
-    private void loadAdsNative(){
+    private void loadAdsNative() {
         List<String> listID = new ArrayList<>();
         listID.add("1");
         listID.add("2");
         listID.add(getString(R.string.ads_test_native));
 
-       // Admob.getInstance().loadNativeAdFloor(this, listID, native_ads,R.layout.ads_native_btn_ads_top);
-        Admob.getInstance().loadNativeAd(this,listID, new NativeCallback(){
+        // Admob.getInstance().loadNativeAdFloor(this, listID, native_ads,R.layout.ads_native_btn_ads_top);
+        Admob.getInstance().loadNativeAd(this, listID, new NativeCallback() {
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {
                 super.onNativeAdLoaded(nativeAd);
-                NativeAdView adView = ( NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.ads_native_btn_ads_top, null);
+                NativeAdView adView = (NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.ads_native_btn_ads_top, null);
                 native_ads.addView(adView);
                 Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
             }
@@ -199,28 +200,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAdFailedToLoad() {
                 super.onAdFailedToLoad();
-                Log.e("xxxx native","onAdFailedToLoad");
+                Log.e("xxxx native", "onAdFailedToLoad");
             }
 
             @Override
             public void onEarnRevenue(Double Revenue) {
                 super.onEarnRevenue(Revenue);
-                Log.e("xxxx native","onEarnRevenue");
+                Log.e("xxxx native", "onEarnRevenue");
             }
 
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
-                Log.e("xxxx native","onAdClicked");
+                Log.e("xxxx native", "onAdClicked");
             }
         });
 
 
-        Admob.getInstance().loadNativeAd(this, "id native", native_ads,R.layout.ads_native);
+        Admob.getInstance().loadNativeAd(this, "id native", native_ads, R.layout.ads_native);
     }
 
     private void loadAdInter() {
-        AdmobApi.getInstance().loadInterAll(this,new InterCallback(){});
+        AdmobApi.getInstance().loadInterAll(this, new InterCallback() {
+        });
     }
 
 }

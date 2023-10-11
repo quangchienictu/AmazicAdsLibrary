@@ -98,75 +98,83 @@ public class NativeAdsView extends FrameLayout {
         TextView tvBody = adView.findViewById(R.id.ad_body);
         tvBody.setTextColor(textDescriptionColor);
 
-        TextView tvIcon = adView.findViewById(R.id.tv_icon);
-        tvIcon.setBackground(backgroundIcon);
-
+        if (backgroundIcon != null) {
+            TextView tvIcon = adView.findViewById(R.id.tv_icon);
+            tvIcon.setBackground(backgroundIcon);
+        }
         AppCompatButton btn = adView.findViewById(R.id.ad_call_to_action);
-        btn.setBackgroundDrawable(backgroundBtn);
+        if (backgroundBtn != null)
+            btn.setBackgroundDrawable(backgroundBtn);
         btn.setTextColor(textBtnColor);
 
-        ConstraintLayout ctlRoot = adView.findViewById(R.id.ad_unit_content);
-        ctlRoot.setBackground(backgroundItem);
+        if (backgroundItem != null) {
+            ConstraintLayout ctlRoot = adView.findViewById(R.id.ad_unit_content);
+            ctlRoot.setBackground(backgroundItem);
+        }
         attributes.recycle();
     }
 
 
     public void loadNative(List<String> idAds, String nameEvent) {
-        if (adView != null && idAds != null) {
-            Admob.getInstance().loadNativeAd(getContext(), idAds, new NativeCallback() {
-                @Override
-                public void onNativeAdLoaded(NativeAd nativeAd) {
-                    NativeAdsView.this.removeAllViews();
-                    addView(adView);
-                    Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
-                    if (nameEvent != null)
-                        AdmobEvent.logEvent(getContext(), nameEvent + "_native_view", new Bundle());
-                }
+        new Thread(() -> {
+            if (adView != null && idAds != null) {
+                Admob.getInstance().loadNativeAd(getContext(), idAds, new NativeCallback() {
+                    @Override
+                    public void onNativeAdLoaded(NativeAd nativeAd) {
+                        NativeAdsView.this.removeAllViews();
+                        addView(adView);
+                        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                        if (nameEvent != null)
+                            AdmobEvent.logEvent(getContext(), nameEvent + "_native_view", new Bundle());
+                    }
 
-                @Override
-                public void onAdFailedToLoad() {
-                    NativeAdsView.this.removeAllViews();
-                }
+                    @Override
+                    public void onAdFailedToLoad() {
+                        NativeAdsView.this.removeAllViews();
+                    }
 
-                @Override
-                public void onAdClicked() {
-                    super.onAdClicked();
-                    if (nameEvent != null)
-                        AdmobEvent.logEvent(getContext(), nameEvent + "_native_click", new Bundle());
-                }
-            });
-        } else {
-            removeAllViews();
-        }
+                    @Override
+                    public void onAdClicked() {
+                        super.onAdClicked();
+                        if (nameEvent != null)
+                            AdmobEvent.logEvent(getContext(), nameEvent + "_native_click", new Bundle());
+                    }
+                });
+            } else {
+                removeAllViews();
+            }
+        }).start();
     }
 
     public void loadNative(String idAds, String nameEvent) {
-        if (adView != null && idAds != null) {
-            Admob.getInstance().loadNativeAd(getContext(), idAds, new NativeCallback() {
-                @Override
-                public void onNativeAdLoaded(NativeAd nativeAd) {
-                    NativeAdsView.this.removeAllViews();
-                    addView(adView);
-                    Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
-                    if (nameEvent != null)
-                        AdmobEvent.logEvent(getContext(), nameEvent + "_native_view", new Bundle());
-                }
+        new Thread(() -> {
+            if (adView != null && idAds != null) {
+                Admob.getInstance().loadNativeAd(getContext(), idAds, new NativeCallback() {
+                    @Override
+                    public void onNativeAdLoaded(NativeAd nativeAd) {
+                        NativeAdsView.this.removeAllViews();
+                        addView(adView);
+                        Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                        if (nameEvent != null)
+                            AdmobEvent.logEvent(getContext(), nameEvent + "_native_view", new Bundle());
+                    }
 
-                @Override
-                public void onAdFailedToLoad() {
-                    NativeAdsView.this.removeAllViews();
-                }
+                    @Override
+                    public void onAdFailedToLoad() {
+                        NativeAdsView.this.removeAllViews();
+                    }
 
-                @Override
-                public void onAdClicked() {
-                    super.onAdClicked();
-                    if (nameEvent != null)
-                        AdmobEvent.logEvent(getContext(), nameEvent + "_native_click", new Bundle());
-                }
-            });
-        } else {
-            removeAllViews();
-        }
+                    @Override
+                    public void onAdClicked() {
+                        super.onAdClicked();
+                        if (nameEvent != null)
+                            AdmobEvent.logEvent(getContext(), nameEvent + "_native_click", new Bundle());
+                    }
+                });
+            } else {
+                removeAllViews();
+            }
+        }).start();
     }
 
     public void loadNativeAll(String nameEvent) {
