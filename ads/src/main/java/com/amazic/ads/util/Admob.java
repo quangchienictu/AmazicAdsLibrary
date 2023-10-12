@@ -883,12 +883,12 @@ public class Admob {
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
-                    bannerCallBack.onAdFailedToLoad(loadAdError);
                     Log.e("Admob", "load failed collap banner ID : " + listId.get(0));
                     if (listId.size() > 0) {
                         listId.remove(0);
                         loadCollapsibleBannerFloor(mActivity, listId, gravity, adContainer, containerShimmer);
                     } else {
+                        bannerCallBack.onAdFailedToLoad(loadAdError);
                         containerShimmer.stopShimmer();
                         adContainer.setVisibility(View.GONE);
                         containerShimmer.setVisibility(View.GONE);
