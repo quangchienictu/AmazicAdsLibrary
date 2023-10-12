@@ -32,14 +32,12 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.amazic.ads.BuildConfig;
 import com.amazic.ads.R;
-import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.amazic.ads.event.AdType;
-import com.amazic.ads.event.AdmobEvent;
 import com.amazic.ads.event.FirebaseUtil;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.ads.mediation.admob.AdMobAdapter;
@@ -1527,10 +1525,13 @@ public class Admob {
                         @Override
                         public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                             listID.remove(0);
-                            // Log event admob
-                            adCallback.onAdFailedToLoad(loadAdError);
-                            //end log
-                            loadInterAdsFloorByList(context, listID, adCallback);
+                            if (listID.size() < 1) {
+                                // Log event admob
+                                adCallback.onAdFailedToLoad(loadAdError);
+                            } else {
+                                //end log
+                                loadInterAdsFloorByList(context, listID, adCallback);
+                            }
                         }
 
                     });
@@ -2049,10 +2050,11 @@ public class Admob {
                 @Override
                 public void onAdFailedToLoad() {
                     super.onAdFailedToLoad();
-                    callback.onAdFailedToLoad();
                     if (listIDNew.size() > 1) {
                         listIDNew.remove(0);
                         loadNativeAd(context, listIDNew, callback);
+                    } else {
+                        callback.onAdFailedToLoad();
                     }
 
                 }

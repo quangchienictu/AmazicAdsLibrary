@@ -80,6 +80,11 @@ public class NativeAdsView extends FrameLayout {
                 Color.parseColor("#000000"));
         int textBtnColor = attributes.getColor(R.styleable.LayoutNative_ln_text_btn_color,
                 Color.parseColor("#FFFFFF"));
+
+        int styleHeader = attributes.getResourceId(R.styleable.LayoutNative_ln_style_text_header, -1);
+        int styleDesc = attributes.getResourceId(R.styleable.LayoutNative_ln_style_text_desc, -1);
+        int styleBtn = attributes.getResourceId(R.styleable.LayoutNative_ln_style_btn, -1);
+
         Drawable backgroundIcon = attributes.getDrawable(R.styleable.LayoutNative_ln_icon_background);
         Drawable backgroundBtn = attributes.getDrawable(R.styleable.LayoutNative_ln_btn_background);
         Drawable backgroundItem = attributes.getDrawable(R.styleable.LayoutNative_ln_native_background);
@@ -93,9 +98,13 @@ public class NativeAdsView extends FrameLayout {
             adView = (NativeAdView) LayoutInflater.from(context).inflate(R.layout.ads_native_large, null);
         }
         TextView tvHeader = adView.findViewById(R.id.ad_headline);
+        if (styleHeader != -1)
+            tvHeader.setTextAppearance(context, styleHeader);
         tvHeader.setTextColor(textHeaderColor);
 
         TextView tvBody = adView.findViewById(R.id.ad_body);
+        if (styleDesc != -1)
+            tvBody.setTextAppearance(context, styleDesc);
         tvBody.setTextColor(textDescriptionColor);
 
         if (backgroundIcon != null) {
@@ -103,6 +112,9 @@ public class NativeAdsView extends FrameLayout {
             tvIcon.setBackground(backgroundIcon);
         }
         AppCompatButton btn = adView.findViewById(R.id.ad_call_to_action);
+        if (styleBtn != -1)
+            btn.setTextAppearance(context, styleBtn);
+
         if (backgroundBtn != null)
             btn.setBackgroundDrawable(backgroundBtn);
         btn.setTextColor(textBtnColor);
@@ -113,7 +125,6 @@ public class NativeAdsView extends FrameLayout {
         }
         attributes.recycle();
     }
-
 
     public void loadNative(List<String> idAds, String nameEvent) {
         new Thread(() -> {

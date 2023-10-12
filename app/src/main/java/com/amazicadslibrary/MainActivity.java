@@ -10,9 +10,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.callback.NativeCallback;
-import com.amazic.ads.callback.PurchaseListioner;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.service.AdmobApi;
@@ -49,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         loadAdsNative();
 
         NativeAdsView nativeAdsView = findViewById(R.id.fr_ads_new);
-        nativeAdsView.loadNative(AdmobApi.getInstance().getListIDNativeAll(), null);
+        nativeAdsView.loadNative(AdmobApi.getInstance().getListIDByName("native_test"));
 
         findViewById(R.id.clickFGM).setOnClickListener(new View.OnClickListener() {
             @Override

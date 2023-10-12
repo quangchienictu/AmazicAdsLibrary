@@ -32,8 +32,6 @@
     </style>
 
     <!-- =====================  Layout native ===================== -->
-    <attr name="dotIndicatorStyle" />
-
     <declare-styleable name="LayoutNative">
         <attr name="ln_text_header_color" format="color" />
         <attr name="ln_text_desc_color" format="color" />
@@ -41,6 +39,9 @@
         <attr name="ln_icon_background" format="reference" />
         <attr name="ln_btn_background" format="reference" />
         <attr name="ln_native_background" format="reference" />
+        <attr name="ln_style_btn" format="reference" />
+        <attr name="ln_style_text_header" format="reference" />
+        <attr name="ln_style_text_desc" format="reference" />
         <attr name="ln_type" format="enum">
             <enum name="large" value="0" />
             <enum name="small" value="1" />
