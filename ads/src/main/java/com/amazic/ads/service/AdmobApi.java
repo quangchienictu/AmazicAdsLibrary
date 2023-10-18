@@ -98,7 +98,6 @@ public class AdmobApi {
         return INSTANCE;
     }
 
-
     public void init(Context context, String linkServerRelease, String AppID, ApiCallBack callBack) {
         this.context = context;
         this.packageName = context.getPackageName();
@@ -127,7 +126,6 @@ public class AdmobApi {
 
     }
 
-
     private void fetchData(ApiCallBack callBack) {
         Log.e(TAG, "fetchData: ");
         try {
@@ -155,6 +153,14 @@ public class AdmobApi {
                         listIDAds.add(ads.getAds_id());
                         listAds.put(ads.getName(), listIDAds);
                     }
+                    Log.d(TAG, "getListIDOpenSplash: "+getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDNativeLanguage: "+getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDNativeIntro: "+getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDNativePermission: "+getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDNativeAll: "+getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDInterAll: "+getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDBannerAll: "+getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDCollapseBannerAll: "+getListIDNativeLanguage());
                     callBack.onReady();
                 }
 
