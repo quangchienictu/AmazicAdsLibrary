@@ -112,7 +112,7 @@ public class Admob {
     boolean isFinishedInterval = true;
     boolean isShowingInter = false;
     Handler handlerInterval = new Handler();
-    Runnable runnableInterval = () -> isShowingInter = true;
+    Runnable runnableInterval = () -> isFinishedInterval = true;
 
     public static Admob getInstance() {
         if (INSTANCE == null) {
@@ -1592,8 +1592,6 @@ public class Admob {
 
                 Log.d(TAG, "showInterAds xxx: isShowedInter = " + isShowingInter);
                 if (isShowingInter) {
-                    isFinishedInterval = false;
-                    handlerInterval.removeCallbacks(runnableInterval);
                     handlerInterval.postDelayed(runnableInterval, timeInterval);
                 }
 
@@ -1775,8 +1773,6 @@ public class Admob {
                                     callback.onNextAction();
                                     Log.d(TAG, "showInterAds xxx: isShowedInter = " + isShowingInter);
                                     if (isShowingInter) {
-                                        isFinishedInterval = false;
-                                        handlerInterval.removeCallbacks(runnableInterval);
                                         handlerInterval.postDelayed(runnableInterval, timeInterval);
                                     }
                                     if (AppOpenManager.getInstance().isInitialized()) {
