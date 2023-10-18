@@ -196,7 +196,8 @@ public class AdmobApi {
     }
 
     public void loadInterAll(final Activity activity) {
-        if (interAll == null)
+        if (interAll == null) {
+            Log.d(TAG, "loadInterAll: xxxx");
             Admob.getInstance().loadInterAdsFloor(activity, getListIDInterAll(), new InterCallback() {
                 @Override
                 public void onAdLoadSuccess(InterstitialAd interstitialAd) {
@@ -204,6 +205,7 @@ public class AdmobApi {
                     interAll = interstitialAd;
                 }
             });
+        }
     }
 
     public void loadInterAll(final Activity activity, InterCallback interCallback) {
@@ -250,8 +252,6 @@ public class AdmobApi {
             public void onNextAction() {
                 super.onNextAction();
                 interCallback.onNextAction();
-                interAll = null;
-                loadInterAll(activity);
             }
 
             @Override
@@ -280,6 +280,13 @@ public class AdmobApi {
             public void onAdImpression() {
                 super.onAdImpression();
                 interCallback.onAdImpression();
+            }
+
+            @Override
+            public void onLoadInter() {
+                super.onLoadInter();
+                interAll = null;
+                loadInterAll(activity);
             }
         });
     }
