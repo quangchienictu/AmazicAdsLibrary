@@ -106,12 +106,12 @@ public class Admob {
     private boolean isFan = false;
     private long currentTime;
     private long currentTimeShowAds;
-    private long timeInterval = 0L;
-    private long lastTimeDismissInter = 0L;
     private boolean checkLoadBanner = false;
     private boolean checkLoadBannerCollap = false;
-    boolean isSetTime = true;
-    boolean isShowingInter = false;
+    private long timeInterval = 0L;
+    private long lastTimeDismissInter = 0L;
+    private boolean isSetTime = true;
+    private boolean isShowingInter = false;
 
     public static Admob getInstance() {
         if (INSTANCE == null) {
@@ -1550,7 +1550,6 @@ public class Admob {
     public void showInterAds(Context context, InterstitialAd mInterstitialAd, final InterCallback callback) {
         Log.d(TAG, "time: " + (System.currentTimeMillis() - lastTimeDismissInter) + " - isSetTime: " + isSetTime);
         if (System.currentTimeMillis() - lastTimeDismissInter > timeInterval && isSetTime) {
-            isSetTime = false;
             showInterAds(context, mInterstitialAd, callback, false);
         } else {
             callback.onNextAction();
@@ -1639,6 +1638,7 @@ public class Admob {
                 super.onAdShowedFullScreenContent();
                 // Called when fullscreen content is shown.
                 callback.onAdImpression();
+                isSetTime = false;
                 isShowingInter = true;
                 if (logLogTimeShowAds) {
                     long timeLoad = System.currentTimeMillis() - currentTimeShowAds;
@@ -1779,7 +1779,6 @@ public class Admob {
                 super.onAdLoaded(interstitialAd);
                 if (interstitialAd != null) {
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                        isSetTime = false;
                         interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                             @Override
                             public void onAdDismissedFullScreenContent() {
@@ -1813,6 +1812,7 @@ public class Admob {
                             @Override
                             public void onAdShowedFullScreenContent() {
                                 isShowingInter = true;
+                                isSetTime = false;
                                 Log.d("TAG", "The ad was shown.");
                             }
 
@@ -2493,6 +2493,9 @@ public class Admob {
     }
 
     public void setTimeInterval(long timeInterval) {
+        this.lastTimeDismissInter = 0L;
+        this.isSetTime = true;
+        this.isShowingInter = false;
         this.timeInterval = timeInterval;
     }
 }
