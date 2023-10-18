@@ -1467,16 +1467,14 @@ public class Admob {
                             if (adCallback != null) {
                                 adCallback.onAdFailedToLoad(loadAdError);
                                 adCallback.onNextAction();
-                                adCallback.onLoadInter();
                             }
                         }
-
                     });
         }
     }
 
     public void loadInterAdsFloor(Context context, List<String> listID, InterCallback adCallback) {
-        Log.d(TAG, "loadInterAds: ");
+        Log.d(TAG, "loadInterAdsFloor: ");
         if (listID == null) {
             adCallback.onAdFailedToLoad(null);
             adCallback.onNextAction();
@@ -1495,7 +1493,7 @@ public class Admob {
     }
 
     private void loadInterAdsFloorByList(Context context, List<String> listID, InterCallback adCallback) {
-        Log.d(TAG, "loadInterAds: ");
+        Log.d(TAG, "loadInterAdsFloorByList: ");
         if (!isShowAllAds) {
             adCallback.onNextAction();
             adCallback.onAdFailedToLoad(null);
@@ -1604,11 +1602,10 @@ public class Admob {
                     if (!openActivityAfterShowInterAds) {
                         callback.onAdClosed();
                         callback.onNextAction();
-                        callback.onLoadInter();
                     } else {
                         callback.onAdClosedByUser();
-                        callback.onLoadInter();
                     }
+                    callback.onLoadInter();
 
                     if (dialog != null) {
                         dialog.dismiss();
