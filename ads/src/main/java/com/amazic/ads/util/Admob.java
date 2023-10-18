@@ -106,10 +106,13 @@ public class Admob {
     private boolean isFan = false;
     private long currentTime;
     private long currentTimeShowAds;
-    private long lastTimeShowAds = 0L;
     private long timeInterval = 0L;
     private boolean checkLoadBanner = false;
     private boolean checkLoadBannerCollap = false;
+    boolean isFinishedInterval = true;
+    boolean isShowingInter = false;
+    Handler handlerInterval = new Handler();
+    Runnable runnableInterval = () -> isShowingInter = true;
 
     public static Admob getInstance() {
         if (INSTANCE == null) {
@@ -1163,7 +1166,6 @@ public class Admob {
                     adListener.onAdLoaded();
                 }
 
-                isShowedInter = false;
                 mInterstitialSplash.setFullScreenContentCallback(new FullScreenContentCallback() {
                     @Override
                     public void onAdShowedFullScreenContent() {
@@ -1171,7 +1173,6 @@ public class Admob {
                             AppOpenManager.getInstance().disableAppResume();
                         }
                         isShowLoadingSplash = true;
-                        isShowedInter = true;
                         if (logTimeLoadAdsSplash) {
                             long timeLoad = System.currentTimeMillis() - currentTime;
                             Log.e(TAG, "load ads time :" + timeLoad);
@@ -1185,9 +1186,6 @@ public class Admob {
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().enableAppResume();
                         }
-                        Log.d(TAG, "showInterAds xxx: isShowedInter = " + isShowedInter);
-                        if (isShowedInter)
-                            lastTimeShowAds = System.currentTimeMillis();
                         if (adListener != null) {
                             if (!openActivityAfterShowInterAds) {
                                 adListener.onAdClosed();
@@ -1317,7 +1315,6 @@ public class Admob {
             @Override
             public void onAdShowedFullScreenContent() {
                 isShowLoadingSplash = false;
-                isShowedInter = true;
                 if (logTimeLoadAdsSplash) {
                     long timeLoad = System.currentTimeMillis() - currentTime;
                     Log.e(TAG, "load ads time :" + timeLoad);
@@ -1550,10 +1547,10 @@ public class Admob {
      * Show ads inter
      */
     public void showInterAds(Context context, InterstitialAd mInterstitialAd, final InterCallback callback) {
-        Log.d(TAG, "showInterAds xxx: " + (System.currentTimeMillis() - lastTimeShowAds));
-        if (System.currentTimeMillis() - lastTimeShowAds > timeInterval)
+        if (isFinishedInterval) {
+            isFinishedInterval = false;
             showInterAds(context, mInterstitialAd, callback, false);
-        else {
+        } else {
             callback.onAdClosed();
             callback.onNextAction();
         }
@@ -1563,8 +1560,6 @@ public class Admob {
         currentClicked = numShowAds;
         showInterAdByTimes(context, mInterstitialAd, callback, shouldReload);
     }
-
-    boolean isShowedInter = false;
 
 
     private void showInterAdByTimes(final Context context, InterstitialAd mInterstitialAd, final InterCallback callback, final boolean shouldReloadAds) {
@@ -1585,7 +1580,7 @@ public class Admob {
             return;
         }
 
-        isShowedInter = false;
+        isShowingInter = false;
         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
             @Override
             public void onAdDismissedFullScreenContent() {
@@ -1595,9 +1590,12 @@ public class Admob {
                     AppOpenManager.getInstance().enableAppResume();
                 }
 
-                Log.d(TAG, "showInterAds xxx: isShowedInter = " + isShowedInter);
-                if (isShowedInter)
-                    lastTimeShowAds = System.currentTimeMillis();
+                Log.d(TAG, "showInterAds xxx: isShowedInter = " + isShowingInter);
+                if (isShowingInter) {
+                    isFinishedInterval = false;
+                    handlerInterval.removeCallbacks(runnableInterval);
+                    handlerInterval.postDelayed(runnableInterval, timeInterval);
+                }
 
                 if (callback != null) {
                     if (!openActivityAfterShowInterAds) {
@@ -1638,7 +1636,7 @@ public class Admob {
                 super.onAdShowedFullScreenContent();
                 // Called when fullscreen content is shown.
                 callback.onAdImpression();
-                isShowedInter = true;
+                isShowingInter = true;
                 if (logLogTimeShowAds) {
                     long timeLoad = System.currentTimeMillis() - currentTimeShowAds;
                     Log.e(TAG, "show ads time :" + timeLoad);
@@ -1748,7 +1746,7 @@ public class Admob {
             AppOpenManager.getInstance().disableAppResumeWithActivity(activity.getClass());
         }
 
-        isShowedInter = false;
+        isShowingInter = false;
         Dialog dialog2 = new LoadingAdsDialog(activity);
         dialog2.show();
         InterstitialAd.load(activity, idInter, getAdRequestTimeOut(timeOut), new InterstitialAdLoadCallback() {
@@ -1766,62 +1764,65 @@ public class Admob {
             public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
                 super.onAdLoaded(interstitialAd);
                 if (interstitialAd != null) {
-                    if (System.currentTimeMillis() - lastTimeShowAds < timeInterval)
-                        return;
-                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                        interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
-                            @Override
-                            public void onAdDismissedFullScreenContent() {
-                                dialog2.dismiss();
-                                callback.onAdClosed();
-                                callback.onNextAction();
-                                Log.d(TAG, "showInterAds xxx: isShowedInter = " + isShowedInter);
-                                if (isShowedInter)
-                                    lastTimeShowAds = System.currentTimeMillis();
-                                if (AppOpenManager.getInstance().isInitialized()) {
-                                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                                }
-                            }
-
-                            @Override
-                            public void onAdFailedToShowFullScreenContent(AdError adError) {
-                                dialog2.dismiss();
-                                callback.onAdClosed();
-                                callback.onNextAction();
-                                if (AppOpenManager.getInstance().isInitialized()) {
-                                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
-                                }
-                            }
-
-                            @Override
-                            public void onAdShowedFullScreenContent() {
-                                isShowedInter = true;
-                                Log.d("TAG", "The ad was shown.");
-                            }
-
-                            @Override
-                            public void onAdClicked() {
-                                super.onAdClicked();
-                                if (disableAdResumeWhenClickAds)
-                                    AppOpenManager.getInstance().disableAdResumeByClickAction();
-                                if (timeLimitAds > 1000) {
-                                    setTimeLimitInter();
-                                }
-                                FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
-                            }
-                        });
-                        if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && interstitialAd != null) {
-                            interstitialAd.show(activity);
-                        } else {
-                            if (interstitialAd != null) {
-                                if (AppOpenManager.getInstance().isInitialized()) {
-                                    AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                    if (isFinishedInterval)
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            isFinishedInterval = false;
+                            interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                                @Override
+                                public void onAdDismissedFullScreenContent() {
                                     dialog2.dismiss();
+                                    callback.onAdClosed();
+                                    callback.onNextAction();
+                                    Log.d(TAG, "showInterAds xxx: isShowedInter = " + isShowingInter);
+                                    if (isShowingInter) {
+                                        isFinishedInterval = false;
+                                        handlerInterval.removeCallbacks(runnableInterval);
+                                        handlerInterval.postDelayed(runnableInterval, timeInterval);
+                                    }
+                                    if (AppOpenManager.getInstance().isInitialized()) {
+                                        AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                                    }
                                 }
+
+                                @Override
+                                public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                    dialog2.dismiss();
+                                    callback.onAdClosed();
+                                    callback.onNextAction();
+                                    if (AppOpenManager.getInstance().isInitialized()) {
+                                        AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                                    }
+                                }
+
+                                @Override
+                                public void onAdShowedFullScreenContent() {
+                                    isShowingInter = true;
+                                    Log.d("TAG", "The ad was shown.");
+                                }
+
+                                @Override
+                                public void onAdClicked() {
+                                    super.onAdClicked();
+                                    if (disableAdResumeWhenClickAds)
+                                        AppOpenManager.getInstance().disableAdResumeByClickAction();
+                                    if (timeLimitAds > 1000) {
+                                        setTimeLimitInter();
+                                    }
+                                    FirebaseUtil.logClickAdsEvent(context, mInterstitialSplash.getAdUnitId());
+                                }
+                            });
+                            if (activity.getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED) && interstitialAd != null) {
+                                interstitialAd.show(activity);
+                            } else {
+                                if (interstitialAd != null) {
+                                    if (AppOpenManager.getInstance().isInitialized()) {
+                                        AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
+                                        dialog2.dismiss();
+                                    }
+                                }
+                                // dialog.dismiss();
                             }
-                            // dialog.dismiss();
-                        }
-                    }, timeDelay);
+                        }, timeDelay);
                 }
             }
         });
@@ -1843,7 +1844,6 @@ public class Admob {
             adCallback.onAdFailedToShow(0);
             return;
         } else {
-            isShowedInter = false;
             Admob.this.rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
                 public void onAdDismissedFullScreenContent() {
