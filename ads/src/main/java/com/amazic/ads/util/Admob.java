@@ -1618,7 +1618,7 @@ public class Admob {
             public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                 super.onAdFailedToShowFullScreenContent(adError);
                 Log.e(TAG, "onAdFailedToShowFullScreenContent: " + adError.getMessage());
-
+                isSetTime = true;
 
                 // Called when fullscreen content failed to show.
                 if (callback != null) {
@@ -1802,6 +1802,9 @@ public class Admob {
                                 dialog2.dismiss();
                                 callback.onAdClosed();
                                 callback.onNextAction();
+                                callback.onLoadInter();
+                                isSetTime = true;
+                                Log.d(TAG, "onAdFailedToShowFullScreenContent: ");
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                                 }
