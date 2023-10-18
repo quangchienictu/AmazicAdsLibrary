@@ -1163,6 +1163,7 @@ public class Admob {
                     adListener.onAdLoaded();
                 }
 
+                isShowedInter = false;
                 mInterstitialSplash.setFullScreenContentCallback(new FullScreenContentCallback() {
                     @Override
                     public void onAdShowedFullScreenContent() {
@@ -1170,6 +1171,7 @@ public class Admob {
                             AppOpenManager.getInstance().disableAppResume();
                         }
                         isShowLoadingSplash = true;
+                        isShowedInter = true;
                         if (logTimeLoadAdsSplash) {
                             long timeLoad = System.currentTimeMillis() - currentTime;
                             Log.e(TAG, "load ads time :" + timeLoad);
@@ -1183,12 +1185,13 @@ public class Admob {
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().enableAppResume();
                         }
+                        if (isShowedInter)
+                            lastTimeShowAds = System.currentTimeMillis();
                         if (adListener != null) {
                             if (!openActivityAfterShowInterAds) {
                                 adListener.onAdClosed();
                                 adListener.onNextAction();
                             } else {
-                                lastTimeShowAds = System.currentTimeMillis();
                                 adListener.onAdClosedByUser();
                             }
 
@@ -1313,6 +1316,7 @@ public class Admob {
             @Override
             public void onAdShowedFullScreenContent() {
                 isShowLoadingSplash = false;
+                isShowedInter = true;
                 if (logTimeLoadAdsSplash) {
                     long timeLoad = System.currentTimeMillis() - currentTime;
                     Log.e(TAG, "load ads time :" + timeLoad);
@@ -1332,7 +1336,6 @@ public class Admob {
                         adListener.onNextAction();
                     } else {
                         adListener.onAdClosedByUser();
-                        lastTimeShowAds = System.currentTimeMillis();
                     }
 
                     if (dialog != null) {
@@ -1559,11 +1562,11 @@ public class Admob {
         currentClicked = numShowAds;
         showInterAdByTimes(context, mInterstitialAd, callback, shouldReload);
     }
+
     boolean isShowedInter = false;
 
 
     private void showInterAdByTimes(final Context context, InterstitialAd mInterstitialAd, final InterCallback callback, final boolean shouldReloadAds) {
-        isShowedInter = false;
         if (logLogTimeShowAds) {
             currentTimeShowAds = System.currentTimeMillis();
         }
@@ -1581,6 +1584,7 @@ public class Admob {
             return;
         }
 
+        isShowedInter = false;
         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
             @Override
             public void onAdDismissedFullScreenContent() {
@@ -1589,6 +1593,10 @@ public class Admob {
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().enableAppResume();
                 }
+
+                if (isShowedInter)
+                    lastTimeShowAds = System.currentTimeMillis();
+
                 if (callback != null) {
                     if (!openActivityAfterShowInterAds) {
                         callback.onAdClosed();
@@ -1600,8 +1608,6 @@ public class Admob {
                     if (dialog != null) {
                         dialog.dismiss();
                     }
-                    if (isShowedInter)
-                        lastTimeShowAds = System.currentTimeMillis();
                 }
                 Log.e(TAG, "onAdDismissedFullScreenContent");
             }
@@ -1739,6 +1745,8 @@ public class Admob {
         if (AppOpenManager.getInstance().isInitialized()) {
             AppOpenManager.getInstance().disableAppResumeWithActivity(activity.getClass());
         }
+
+        isShowedInter = false;
         Dialog dialog2 = new LoadingAdsDialog(activity);
         dialog2.show();
         InterstitialAd.load(activity, idInter, getAdRequestTimeOut(timeOut), new InterstitialAdLoadCallback() {
@@ -1756,6 +1764,8 @@ public class Admob {
             public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
                 super.onAdLoaded(interstitialAd);
                 if (interstitialAd != null) {
+                    if (System.currentTimeMillis() - lastTimeShowAds < timeInterval)
+                        return;
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                             @Override
@@ -1763,6 +1773,8 @@ public class Admob {
                                 dialog2.dismiss();
                                 callback.onAdClosed();
                                 callback.onNextAction();
+                                if (isShowedInter)
+                                    lastTimeShowAds = System.currentTimeMillis();
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                                 }
@@ -1780,6 +1792,7 @@ public class Admob {
 
                             @Override
                             public void onAdShowedFullScreenContent() {
+                                isShowedInter = true;
                                 Log.d("TAG", "The ad was shown.");
                             }
 
@@ -1827,6 +1840,7 @@ public class Admob {
             adCallback.onAdFailedToShow(0);
             return;
         } else {
+            isShowedInter = false;
             Admob.this.rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
                 public void onAdDismissedFullScreenContent() {
