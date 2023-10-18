@@ -1559,9 +1559,11 @@ public class Admob {
         currentClicked = numShowAds;
         showInterAdByTimes(context, mInterstitialAd, callback, shouldReload);
     }
+    boolean isShowedInter = false;
+
 
     private void showInterAdByTimes(final Context context, InterstitialAd mInterstitialAd, final InterCallback callback, final boolean shouldReloadAds) {
-
+        isShowedInter = false;
         if (logLogTimeShowAds) {
             currentTimeShowAds = System.currentTimeMillis();
         }
@@ -1593,13 +1595,13 @@ public class Admob {
                         callback.onNextAction();
                     } else {
                         callback.onAdClosedByUser();
-                        lastTimeShowAds = System.currentTimeMillis();
                     }
 
                     if (dialog != null) {
                         dialog.dismiss();
                     }
-
+                    if (isShowedInter)
+                        lastTimeShowAds = System.currentTimeMillis();
                 }
                 Log.e(TAG, "onAdDismissedFullScreenContent");
             }
@@ -1628,7 +1630,7 @@ public class Admob {
                 super.onAdShowedFullScreenContent();
                 // Called when fullscreen content is shown.
                 callback.onAdImpression();
-
+                isShowedInter = true;
                 if (logLogTimeShowAds) {
                     long timeLoad = System.currentTimeMillis() - currentTimeShowAds;
                     Log.e(TAG, "show ads time :" + timeLoad);
