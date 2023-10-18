@@ -1185,6 +1185,7 @@ public class Admob {
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().enableAppResume();
                         }
+                        Log.d(TAG, "showInterAds xxx: isShowedInter = " + isShowedInter);
                         if (isShowedInter)
                             lastTimeShowAds = System.currentTimeMillis();
                         if (adListener != null) {
