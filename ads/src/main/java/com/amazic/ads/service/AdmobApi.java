@@ -103,7 +103,9 @@ public class AdmobApi {
         this.context = context;
         this.packageName = context.getPackageName();
         if (linkServerRelease != null && AppID != null) {
-            if (!linkServerRelease.trim().equals("")) {
+            if (!linkServerRelease.trim().equals("")
+                    && (linkServerRelease.contains("http://")
+                    || linkServerRelease.contains("https://"))) {
                 this.linkServer = linkServerRelease.trim();
                 this.appIDRelease = AppID.trim();
             }
@@ -261,7 +263,6 @@ public class AdmobApi {
             @Override
             public void onAdClosedByUser() {
                 super.onAdClosedByUser();
-                interCallback.onAdClosedByUser();
                 interCallback.onAdClosedByUser();
                 interAll = null;
                 loadInterAll(activity);

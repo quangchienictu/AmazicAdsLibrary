@@ -106,6 +106,8 @@ public class Admob {
     private boolean isFan = false;
     private long currentTime;
     private long currentTimeShowAds;
+    private long lastTimeShowAds = 0L;
+    private long timeInterval = 0L;
     private boolean checkLoadBanner = false;
     private boolean checkLoadBannerCollap = false;
 
@@ -1186,6 +1188,7 @@ public class Admob {
                                 adListener.onAdClosed();
                                 adListener.onNextAction();
                             } else {
+                                lastTimeShowAds = System.currentTimeMillis();
                                 adListener.onAdClosedByUser();
                             }
 
@@ -1329,6 +1332,7 @@ public class Admob {
                         adListener.onNextAction();
                     } else {
                         adListener.onAdClosedByUser();
+                        lastTimeShowAds = System.currentTimeMillis();
                     }
 
                     if (dialog != null) {
@@ -1542,8 +1546,13 @@ public class Admob {
      * Show ads inter
      */
     public void showInterAds(Context context, InterstitialAd mInterstitialAd, final InterCallback callback) {
-        showInterAds(context, mInterstitialAd, callback, false);
-
+        Log.d(TAG, "showInterAds xxx: " + (System.currentTimeMillis() - lastTimeShowAds));
+        if (System.currentTimeMillis() - lastTimeShowAds > timeInterval)
+            showInterAds(context, mInterstitialAd, callback, false);
+        else {
+            callback.onAdClosed();
+            callback.onNextAction();
+        }
     }
 
     private void showInterAds(Context context, InterstitialAd mInterstitialAd, final InterCallback callback, boolean shouldReload) {
@@ -1584,6 +1593,7 @@ public class Admob {
                         callback.onNextAction();
                     } else {
                         callback.onAdClosedByUser();
+                        lastTimeShowAds = System.currentTimeMillis();
                     }
 
                     if (dialog != null) {
@@ -2445,5 +2455,9 @@ public class Admob {
 
     public int round1000(long time) {
         return (int) (Math.round(time / 1000));
+    }
+
+    public void setTimeInterval(long timeInterval) {
+        this.timeInterval = timeInterval;
     }
 }
