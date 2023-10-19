@@ -1548,7 +1548,9 @@ public class Admob {
      * Show ads inter
      */
     public void showInterAds(Context context, InterstitialAd mInterstitialAd, final InterCallback callback) {
-        Log.d(TAG, "time: " + (System.currentTimeMillis() - lastTimeDismissInter) + " - isDismissInter: " + isDismissInter);
+        Log.d(TAG, "time: " + (System.currentTimeMillis() - lastTimeDismissInter) +
+                " \n isDismissInter: " + isDismissInter +
+                " \n isShowingInter: " + isShowingInter);
         if (System.currentTimeMillis() - lastTimeDismissInter > timeInterval && isDismissInter && !isShowingInter) {
             isShowingInter = true;
             showInterAds(context, mInterstitialAd, callback, false);
@@ -2486,7 +2488,8 @@ public class Admob {
 
     public void setTimeInterval(long timeInterval) {
         this.lastTimeDismissInter = 0L;
-        this.isDismissInter = false;
+        this.isDismissInter = true;
+        this.isShowingInter = false;
         this.timeInterval = timeInterval;
     }
 }
