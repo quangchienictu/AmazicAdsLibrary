@@ -110,7 +110,7 @@ public class Admob {
     private boolean checkLoadBannerCollap = false;
     private long timeInterval = 0L;
     private long lastTimeDismissInter = 0L;
-    private boolean isSetTime = true;
+    private boolean isDismissInter = true;
     private boolean isShowingInter = false;
 
     public static Admob getInstance() {
@@ -1548,8 +1548,9 @@ public class Admob {
      * Show ads inter
      */
     public void showInterAds(Context context, InterstitialAd mInterstitialAd, final InterCallback callback) {
-        Log.d(TAG, "time: " + (System.currentTimeMillis() - lastTimeDismissInter) + " - isSetTime: " + isSetTime);
-        if (System.currentTimeMillis() - lastTimeDismissInter > timeInterval && isSetTime) {
+        Log.d(TAG, "time: " + (System.currentTimeMillis() - lastTimeDismissInter) + " - isDismissInter: " + isDismissInter);
+        if (System.currentTimeMillis() - lastTimeDismissInter > timeInterval && isDismissInter && !isShowingInter) {
+            isShowingInter = true;
             showInterAds(context, mInterstitialAd, callback, false);
         } else {
             callback.onNextAction();
@@ -1581,7 +1582,6 @@ public class Admob {
             return;
         }
 
-        isShowingInter = false;
         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
             @Override
             public void onAdDismissedFullScreenContent() {
@@ -1590,13 +1590,10 @@ public class Admob {
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().enableAppResume();
                 }
-
-                Log.d(TAG, "showInterAds xxx: isShowedInter = " + isShowingInter);
-                if (isShowingInter) {
-                    isSetTime = true;
-                    lastTimeDismissInter = System.currentTimeMillis();
-                }
-
+                Log.d(TAG, "showInterAds xxx: isShowedInter = " + isDismissInter);
+                lastTimeDismissInter = System.currentTimeMillis();
+                isDismissInter = true;
+                isShowingInter = false;
                 if (callback != null) {
                     if (!openActivityAfterShowInterAds) {
                         callback.onAdClosed();
@@ -1617,7 +1614,7 @@ public class Admob {
             public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                 super.onAdFailedToShowFullScreenContent(adError);
                 Log.e(TAG, "onAdFailedToShowFullScreenContent: " + adError.getMessage());
-                isSetTime = true;
+                isDismissInter = true;
 
                 // Called when fullscreen content failed to show.
                 if (callback != null) {
@@ -1638,8 +1635,7 @@ public class Admob {
                 super.onAdShowedFullScreenContent();
                 // Called when fullscreen content is shown.
                 callback.onAdImpression();
-                isSetTime = false;
-                isShowingInter = true;
+                isDismissInter = false;
                 if (logLogTimeShowAds) {
                     long timeLoad = System.currentTimeMillis() - currentTimeShowAds;
                     Log.e(TAG, "show ads time :" + timeLoad);
@@ -1749,8 +1745,8 @@ public class Admob {
             callback.onNextAction();
             return;
         }
-        Log.d(TAG, "time: " + (System.currentTimeMillis() - lastTimeDismissInter) + " - isSetTime: " + isSetTime);
-        if (System.currentTimeMillis() - lastTimeDismissInter < timeInterval || !isSetTime) {
+        Log.d(TAG, "time: " + (System.currentTimeMillis() - lastTimeDismissInter) + " - isDismissInter: " + isDismissInter);
+        if (System.currentTimeMillis() - lastTimeDismissInter < timeInterval || !isDismissInter) {
             callback.onAdClosed();
             callback.onNextAction();
             return;
@@ -1760,7 +1756,6 @@ public class Admob {
             AppOpenManager.getInstance().disableAppResumeWithActivity(activity.getClass());
         }
 
-        isShowingInter = false;
         Dialog dialog2 = new LoadingAdsDialog(activity);
         dialog2.show();
         InterstitialAd.load(activity, idInter, getAdRequestTimeOut(timeOut), new InterstitialAdLoadCallback() {
@@ -1786,11 +1781,9 @@ public class Admob {
                                 callback.onAdClosed();
                                 callback.onNextAction();
                                 callback.onLoadInter();
-                                Log.d(TAG, "showInterAds xxx: isShowedInter = " + isShowingInter);
-                                if (isShowingInter) {
-                                    isSetTime = true;
-                                    lastTimeDismissInter = System.currentTimeMillis();
-                                }
+                                Log.d(TAG, "showInterAds xxx: isShowedInter = " + isDismissInter);
+                                lastTimeDismissInter = System.currentTimeMillis();
+                                isDismissInter = true;
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
                                 }
@@ -1802,7 +1795,7 @@ public class Admob {
                                 callback.onAdClosed();
                                 callback.onNextAction();
                                 callback.onLoadInter();
-                                isSetTime = true;
+                                isDismissInter = true;
                                 Log.d(TAG, "onAdFailedToShowFullScreenContent: ");
                                 if (AppOpenManager.getInstance().isInitialized()) {
                                     AppOpenManager.getInstance().enableAppResumeWithActivity(activity.getClass());
@@ -1811,8 +1804,7 @@ public class Admob {
 
                             @Override
                             public void onAdShowedFullScreenContent() {
-                                isShowingInter = true;
-                                isSetTime = false;
+                                isDismissInter = false;
                                 Log.d("TAG", "The ad was shown.");
                             }
 
@@ -2494,8 +2486,7 @@ public class Admob {
 
     public void setTimeInterval(long timeInterval) {
         this.lastTimeDismissInter = 0L;
-        this.isSetTime = true;
-        this.isShowingInter = false;
+        this.isDismissInter = false;
         this.timeInterval = timeInterval;
     }
 }
