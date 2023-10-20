@@ -1552,7 +1552,6 @@ public class Admob {
         Log.d(TAG, "time: " + (System.currentTimeMillis() - lastTimeDismissInter) +
                 " - stateInter: " + stateInter);
         if (System.currentTimeMillis() - lastTimeDismissInter > timeInterval && stateInter == StateInter.DISMISS) {
-            stateInter = StateInter.SHOWING;
             showInterAds(context, mInterstitialAd, callback, false);
         } else {
             callback.onNextAction();
@@ -1583,7 +1582,7 @@ public class Admob {
             }
             return;
         }
-
+        stateInter = StateInter.SHOWING;
         mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
             @Override
             public void onAdDismissedFullScreenContent() {
@@ -1776,6 +1775,7 @@ public class Admob {
                 super.onAdLoaded(interstitialAd);
                 if (interstitialAd != null) {
                     new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        stateInter = StateInter.SHOWING;
                         interstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                             @Override
                             public void onAdDismissedFullScreenContent() {
