@@ -71,7 +71,7 @@ public class AdmobApi {
     }
 
     public List<String> getListIDCollapseBannerAll() {
-        return getListIDByName("collapse_banner_all");
+        return getListIDByName("collapse_banner");
     }
 
     public List<String> getListIDInterIntro() {
