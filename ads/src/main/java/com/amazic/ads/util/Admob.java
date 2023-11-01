@@ -1137,6 +1137,49 @@ public class Admob {
         }
     }
 
+    Handler handlerTimeOutSplash = null;
+
+    public void loadSplashInterAds3(Context context, List<String> idInter, int timeDelay, int timeOut, InterCallback callback) {
+        if (handlerTimeOutSplash == null) {
+            handlerTimeOutSplash = new Handler(Looper.getMainLooper());
+            handlerTimeOutSplash.postDelayed(() -> {
+                callback.onAdClosed();
+                handlerTimeOutSplash = null;
+            }, timeOut);
+        }
+        if (!isNetworkConnected() || idInter == null || idInter.size() == 0) {
+            handlerTimeOutSplash.removeCallbacks(null);
+            handlerTimeOutSplash.postDelayed(() -> {
+                callback.onAdClosed();
+                callback.onNextAction();
+                handlerTimeOutSplash = null;
+            }, timeDelay);
+        } else {
+            Log.d(TAG, "loadSplashInterAds3: " + idInter.get(0));
+            InterstitialAd.load(context, idInter.get(0), getAdRequest(),
+                    new InterstitialAdLoadCallback() {
+                        @Override
+                        public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                            super.onAdLoaded(interstitialAd);
+                            mInterstitialSplash = interstitialAd;
+                            handlerTimeOutSplash.removeCallbacks(null);
+                            AppOpenManager.getInstance().disableAppResume();
+                            onShowSplash((Activity) context, callback);
+                        }
+
+                        @Override
+                        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                            super.onAdFailedToLoad(loadAdError);
+                            mInterstitialSplash = null;
+                            idInter.remove(0);
+                            loadSplashInterAds3(context, idInter, timeDelay, timeOut, callback);
+                        }
+
+                    });
+        }
+    }
+
+
     public void onShowSplash(Activity activity, InterstitialAd interSplash, InterCallback adListener) {
         AppOpenManager.getInstance().disableAppResume();
         isShowLoadingSplash = true;
@@ -1735,6 +1778,7 @@ public class Admob {
     /**
      * load and show ads inter
      */
+
     public void loadAndShowInter(AppCompatActivity activity, String idInter, int timeDelay, int timeOut, InterCallback callback) {
         if (!isNetworkConnected()) {
             callback.onAdClosed();
