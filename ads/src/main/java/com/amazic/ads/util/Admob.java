@@ -1138,19 +1138,21 @@ public class Admob {
     }
 
     Handler handlerTimeOutSplash = null;
+    long timeStartSplash = 0;
 
-    public void loadSplashInterAds3(Context context, List<String> idInter, int timeDelay, int timeOut, InterCallback callback) {
+    public void loadSplashInterAds3(Context context, List<String> idInter, int timeDelay, int timeOut, InterCallback callback, boolean isNextAction) {
         if (handlerTimeOutSplash == null) {
+            timeStartSplash = System.currentTimeMillis();
             handlerTimeOutSplash = new Handler(Looper.getMainLooper());
             handlerTimeOutSplash.postDelayed(() -> {
                 callback.onAdClosed();
+                callback.onNextAction();
                 handlerTimeOutSplash = null;
             }, timeOut);
         }
         if (!isNetworkConnected() || idInter == null || idInter.size() == 0) {
             handlerTimeOutSplash.removeCallbacks(null);
             handlerTimeOutSplash.postDelayed(() -> {
-                callback.onAdClosed();
                 callback.onNextAction();
                 handlerTimeOutSplash = null;
             }, timeDelay);
@@ -1162,9 +1164,11 @@ public class Admob {
                         public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
                             super.onAdLoaded(interstitialAd);
                             mInterstitialSplash = interstitialAd;
-                            handlerTimeOutSplash.removeCallbacks(null);
-                            AppOpenManager.getInstance().disableAppResume();
-                            onShowSplash((Activity) context, callback);
+                            if (System.currentTimeMillis() - timeStartSplash < timeOut) {
+                                handlerTimeOutSplash.removeCallbacks(null);
+                                AppOpenManager.getInstance().disableAppResume();
+                                onShowSplash((Activity) context, callback);
+                            }
                         }
 
                         @Override
@@ -1172,9 +1176,17 @@ public class Admob {
                             super.onAdFailedToLoad(loadAdError);
                             mInterstitialSplash = null;
                             idInter.remove(0);
-                            loadSplashInterAds3(context, idInter, timeDelay, timeOut, callback);
+                            if (idInter.size() == 0) {
+                                callback.onAdFailedToLoad(loadAdError);
+                                if (!isNextAction)
+                                    return;
+                            }
+                            if (System.currentTimeMillis() - timeStartSplash < timeOut) {
+//                                new Handler().postDelayed(() -> loadSplashInterAds3(context, idInter, timeDelay, timeOut, callback, isNextAction), 5000);
+//                            }
+                                loadSplashInterAds3(context, idInter, timeDelay, timeOut, callback, isNextAction);
+                            }
                         }
-
                     });
         }
     }
