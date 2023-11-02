@@ -157,7 +157,7 @@ public class NativeAdsView extends FrameLayout {
         }).start();
     }
 
-    public void loadNative(String idAds, String nameEvent) {
+    public void loadNative(String idAds, NativeCallback callback) {
         new Thread(() -> {
             if (adView != null && idAds != null) {
                 Admob.getInstance().loadNativeAd(getContext(), idAds, new NativeCallback() {
@@ -166,20 +166,29 @@ public class NativeAdsView extends FrameLayout {
                         NativeAdsView.this.removeAllViews();
                         addView(adView);
                         Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
-                        if (nameEvent != null)
-                            AdmobEvent.logEvent(getContext(), nameEvent + "_native_view", new Bundle());
+                        if (callback != null)
+                            callback.onNativeAdLoaded(nativeAd);
                     }
 
                     @Override
                     public void onAdFailedToLoad() {
+                        if (callback != null)
+                            callback.onAdFailedToLoad();
                         NativeAdsView.this.removeAllViews();
                     }
 
                     @Override
                     public void onAdClicked() {
                         super.onAdClicked();
-                        if (nameEvent != null)
-                            AdmobEvent.logEvent(getContext(), nameEvent + "_native_click", new Bundle());
+                        if (callback != null)
+                            callback.onAdClicked();
+                    }
+
+                    @Override
+                    public void onEarnRevenue(Double Revenue) {
+                        super.onEarnRevenue(Revenue);
+                        if (callback != null)
+                            callback.onEarnRevenue(Revenue);
                     }
                 });
             } else {
@@ -198,6 +207,10 @@ public class NativeAdsView extends FrameLayout {
 
     public void loadNative(String idAds) {
         loadNative(idAds, null);
+    }
+
+    public void loadNativeByName(String nameAds) {
+        loadNative(AdmobApi.getInstance().getListIDByName(nameAds), null);
     }
 
     public void loadNativeAll() {
