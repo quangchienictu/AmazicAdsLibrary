@@ -62,6 +62,10 @@ public class AdmobApi {
         return getListIDByName("native_all");
     }
 
+    public List<String> getListIDInterSplash() {
+        return getListIDByName("inter_splash");
+    }
+
     public List<String> getListIDInterAll() {
         return getListIDByName("inter_all");
     }
@@ -153,14 +157,14 @@ public class AdmobApi {
                         listIDAds.add(ads.getAds_id());
                         listAds.put(ads.getName(), listIDAds);
                     }
-                    Log.d(TAG, "getListIDOpenSplash: "+getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDNativeLanguage: "+getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDNativeIntro: "+getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDNativePermission: "+getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDNativeAll: "+getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDInterAll: "+getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDBannerAll: "+getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDCollapseBannerAll: "+getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDOpenSplash: " + getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDNativeLanguage: " + getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDNativeIntro: " + getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDNativePermission: " + getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDNativeAll: " + getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDInterAll: " + getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDBannerAll: " + getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDCollapseBannerAll: " + getListIDNativeLanguage());
                     callBack.onReady();
                 }
 
@@ -298,11 +302,11 @@ public class AdmobApi {
     }
 
     public void loadOpenAppAdSplashFloor(final Activity activity, AdCallback adCallback) {
-        List listIdNew = new ArrayList();
-        for (String id : getListIDOpenSplash()) {
-            listIdNew.add(id);
-        }
-        AppOpenManager.getInstance().loadOpenAppAdSplashFloor(activity, listIdNew, true, adCallback);
+        AppOpenManager.getInstance().loadOpenAppAdSplashFloor(activity, getListIDOpenSplash(), true, adCallback);
+    }
+
+    public void loadInterAdSplashFloor(final Activity activity, int timeDelay, int timeOut, InterCallback callback, boolean isNextActionWhenFailedInter) {
+        Admob.getInstance().loadSplashInterAds3(activity, getListIDInterSplash(), timeDelay, timeOut, callback, isNextActionWhenFailedInter);
     }
 
     public void loadNativeIntro(final Activity activity, FrameLayout frameLayout, int layoutNative) {

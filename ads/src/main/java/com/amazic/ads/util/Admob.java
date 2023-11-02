@@ -1138,21 +1138,26 @@ public class Admob {
     }
 
     Handler handlerTimeOutSplash = null;
+    Runnable runnableTimeOutSplash = null;
     long timeStartSplash = 0;
 
-    public void loadSplashInterAds3(Context context, List<String> idInter, int timeDelay, int timeOut, InterCallback callback, boolean isNextAction) {
+    public void loadSplashInterAds3(Context context, List<String> idInter, int timeDelay, int timeOut, InterCallback callback, boolean isNextActionWhenFailedInter) {
         if (handlerTimeOutSplash == null) {
             timeStartSplash = System.currentTimeMillis();
             handlerTimeOutSplash = new Handler(Looper.getMainLooper());
-            handlerTimeOutSplash.postDelayed(() -> {
+            runnableTimeOutSplash = () -> {
+                Log.d(TAG, "handlerTimeOutSplash: timeout");
                 callback.onAdClosed();
                 callback.onNextAction();
                 handlerTimeOutSplash = null;
-            }, timeOut);
+            };
+            handlerTimeOutSplash.postDelayed(runnableTimeOutSplash, timeOut);
         }
         if (!isNetworkConnected() || idInter == null || idInter.size() == 0) {
-            handlerTimeOutSplash.removeCallbacks(null);
+            handlerTimeOutSplash.removeCallbacks(runnableTimeOutSplash);
+            handlerTimeOutSplash.removeCallbacksAndMessages(null);
             handlerTimeOutSplash.postDelayed(() -> {
+                Log.d(TAG, "handlerTimeOutSplash: size 0");
                 callback.onNextAction();
                 handlerTimeOutSplash = null;
             }, timeDelay);
@@ -1163,12 +1168,13 @@ public class Admob {
                         @Override
                         public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
                             super.onAdLoaded(interstitialAd);
+                            Log.d(TAG, "loadSplashInterAds3 - onAdLoaded: ");
                             mInterstitialSplash = interstitialAd;
-                            if (System.currentTimeMillis() - timeStartSplash < timeOut) {
-                                handlerTimeOutSplash.removeCallbacks(null);
-                                AppOpenManager.getInstance().disableAppResume();
-                                onShowSplash((Activity) context, callback);
-                            }
+                            handlerTimeOutSplash.removeCallbacks(runnableTimeOutSplash);
+                            handlerTimeOutSplash.removeCallbacksAndMessages(null);
+                            handlerTimeOutSplash = null;
+                            AppOpenManager.getInstance().disableAppResume();
+                            onShowSplash((Activity) context, callback);
                         }
 
                         @Override
@@ -1178,13 +1184,14 @@ public class Admob {
                             idInter.remove(0);
                             if (idInter.size() == 0) {
                                 callback.onAdFailedToLoad(loadAdError);
-                                if (!isNextAction)
+                                if (!isNextActionWhenFailedInter)
                                     return;
                             }
+                            Log.d(TAG, "loadSplashInterAds3 - onAdFailedToLoad: ");
                             if (System.currentTimeMillis() - timeStartSplash < timeOut) {
 //                                new Handler().postDelayed(() -> loadSplashInterAds3(context, idInter, timeDelay, timeOut, callback, isNextAction), 5000);
 //                            }
-                                loadSplashInterAds3(context, idInter, timeDelay, timeOut, callback, isNextAction);
+                                loadSplashInterAds3(context, idInter, timeDelay, timeOut, callback, isNextActionWhenFailedInter);
                             }
                         }
                     });
@@ -1346,6 +1353,7 @@ public class Admob {
     private void onShowSplash(Activity activity, InterCallback adListener) {
         isShowLoadingSplash = true;
         if (mInterstitialSplash == null) {
+            Log.d(TAG, "loadSplashInterAds3: ");
             adListener.onAdClosed();
             adListener.onNextAction();
             return;
