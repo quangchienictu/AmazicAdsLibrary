@@ -73,6 +73,10 @@ public class NativeAdsView extends FrameLayout {
     }
 
     private void setContentInView(Context context, TypedArray attributes) {
+        if (!Admob.isShowAllAds) {
+            removeAllViews();
+            return;
+        }
         int textHeaderColor = attributes.getColor(
                 R.styleable.LayoutNative_ln_text_header_color,
                 Color.parseColor("#000000"));
