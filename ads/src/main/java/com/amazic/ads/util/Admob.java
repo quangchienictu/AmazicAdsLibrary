@@ -218,6 +218,8 @@ public class Admob {
         Log.e("Admob", "Load Native ID Floor");
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -245,6 +247,8 @@ public class Admob {
         Log.e("Admob", "Load Native ID Floor");
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
