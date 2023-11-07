@@ -157,14 +157,14 @@ public class AdmobApi {
                         listIDAds.add(ads.getAds_id());
                         listAds.put(ads.getName(), listIDAds);
                     }
-                    Log.d(TAG, "getListIDOpenSplash: " + getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDOpenSplash: " + getListIDOpenSplash());
                     Log.d(TAG, "getListIDNativeLanguage: " + getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDNativeIntro: " + getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDNativePermission: " + getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDNativeAll: " + getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDInterAll: " + getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDBannerAll: " + getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDCollapseBannerAll: " + getListIDNativeLanguage());
+                    Log.d(TAG, "getListIDNativeIntro: " + getListIDNativeIntro());
+                    Log.d(TAG, "getListIDNativePermission: " + getListIDNativePermission());
+                    Log.d(TAG, "getListIDNativeAll: " + getListIDNativeAll());
+                    Log.d(TAG, "getListIDInterAll: " + getListIDInterAll());
+                    Log.d(TAG, "getListIDBannerAll: " + getListIDBannerAll());
+                    Log.d(TAG, "getListIDCollapseBannerAll: " + getListIDCollapseBannerAll());
                     callBack.onReady();
                 }
 
