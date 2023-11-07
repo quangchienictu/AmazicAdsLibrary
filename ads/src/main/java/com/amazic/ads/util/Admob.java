@@ -2068,6 +2068,60 @@ public class Admob {
 
     }
 
+    public void loadNativeAd(Context context, String id, FrameLayout frameLayout, int shimmerLayout, int layoutNative) {
+        frameLayout.removeAllViews();
+        if (isShowNative && isNetworkConnected() && isShowNative) {
+            ShimmerFrameLayout shimmerFrameLayout = (ShimmerFrameLayout) LayoutInflater.from(context).inflate(shimmerLayout, null);
+            frameLayout.addView(shimmerFrameLayout);
+            VideoOptions videoOptions = new VideoOptions.Builder()
+                    .setStartMuted(true)
+                    .build();
+
+            NativeAdOptions adOptions = new NativeAdOptions.Builder()
+                    .setVideoOptions(videoOptions)
+                    .build();
+            AdLoader adLoader = new AdLoader.Builder(context, id)
+                    .forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+
+                        @Override
+                        public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+                            NativeAdView adView = (NativeAdView) LayoutInflater.from(context).inflate(layoutNative, null);
+                            frameLayout.removeAllViews();
+                            frameLayout.addView(adView);
+                            Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
+                            nativeAd.setOnPaidEventListener(adValue -> {
+                                Log.d(TAG, "OnPaidEvent getInterstitalAds:" + adValue.getValueMicros());
+                                FirebaseUtil.logPaidAdImpression(context,
+                                        adValue,
+                                        id,
+                                        AdType.NATIVE);
+                            });
+                        }
+                    })
+                    .withAdListener(new AdListener() {
+                        @Override
+                        public void onAdFailedToLoad(LoadAdError error) {
+                            Log.e(TAG, "NativeAd onAdFailedToLoad: " + error.getMessage());
+                            frameLayout.removeAllViews();
+                        }
+
+                        @Override
+                        public void onAdClicked() {
+                            super.onAdClicked();
+                            if (disableAdResumeWhenClickAds)
+                                AppOpenManager.getInstance().disableAdResumeByClickAction();
+                            FirebaseUtil.logClickAdsEvent(context, id);
+                            if (timeLimitAds > 1000) {
+                                setTimeLimitNative();
+                            }
+                        }
+                    })
+                    .withNativeAdOptions(adOptions)
+                    .build();
+            adLoader.loadAd(getAdRequest());
+        }
+    }
+
     public void loadNativeAd(Context context, String id, FrameLayout frameLayout, int layoutNative) {
         if (!isShowAllAds || !isNetworkConnected()) {
             frameLayout.removeAllViews();

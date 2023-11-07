@@ -31,7 +31,7 @@ public class AdsSplash {
 
 
     boolean isShowOpenSplash(int countRateOpenSplash) {
-        int value = new Random().nextInt(99) + 1;
+        int value = new Random().nextInt(100) + 1;
         Log.d(TAG, "isShowOpenSplash: " + value);
         return value < countRateOpenSplash;
     }
