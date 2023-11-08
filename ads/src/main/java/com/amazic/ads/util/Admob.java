@@ -206,6 +206,8 @@ public class Admob {
     public void loadBanner(final Activity mActivity, String id) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -278,6 +280,8 @@ public class Admob {
     public void loadBanner(final Activity mActivity, String id, BannerCallBack callback) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -293,6 +297,8 @@ public class Admob {
     public void loadBanner(final Activity mActivity, String id, Boolean useInlineAdaptive) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -307,6 +313,8 @@ public class Admob {
     public void loadInlineBanner(final Activity activity, String id, String inlineStyle) {
         final FrameLayout adContainer = activity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = activity.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         loadBanner(activity, id, adContainer, containerShimmer, null, true, inlineStyle);
     }
 
@@ -316,6 +324,8 @@ public class Admob {
     public void loadBanner(final Activity mActivity, String id, final BannerCallBack callback, Boolean useInlineAdaptive) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -344,6 +354,8 @@ public class Admob {
     public void loadCollapsibleBanner(final Activity mActivity, String id, String gravity) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -355,6 +367,8 @@ public class Admob {
     public void loadCollapsibleBannerFloor(final Activity mActivity, List<String> listID, String gravity) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        adContainer.setVisibility(View.GONE);
+        containerShimmer.setVisibility(View.VISIBLE);
         if (!isShowAllAds || !isNetworkConnected()) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -2071,7 +2085,7 @@ public class Admob {
     public void loadNativeAd(Context context, String id, FrameLayout frameLayout, int shimmerLayout, int layoutNative) {
         frameLayout.removeAllViews();
         if (isShowNative && isNetworkConnected() && isShowNative) {
-            ShimmerFrameLayout shimmerFrameLayout = (ShimmerFrameLayout) LayoutInflater.from(context).inflate(shimmerLayout, null);
+            View shimmerFrameLayout = LayoutInflater.from(context).inflate(shimmerLayout, null);
             frameLayout.addView(shimmerFrameLayout);
             VideoOptions videoOptions = new VideoOptions.Builder()
                     .setStartMuted(true)
