@@ -1266,7 +1266,6 @@ public class Admob {
                         if (AppOpenManager.getInstance().isInitialized()) {
                             AppOpenManager.getInstance().enableAppResume();
                         }
-                        lastTimeDismissInter = System.currentTimeMillis();
                         if (adListener != null) {
                             if (!openActivityAfterShowInterAds) {
                                 adListener.onAdClosed();
@@ -1410,7 +1409,6 @@ public class Admob {
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().enableAppResume();
                 }
-                lastTimeDismissInter = System.currentTimeMillis();
                 if (adListener != null) {
                     if (!openActivityAfterShowInterAds) {
                         adListener.onAdClosed();
