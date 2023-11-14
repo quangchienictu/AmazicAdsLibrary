@@ -102,6 +102,20 @@ public class AdmobApi {
         return INSTANCE;
     }
 
+    public void setIdApi(List<AdsModel> list) {
+        for (AdsModel ads : list) {
+            List<String> listIDAds = null;
+            if (listAds.containsKey(ads.getName())) {
+                listIDAds = listAds.get(ads.getName());
+            }
+            if (listIDAds == null) {
+                listIDAds = new ArrayList<>();
+            }
+            listIDAds.add(ads.getAds_id());
+            listAds.put(ads.getName(), listIDAds);
+        }
+    }
+
     public void init(Context context, String linkServerRelease, String AppID, ApiCallBack callBack) {
         this.context = context;
         this.packageName = context.getPackageName();
