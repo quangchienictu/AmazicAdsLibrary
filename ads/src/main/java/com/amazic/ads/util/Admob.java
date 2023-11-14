@@ -726,17 +726,15 @@ public class Admob {
                         callback.onAdLoadSuccess();
                     Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
                     containerShimmer.stopShimmer();
-                    containerShimmer.setVisibility(View.GONE);
-                    adContainer.setVisibility(View.VISIBLE);
-                    if (adView != null) {
-                        adView.setOnPaidEventListener(adValue -> {
-                            Log.d(TAG, "OnPaidEvent banner:" + adValue.getValueMicros());
+                    adView.setOnPaidEventListener(adValue -> {
+                        adContainer.setVisibility(View.VISIBLE);
+                        containerShimmer.setVisibility(View.GONE);
+                        Log.d(TAG, "OnPaidEvent banner:" + adValue.getValueMicros());
 
-                            FirebaseUtil.logPaidAdImpression(context,
-                                    adValue,
-                                    adView.getAdUnitId(), AdType.BANNER);
-                        });
-                    }
+                        FirebaseUtil.logPaidAdImpression(context,
+                                adValue,
+                                adView.getAdUnitId(), AdType.BANNER);
+                    });
                 }
 
                 @Override
@@ -799,8 +797,8 @@ public class Admob {
                 public void onAdLoaded() {
                     Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
                     containerShimmer.stopShimmer();
-                    containerShimmer.setVisibility(View.GONE);
                     adContainer.setVisibility(View.VISIBLE);
+                    containerShimmer.setVisibility(View.GONE);
                     adView.setOnPaidEventListener(adValue -> {
                         Log.d(TAG, "OnPaidEvent banner:" + adValue.getValueMicros());
 
