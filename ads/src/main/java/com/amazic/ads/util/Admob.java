@@ -726,9 +726,9 @@ public class Admob {
                         callback.onAdLoadSuccess();
                     Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
                     containerShimmer.stopShimmer();
+                    adContainer.setVisibility(View.VISIBLE);
+                    containerShimmer.setVisibility(View.GONE);
                     adView.setOnPaidEventListener(adValue -> {
-                        adContainer.setVisibility(View.VISIBLE);
-                        containerShimmer.setVisibility(View.GONE);
                         Log.d(TAG, "OnPaidEvent banner:" + adValue.getValueMicros());
 
                         FirebaseUtil.logPaidAdImpression(context,
