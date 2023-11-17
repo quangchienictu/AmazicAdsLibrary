@@ -251,6 +251,12 @@ public class AdmobApi {
                     super.onAdImpression();
                     interCallback.onAdImpression();
                 }
+
+                @Override
+                public void onInterDismiss() {
+                    super.onInterDismiss();
+                    interCallback.onInterDismiss();
+                }
             });
         }
     }

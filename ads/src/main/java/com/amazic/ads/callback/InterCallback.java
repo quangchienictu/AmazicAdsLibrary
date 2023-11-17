@@ -40,4 +40,7 @@ public class InterCallback {
 
     public void onLoadInter() {
     }
+
+    public void onInterDismiss() {
+    }
 }

@@ -1666,6 +1666,7 @@ public class Admob {
             @Override
             public void onAdDismissedFullScreenContent() {
                 super.onAdDismissedFullScreenContent();
+                callback.onInterDismiss();
                 // Called when fullscreen content is dismissed.
                 if (AppOpenManager.getInstance().isInitialized()) {
                     AppOpenManager.getInstance().enableAppResume();
@@ -1860,6 +1861,7 @@ public class Admob {
                             @Override
                             public void onAdDismissedFullScreenContent() {
                                 dialog2.dismiss();
+                                callback.onInterDismiss();
                                 callback.onAdClosed();
                                 callback.onNextAction();
                                 callback.onLoadInter();
