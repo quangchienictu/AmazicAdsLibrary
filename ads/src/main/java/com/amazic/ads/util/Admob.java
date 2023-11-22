@@ -1633,7 +1633,7 @@ public class Admob {
         if (System.currentTimeMillis() - lastTimeDismissInter > timeInterval && stateInter == StateInter.DISMISS) {
             showInterAds(context, mInterstitialAd, callback, false);
         } else {
-            if (!openActivityAfterShowInterAds) {
+            if (openActivityAfterShowInterAds) {
                 callback.onAdClosed();
                 callback.onNextAction();
             } else {
