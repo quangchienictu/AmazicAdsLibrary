@@ -51,7 +51,7 @@ public class AdsSplash {
         }
         Log.d(TAG, "rateInter: " + rateInter + " - rateOpen: " + rateOpen);
         Log.d(TAG, "rateInter: " + rateInter + " - rateOpen: " + rateOpen);
-        if (rateInter > 0 && rateOpen > 0 && rateInter + rateOpen == 100) {
+        if (rateInter >= 0 && rateOpen >= 0 && rateInter + rateOpen == 100) {
             boolean isShowOpenSplash = new Random().nextInt(100) + 1 < rateOpen;
             setState(isShowOpenSplash ? OPEN : INTER);
         } else {
