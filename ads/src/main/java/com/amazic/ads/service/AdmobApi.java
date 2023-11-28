@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
+
 import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.ApiCallBack;
 import com.amazic.ads.callback.BannerCallBack;
@@ -218,51 +220,49 @@ public class AdmobApi {
         }
     }
 
-    public void loadInterAll(final Activity activity, InterCallback interCallback) {
-        if (interAll == null) {
-            Admob.getInstance().loadInterAdsFloor(activity, getListIDInterAll(), new InterCallback() {
-                @Override
-                public void onAdLoadSuccess(InterstitialAd interstitialAd) {
-                    super.onAdLoadSuccess(interstitialAd);
-                    interAll = interstitialAd;
-                    interCallback.onAdLoadSuccess(interstitialAd);
-                }
+    public void loadInterAll(final Activity activity, @NonNull InterCallback interCallback) {
+        Admob.getInstance().loadInterAdsFloor(activity, getListIDInterAll(), new InterCallback() {
+            @Override
+            public void onAdLoadSuccess(InterstitialAd interstitialAd) {
+                super.onAdLoadSuccess(interstitialAd);
+                interAll = interstitialAd;
+                interCallback.onAdLoadSuccess(interstitialAd);
+            }
 
-                @Override
-                public void onAdClicked() {
-                    super.onAdClicked();
-                    interCallback.onAdClicked();
-                }
+            @Override
+            public void onAdClicked() {
+                super.onAdClicked();
+                interCallback.onAdClicked();
+            }
 
-                @Override
-                public void onAdFailedToLoad(LoadAdError i) {
-                    super.onAdFailedToLoad(i);
-                    interCallback.onAdFailedToLoad(i);
-                }
+            @Override
+            public void onAdFailedToLoad(LoadAdError i) {
+                super.onAdFailedToLoad(i);
+                interCallback.onAdFailedToLoad(i);
+            }
 
-                @Override
-                public void onAdLoaded() {
-                    super.onAdLoaded();
-                    interCallback.onAdLoaded();
-                }
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                interCallback.onAdLoaded();
+            }
 
-                @Override
-                public void onAdImpression() {
-                    super.onAdImpression();
-                    interCallback.onAdImpression();
-                }
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
+                interCallback.onAdImpression();
+            }
 
-                @Override
-                public void onInterDismiss() {
-                    super.onInterDismiss();
-                    interCallback.onInterDismiss();
-                }
-            });
-        }
+            @Override
+            public void onInterDismiss() {
+                super.onInterDismiss();
+                interCallback.onInterDismiss();
+            }
+        });
     }
 
 
-    public void showInterAll(final Activity activity, InterCallback interCallback) {
+    public void showInterAll(final Activity activity, @NonNull InterCallback interCallback) {
         Admob.getInstance().showInterAds(activity, this.interAll, new InterCallback() {
             @Override
             public void onNextAction() {
@@ -303,6 +303,12 @@ public class AdmobApi {
                 super.onLoadInter();
                 interAll = null;
                 loadInterAll(activity);
+            }
+
+            @Override
+            public void onInterDismiss() {
+                super.onInterDismiss();
+                interCallback.onInterDismiss();
             }
         });
     }
