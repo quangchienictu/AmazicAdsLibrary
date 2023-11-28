@@ -1265,6 +1265,7 @@ public class Admob {
                             AppOpenManager.getInstance().enableAppResume();
                         }
                         if (adListener != null) {
+                            adListener.onInterDismiss();
                             if (!openActivityAfterShowInterAds) {
                                 adListener.onAdClosed();
                                 adListener.onNextAction();
@@ -1408,6 +1409,7 @@ public class Admob {
                     AppOpenManager.getInstance().enableAppResume();
                 }
                 if (adListener != null) {
+                    adListener.onInterDismiss();
                     if (!openActivityAfterShowInterAds) {
                         adListener.onAdClosed();
                         adListener.onNextAction();
