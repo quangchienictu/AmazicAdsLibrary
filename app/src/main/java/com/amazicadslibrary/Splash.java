@@ -11,22 +11,22 @@ import com.amazic.ads.callback.ApiCallBack;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AppOpenManager;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.amazic.ads.util.manager.open_app.OpenAppBuilder;
+import com.amazic.ads.util.manager.open_app.AdOpenAppManager;
 
 public class Splash extends AppCompatActivity {
     private static final String TAG = "SplashActivity";
     AdCallback adCallback;
     public static String PRODUCT_ID_MONTH = "android.test.purchased";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         String android_id = Settings.Secure.getString(this.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-       Admob.getInstance().setOpenShowAllAds(true);
-       Admob.getInstance().setDisableAdResumeWhenClickAds(true);
+        Admob.getInstance().setOpenShowAllAds(true);
+        Admob.getInstance().setDisableAdResumeWhenClickAds(true);
         Admob.getInstance().setOpenEventLoadTimeLoadAdsSplash(true);
         Admob.getInstance().setOpenEventLoadTimeShowAdsInter(true);
         // Admob
@@ -55,23 +55,25 @@ public class Splash extends AppCompatActivity {
             }
         }, 5000);*/
 
-        adCallback = new AdCallback(){
+        adCallback = new AdCallback() {
             @Override
             public void onNextAction() {
                 super.onNextAction();
-                startActivity(new Intent(Splash.this,MainActivity.class));
+                startActivity(new Intent(Splash.this, MainManagerActivity.class));
                 finish();
             }
         };
         AdmobApi.getInstance().setListIDOther("native_home");
-        AdmobApi.getInstance().init(this,getString(R.string.linkServer),getString(R.string.app_id),new ApiCallBack(){
+        AdmobApi.getInstance().init(this, null, getString(R.string.app_id), new ApiCallBack() {
             @Override
             public void onReady() {
                 super.onReady();
-                AdmobApi.getInstance().loadOpenAppAdSplashFloor(Splash.this,adCallback);
+                AdmobApi.getInstance().loadOpenAppAdSplashFloor(Splash.this, adCallback);
+                OpenAppBuilder builder = new OpenAppBuilder(Splash.this.getApplication())
+                        .setId(AdmobApi.getInstance().getListIDByName("appopen_resume"));
+                AdOpenAppManager.getInstance().setBuilder(builder);
             }
         });
-
 
 
         initBilling();
@@ -88,6 +90,6 @@ public class Splash extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        AppOpenManager.getInstance().onCheckShowSplashWhenFail(this,adCallback,1000);
+        AppOpenManager.getInstance().onCheckShowSplashWhenFail(this, adCallback, 1000);
     }
 }

@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {
                 super.onNativeAdLoaded(nativeAd);
-                NativeAdView adView = (NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.ads_native_btn_ads_top, null);
+                NativeAdView adView = (NativeAdView) LayoutInflater.from(MainActivity.this).inflate(R.layout.ads_native, null);
                 native_ads.addView(adView);
                 Admob.getInstance().pushAdsToViewCustom(nativeAd, adView);
             }
