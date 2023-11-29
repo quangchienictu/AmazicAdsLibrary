@@ -73,7 +73,7 @@ public class BannerManager implements LifecycleEventObserver {
                     build.getCallBack().onAdImpression();
                 }
             };
-            Admob.getInstance().loadBannerFloor(build.getCurrentActivity(), build.getListId(), build.getCallBack());
+            Admob.getInstance().loadBannerFloor(build.getCurrentActivity(), build.getListId(), bannerCallBack);
         } else
             Admob.getInstance().hideBanner(build.getCurrentActivity());
     }

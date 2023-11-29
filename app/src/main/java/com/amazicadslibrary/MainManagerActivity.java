@@ -25,9 +25,9 @@ public class MainManagerActivity extends AppCompatActivity {
         //
 
         findViewById(R.id.tv_next_screen).setOnClickListener(v -> {
-            bannerManager.setReloadAds();
-            nativeManager.setReloadAds();
-            startActivity(new Intent(this, MainActivity2.class));
+            bannerManager.reloadAdNow();
+            nativeManager.reloadAdNow();
+//            startActivity(new Intent(this, MainActivity2.class));
         });
     }
 
@@ -48,7 +48,6 @@ public class MainManagerActivity extends AppCompatActivity {
                 R.layout.ads_native);
         nativeBuilder.setListIdAd(AdmobApi.getInstance().getListIDNativeAll());
         NativeManager nativeManager = new NativeManager(this, this, nativeBuilder);
-        nativeManager.setShowLoadingNative(false);
         return nativeManager;
     }
 

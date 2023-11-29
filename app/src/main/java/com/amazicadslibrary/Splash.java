@@ -69,9 +69,6 @@ public class Splash extends AppCompatActivity {
             public void onReady() {
                 super.onReady();
                 AdmobApi.getInstance().loadOpenAppAdSplashFloor(Splash.this, adCallback);
-                OpenAppBuilder builder = new OpenAppBuilder(Splash.this.getApplication())
-                        .setId(AdmobApi.getInstance().getListIDByName("appopen_resume"));
-                AdOpenAppManager.getInstance().setBuilder(builder);
             }
         });
 
