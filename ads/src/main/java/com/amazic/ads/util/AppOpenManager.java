@@ -806,6 +806,86 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         }
     }
 
+    public void showAppOpenSplashNew(Context context, AdCallback adCallback) {
+        if (this.splashAd == null) {
+            adCallback.onNextAction();
+            adCallback.onAdFailedToLoad(null);
+        } else {
+            try {
+                dialog = null;
+                dialog = new LoadingAdsDialog(context);
+                dialog.show();
+            } catch (Exception e) {
+            }
+            /*this.dismissDialogLoading();
+            if (this.dialog == null) {
+                try {
+                    LoadingAdsDialog dialog = new LoadingAdsDialog(context);
+                    dialog.setCancelable(false);
+                    this.dialog = dialog;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                if (this.dialog != null) {
+                    this.dialog.show();
+                }
+            } catch (Exception e) {}*/
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (AppOpenManager.this.splashAd != null) {
+                        AppOpenManager.this.splashAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                            @Override
+                            public void onAdDismissedFullScreenContent() {
+                                adCallback.onNextAction();
+                                adCallback.onAdClosed();
+                                AppOpenManager.this.splashAd = null;
+                                AppOpenManager.isShowingAd = false;
+                                isShowLoadingSplash = false;
+                                if (dialog != null && !AppOpenManager.this.currentActivity.isDestroyed()) {
+                                    try {
+                                        dialog.dismiss();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                isShowLoadingSplash = true;
+                                adCallback.onNextAction();
+                                adCallback.onAdFailedToShow(adError);
+                                AppOpenManager.isShowingAd = false;
+                                AppOpenManager.this.dismissDialogLoading();
+                            }
+
+                            @Override
+                            public void onAdShowedFullScreenContent() {
+                                adCallback.onAdImpression();
+                                AdmobEvent.logEvent(currentActivity, "splash_appopen_view", new Bundle());
+                                AppOpenManager.isShowingAd = true;
+                                AppOpenManager.this.splashAd = null;
+                            }
+
+                            @Override
+                            public void onAdClicked() {
+                                super.onAdClicked();
+                                adCallback.onAdClicked();
+                                AdmobEvent.logEvent(currentActivity, "splash_appopen_click", new Bundle());
+                            }
+                        });
+
+                        AppOpenManager.this.splashAd.show(AppOpenManager.this.currentActivity);
+                    }
+                }
+            }, 800L);
+        }
+    }
+
 
     public void loadOpenAppAdSplash(Context context, String idResumeSplash, long timeDelay, long timeOut, boolean isShowAdIfReady, AdCallback adCallback) {
         this.splashAdId = idResumeSplash;
@@ -941,6 +1021,18 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                 if (AppOpenManager.this.splashAd != null && !AppOpenManager.isShowingAd) {
                     Log.e("AppOpenManager", "show ad splash when show fail in background");
                     AppOpenManager.getInstance().showAppOpenSplash(activity, callback);
+                }
+
+            }
+        }, (long) timeDelay);
+    }
+
+    public void onCheckShowSplashWhenFailNew(final AppCompatActivity activity, final AdCallback callback, int timeDelay) {
+        (new Handler(activity.getMainLooper())).postDelayed(new Runnable() {
+            public void run() {
+                if (AppOpenManager.this.splashAd != null && !AppOpenManager.isShowingAd) {
+                    Log.e("AppOpenManager", "show ad splash when show fail in background");
+                    AppOpenManager.getInstance().showAppOpenSplashNew(activity, callback);
                 }
 
             }

@@ -69,6 +69,7 @@ public class AdsSplash {
     }
 
     public void showAdsSplashApi(AppCompatActivity activity, AdCallback openCallback, InterCallback interCallback) {
+        Log.d(TAG, "state show: "+getState() );
         if (getState() == OPEN)
             AdmobApi.getInstance().loadOpenAppAdSplashFloor(activity, openCallback);
         else if (getState() == INTER)
@@ -80,7 +81,7 @@ public class AdsSplash {
 
     public void onCheckShowSplashWhenFail(AppCompatActivity activity, AdCallback openCallback, InterCallback interCallback) {
         if (getState() == OPEN)
-            AppOpenManager.getInstance().onCheckShowSplashWhenFail(activity, openCallback, 1000);
+            AppOpenManager.getInstance().onCheckShowSplashWhenFailNew(activity, openCallback, 1000);
         else if (getState() == INTER)
             Admob.getInstance().onCheckShowSplashWhenFail(activity, interCallback, 1000);
     }
