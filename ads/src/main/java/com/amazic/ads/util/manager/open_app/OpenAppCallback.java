@@ -28,6 +28,6 @@ public class OpenAppCallback {
     public void onAdShowed() {
     }
 
-    public void onAdLoaded(@NonNull AppOpenAd appOpenAd) {
+    public void onAdLoaded() {
     }
 }

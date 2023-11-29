@@ -1,14 +1,10 @@
 package com.amazic.ads.util.manager.open_app;
 
 import android.app.Activity;
-import android.app.Application;
-import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.amazic.ads.util.NetworkUtil;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.FullScreenContentCallback;
@@ -18,30 +14,19 @@ import com.google.android.gms.ads.appopen.AppOpenAd;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdOpenAppManager implements Application.ActivityLifecycleCallbacks {
+public class AdOpenAppManager {
 
     enum State {LOADING, LOADED, SHOWING, DISMISS}
 
     private static final String TAG = "OpenAppManager";
-    private static AdOpenAppManager INSTANCE = null;
-
-    public static AdOpenAppManager getInstance() {
-        if (INSTANCE == null)
-            INSTANCE = new AdOpenAppManager();
-        return INSTANCE;
-    }
-
-    LoadingAdsDialog dialog;
 
     OpenAppBuilder builder;
     static AppOpenAd myAppOpenAd;
     List<String> listId = new ArrayList<>();
     State state = State.DISMISS;
-    Activity currentActivity = null;
 
     public void setBuilder(OpenAppBuilder builder) {
         this.builder = builder;
-        this.builder.getApplication().registerActivityLifecycleCallbacks(this);
     }
 
     public void setId(List<String> listId) {
@@ -49,7 +34,7 @@ public class AdOpenAppManager implements Application.ActivityLifecycleCallbacks 
     }
 
     private void loadOpenAdWithList() {
-        if (!NetworkUtil.isNetworkActive(currentActivity)) {
+        if (!NetworkUtil.isNetworkActive(builder.currentActivity)) {
             LoadAdError error = new LoadAdError(-1, "network isn't active", "local", null, null);
             builder.getCallback().onAdFailedToLoad(error);
             return;
@@ -61,7 +46,7 @@ public class AdOpenAppManager implements Application.ActivityLifecycleCallbacks 
         }
         Log.d(TAG, "loadOpenAdWithList: " + listId.get(0));
         if (myAppOpenAd == null)
-            AppOpenAd.load(currentActivity, listId.get(0), builder.getAdNewRequest(), new AppOpenAd.AppOpenAdLoadCallback() {
+            AppOpenAd.load(builder.currentActivity, listId.get(0), builder.getAdNewRequest(), new AppOpenAd.AppOpenAdLoadCallback() {
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
@@ -69,6 +54,7 @@ public class AdOpenAppManager implements Application.ActivityLifecycleCallbacks 
                     if (listId.isEmpty()) {
                         Log.d(TAG, "onAdFailedToLoad: " + loadAdError);
                         builder.getCallback().onAdFailedToLoad(loadAdError);
+                        builder.getCallback().onAdLoaded();
                         state = State.LOADED;
                     } else {
                         loadOpenAdWithList();
@@ -79,7 +65,7 @@ public class AdOpenAppManager implements Application.ActivityLifecycleCallbacks 
                 public void onAdLoaded(@NonNull AppOpenAd appOpenAd) {
                     super.onAdLoaded(appOpenAd);
                     Log.d(TAG, "onAdLoaded: ");
-                    builder.getCallback().onAdLoaded(appOpenAd);
+                    builder.getCallback().onAdLoaded();
                     myAppOpenAd = appOpenAd;
                     state = State.LOADED;
                 }
@@ -95,24 +81,24 @@ public class AdOpenAppManager implements Application.ActivityLifecycleCallbacks 
         }
     }
 
-    public void showAd(Activity activity, OpenAppCallback callback) {
+    public void showAd(Activity activity) {
         if (myAppOpenAd == null || builder.getCallback() == null) {
-            callback.onNextAction();
+            builder.getCallback().onNextAction();
             return;
         }
-        if (!NetworkUtil.isNetworkActive(currentActivity)) {
+        if (!NetworkUtil.isNetworkActive(builder.currentActivity)) {
             LoadAdError error = new LoadAdError(-1, "network isn't active", "local", null, null);
             builder.getCallback().onAdFailedToLoad(error);
-            callback.onNextAction();
+            builder.getCallback().onNextAction();
             return;
         }
-        showLoading();
+        builder.showLoading();
         myAppOpenAd.setFullScreenContentCallback(new FullScreenContentCallback() {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
                 Log.d(TAG, "onAdClicked: ");
-                callback.onAdClicked();
+                builder.getCallback().onAdClicked();
             }
 
             @Override
@@ -120,11 +106,10 @@ public class AdOpenAppManager implements Application.ActivityLifecycleCallbacks 
                 super.onAdDismissedFullScreenContent();
                 state = State.DISMISS;
                 Log.d(TAG, "onAdDismissedFullScreenContent: ");
-                dismissLoading();
-                callback.onAdClosed();
-                callback.onNextAction();
+                builder.dismissLoading();
+                builder.getCallback().onAdClosed();
+                builder.getCallback().onNextAction();
                 myAppOpenAd = null;
-                loadAd();
             }
 
             @Override
@@ -132,8 +117,8 @@ public class AdOpenAppManager implements Application.ActivityLifecycleCallbacks 
                 super.onAdFailedToShowFullScreenContent(adError);
                 state = State.DISMISS;
                 Log.d(TAG, "onAdFailedToShowFullScreenContent: ");
-                callback.onAdFailedToShow(adError);
-                callback.onNextAction();
+                builder.getCallback().onAdFailedToShow(adError);
+                builder.getCallback().onNextAction();
             }
 
             @Override
@@ -141,7 +126,7 @@ public class AdOpenAppManager implements Application.ActivityLifecycleCallbacks 
                 super.onAdImpression();
                 state = State.SHOWING;
                 Log.d(TAG, "onAdImpression: ");
-                callback.onAdImpression();
+                builder.getCallback().onAdImpression();
             }
 
             @Override
@@ -149,57 +134,9 @@ public class AdOpenAppManager implements Application.ActivityLifecycleCallbacks 
                 super.onAdShowedFullScreenContent();
                 state = State.SHOWING;
                 Log.d(TAG, "onAdShowedFullScreenContent: ");
-                callback.onAdShowed();
+                builder.getCallback().onAdShowed();
             }
         });
         myAppOpenAd.show(activity);
-    }
-
-    public void showLoading() {
-        if (dialog != null && !dialog.isShowing())
-            dialog.show();
-    }
-
-    public void dismissLoading() {
-        if (dialog != null && dialog.isShowing())
-            dialog.dismiss();
-    }
-
-    @Override
-    public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-    }
-
-    @Override
-    public void onActivityStarted(@NonNull Activity activity) {
-        currentActivity = activity;
-        dialog = new LoadingAdsDialog(currentActivity);
-        loadAd();
-    }
-
-    @Override
-    public void onActivityResumed(@NonNull Activity activity) {
-
-    }
-
-    @Override
-    public void onActivityPaused(@NonNull Activity activity) {
-
-    }
-
-    @Override
-    public void onActivityStopped(@NonNull Activity activity) {
-
-    }
-
-    @Override
-    public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
-
-    }
-
-    @Override
-    public void onActivityDestroyed(@NonNull Activity activity) {
-        currentActivity = null;
-        dialog = null;
-        dismissLoading();
     }
 }

@@ -1,7 +1,11 @@
 package com.amazic.ads.util.manager.open_app;
 
+import android.app.Activity;
 import android.app.Application;
 
+import androidx.annotation.NonNull;
+
+import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.google.android.gms.ads.AdRequest;
 
 import java.util.ArrayList;
@@ -10,15 +14,14 @@ import java.util.List;
 public class OpenAppBuilder {
     List<String> listIdAd = new ArrayList<>();
     OpenAppCallback openAppCallback = new OpenAppCallback();
-    Application application;
+    LoadingAdsDialog dialog;
+    Activity currentActivity;
 
-    public OpenAppBuilder(Application application) {
-        this.application = application;
+    public OpenAppBuilder(@NonNull Activity activity) {
+        this.currentActivity = activity;
+        dialog = new LoadingAdsDialog(activity);
     }
 
-    public Application getApplication() {
-        return application;
-    }
 
     public List<String> getListIdAd() {
         return listIdAd;
@@ -41,5 +44,16 @@ public class OpenAppBuilder {
 
     public AdRequest getAdNewRequest() {
         return new AdRequest.Builder().build();
+    }
+
+
+    public void showLoading() {
+        if (dialog != null && !dialog.isShowing())
+            dialog.show();
+    }
+
+    public void dismissLoading() {
+        if (dialog != null && dialog.isShowing())
+            dialog.dismiss();
     }
 }
