@@ -7,13 +7,18 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.util.Admob;
+import com.google.android.gms.ads.LoadAdError;
 
 public class BannerManager implements LifecycleEventObserver {
+    enum State {LOADING, LOADED}
+
     private static final String TAG = "BannerManager";
     private boolean isReloadAds = false;
     private boolean isAlwaysReloadOnResume = false;
     private final BannerBuilder build;
+    State state = State.LOADED;
 
     public BannerManager(BannerBuilder build) {
         this.build = build;
@@ -42,14 +47,42 @@ public class BannerManager implements LifecycleEventObserver {
 
     private void loadBanner() {
         Log.d(TAG, "loadBanner: " + build.getListId());
-        if (Admob.isShowAllAds)
+        if (Admob.isShowAllAds && state != State.LOADING) {
+            state = State.LOADING;
+            BannerCallBack bannerCallBack = new BannerCallBack() {
+                public void onEarnRevenue(Double Revenue) {
+                    build.getCallBack().onEarnRevenue(Revenue);
+                }
+
+                public void onAdFailedToLoad(LoadAdError loadAdError) {
+                    state = State.LOADED;
+                    build.getCallBack().onAdFailedToLoad(loadAdError);
+                }
+
+                public void onAdLoadSuccess() {
+                    state = State.LOADED;
+                    build.getCallBack().onAdLoadSuccess();
+                }
+
+                public void onAdClicked() {
+                    build.getCallBack().onAdClicked();
+                }
+
+                public void onAdImpression() {
+                    state = State.LOADED;
+                    build.getCallBack().onAdImpression();
+                }
+            };
             Admob.getInstance().loadBannerFloor(build.getCurrentActivity(), build.getListId(), build.getCallBack());
-        else
+        } else
             Admob.getInstance().hideBanner(build.getCurrentActivity());
     }
 
     public void setReloadAds() {
         isReloadAds = true;
+    }
+    public void reloadAdNow() {
+        loadBanner();
     }
 
     public void setAlwaysReloadOnResume() {

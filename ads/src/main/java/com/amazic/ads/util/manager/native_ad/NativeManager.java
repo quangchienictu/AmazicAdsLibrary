@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NativeManager implements LifecycleEventObserver {
+    enum State {LOADING, LOADED}
+
     private static final String TAG = "NativeManager";
     final NativeBuilder builder;
     private final Activity currentActivity;
@@ -28,6 +30,7 @@ public class NativeManager implements LifecycleEventObserver {
     private boolean isReloadAds = false;
     private boolean isAlwaysReloadOnResume = false;
     private boolean isShowLoadingNative = true;
+    State state = State.LOADED;
 
     public NativeManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, NativeBuilder builder) {
         this.builder = builder;
@@ -65,16 +68,18 @@ public class NativeManager implements LifecycleEventObserver {
     }
 
     private void loadNativeFloor(@NonNull List<String> listID) {
-        if (listID.isEmpty() || !NetworkUtil.isNetworkActive(currentActivity)) {
+        if (!Admob.isShowAllAds || listID.isEmpty() || !NetworkUtil.isNetworkActive(currentActivity)) {
             builder.getCallback().onAdFailedToLoad();
             builder.hideAd();
             return;
         }
+        state = State.LOADING;
         Log.d(TAG, "loadNativeFloor: " + listID.get(0));
         AdLoader adLoader = new AdLoader.Builder(currentActivity, listID.get(0))
                 .forNativeAd(nativeAd -> {
                     // Show the ad.
                     Log.d(TAG, "showAd: ");
+                    state = State.LOADED;
                     builder.showAd();
                     builder.getCallback().onNativeAdLoaded(nativeAd);
                     Admob.getInstance().pushAdsToViewCustom(nativeAd, builder.nativeAdView);
@@ -87,6 +92,7 @@ public class NativeManager implements LifecycleEventObserver {
                             listID.remove(0);
                             loadNativeFloor(listID);
                         } else {
+                            state = State.LOADED;
                             builder.getCallback().onAdFailedToLoad();
                             builder.hideAd();
                         }
@@ -95,6 +101,7 @@ public class NativeManager implements LifecycleEventObserver {
                     @Override
                     public void onAdImpression() {
                         super.onAdImpression();
+                        state = State.LOADED;
                         Log.d(TAG, "onAdImpression: ");
                     }
                 })
@@ -108,6 +115,10 @@ public class NativeManager implements LifecycleEventObserver {
 
     public void setReloadAds() {
         isReloadAds = true;
+    }
+
+    public void reloadAdNow() {
+        loadNative(isShowLoadingNative);
     }
 
     public void setAlwaysReloadOnResume(boolean isAlwaysReloadOnResume) {
