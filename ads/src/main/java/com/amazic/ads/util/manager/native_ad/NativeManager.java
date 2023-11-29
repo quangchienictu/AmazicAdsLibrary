@@ -73,6 +73,8 @@ public class NativeManager implements LifecycleEventObserver {
             builder.hideAd();
             return;
         }
+        if (state == State.LOADING)
+            return;
         state = State.LOADING;
         Log.d(TAG, "loadNativeFloor: " + listID.get(0));
         AdLoader adLoader = new AdLoader.Builder(currentActivity, listID.get(0))

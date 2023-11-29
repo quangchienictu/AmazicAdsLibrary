@@ -25,9 +25,9 @@ public class MainManagerActivity extends AppCompatActivity {
         //
 
         findViewById(R.id.tv_next_screen).setOnClickListener(v -> {
-            bannerManager.reloadAdNow();
-            nativeManager.reloadAdNow();
-//            startActivity(new Intent(this, MainActivity2.class));
+            bannerManager.setReloadAds();
+            nativeManager.setReloadAds();
+            startActivity(new Intent(this, MainActivity2.class));
         });
     }
 

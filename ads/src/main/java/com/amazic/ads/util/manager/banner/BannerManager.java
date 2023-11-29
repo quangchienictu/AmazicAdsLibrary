@@ -47,7 +47,9 @@ public class BannerManager implements LifecycleEventObserver {
 
     private void loadBanner() {
         Log.d(TAG, "loadBanner: " + build.getListId());
-        if (Admob.isShowAllAds && state != State.LOADING) {
+        if (Admob.isShowAllAds) {
+            if (state == State.LOADING)
+                return;
             state = State.LOADING;
             BannerCallBack bannerCallBack = new BannerCallBack() {
                 public void onEarnRevenue(Double Revenue) {
@@ -81,6 +83,7 @@ public class BannerManager implements LifecycleEventObserver {
     public void setReloadAds() {
         isReloadAds = true;
     }
+
     public void reloadAdNow() {
         loadBanner();
     }
