@@ -2341,6 +2341,7 @@ public class Admob {
             ((TextView) adView.getHeadlineView()).setText(nativeAd.getHeadline());
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "pushAdsToViewCustom 1: ", e);
         }
 
         // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
@@ -2354,6 +2355,7 @@ public class Admob {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "pushAdsToViewCustom 2: ", e);
         }
 
         try {
@@ -2365,6 +2367,7 @@ public class Admob {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "pushAdsToViewCustom 3: ", e);
         }
 
         try {
@@ -2377,6 +2380,7 @@ public class Admob {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "pushAdsToViewCustom 4: ", e);
         }
 
         try {
@@ -2388,6 +2392,7 @@ public class Admob {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "pushAdsToViewCustom 5: ", e);
         }
 
         try {
@@ -2399,6 +2404,7 @@ public class Admob {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "pushAdsToViewCustom 6: ", e);
         }
 
         try {
@@ -2411,6 +2417,7 @@ public class Admob {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "pushAdsToViewCustom 7: ", e);
         }
 
         try {
@@ -2422,6 +2429,7 @@ public class Admob {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "pushAdsToViewCustom 8: ", e);
         }
 
         // This method tells the Google Mobile Ads SDK that you have finished populating your

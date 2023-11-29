@@ -23,10 +23,11 @@ import java.util.List;
 public class NativeManager implements LifecycleEventObserver {
     private static final String TAG = "NativeManager";
     final NativeBuilder builder;
-    private boolean isReloadAds = false;
     private final Activity currentActivity;
     private final LifecycleOwner lifecycleOwner;
+    private boolean isReloadAds = false;
     private boolean isAlwaysReloadOnResume = false;
+    private boolean isShowLoadingNative = true;
 
     public NativeManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, NativeBuilder builder) {
         this.builder = builder;
@@ -40,13 +41,13 @@ public class NativeManager implements LifecycleEventObserver {
         switch (event) {
             case ON_CREATE:
                 Log.d(TAG, "onStateChanged: ON_CREATE");
-                loadNative();
+                loadNative(true);
                 break;
             case ON_RESUME:
                 if (isReloadAds || isAlwaysReloadOnResume) {
                     Log.d(TAG, "onStateChanged: resume");
                     isReloadAds = false;
-                    loadNative();
+                    loadNative(isShowLoadingNative);
                 }
                 break;
             case ON_DESTROY:
@@ -55,8 +56,9 @@ public class NativeManager implements LifecycleEventObserver {
         }
     }
 
-    private void loadNative() {
-        builder.showLoading();
+    private void loadNative(boolean isShowLoading) {
+        if (isShowLoading)
+            builder.showLoading();
         List<String> listID = new ArrayList<>(builder.listIdAd);
         Log.d(TAG, "loadNative: " + builder.listIdAd);
         loadNativeFloor(listID);
@@ -108,12 +110,16 @@ public class NativeManager implements LifecycleEventObserver {
         isReloadAds = true;
     }
 
-    public void setAlwaysReloadOnResume() {
-        isAlwaysReloadOnResume = true;
+    public void setAlwaysReloadOnResume(boolean isAlwaysReloadOnResume) {
+        this.isAlwaysReloadOnResume = isAlwaysReloadOnResume;
     }
 
     public AdRequest getAdRequest() {
         AdRequest.Builder builder = new AdRequest.Builder();
         return builder.build();
+    }
+
+    public void setShowLoadingNative(boolean showLoadingNative) {
+        isShowLoadingNative = showLoadingNative;
     }
 }
