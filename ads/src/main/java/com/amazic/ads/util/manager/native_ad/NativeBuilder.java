@@ -29,6 +29,7 @@ public class NativeBuilder {
     private void setLayoutAds(Context context, FrameLayout flAd, @LayoutRes int idLayoutShimmer, @LayoutRes int idLayoutNative) {
         View viewAd = LayoutInflater.from(context).inflate(idLayoutNative, null);
         View shimmer = LayoutInflater.from(context).inflate(idLayoutShimmer, null);
+        flAd.removeAllViews();
         if (viewAd instanceof NativeAdView) {
             Log.d(TAG, "setLayoutAds: NativeAdView");
             nativeAdView = (NativeAdView) viewAd;

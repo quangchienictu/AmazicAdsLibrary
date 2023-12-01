@@ -90,7 +90,7 @@ public class NativeManager implements LifecycleEventObserver {
                     @Override
                     public void onAdFailedToLoad(@NonNull LoadAdError adError) {
                         Log.d(TAG, "onAdFailedToLoad: " + adError.getMessage());
-                        if (listID.size() > 1) {
+                        if (listID.size() > 0) {
                             listID.remove(0);
                             loadNativeFloor(listID);
                         } else {
