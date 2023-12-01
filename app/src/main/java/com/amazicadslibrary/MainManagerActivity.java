@@ -46,7 +46,7 @@ public class MainManagerActivity extends AppCompatActivity {
                 findViewById(R.id.fr_ads),
                 R.layout.ads_native_shimer,
                 R.layout.ads_native);
-        nativeBuilder.setListIdAd(AdmobApi.getInstance().getListIDNativeAll());
+        nativeBuilder.setListIdAd(AdmobApi.getInstance().getListIDNativePermission());
         NativeManager nativeManager = new NativeManager(this, this, nativeBuilder);
         return nativeManager;
     }

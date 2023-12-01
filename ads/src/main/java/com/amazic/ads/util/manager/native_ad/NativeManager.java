@@ -64,55 +64,48 @@ public class NativeManager implements LifecycleEventObserver {
             builder.showLoading();
         List<String> listID = new ArrayList<>(builder.listIdAd);
         Log.d(TAG, "loadNative: " + builder.listIdAd);
-        loadNativeFloor(listID);
+
+        if (this.state != NativeManager.State.LOADING) {
+            this.state = NativeManager.State.LOADING;
+            loadNativeFloor(listID);
+        }
     }
 
     private void loadNativeFloor(@NonNull List<String> listID) {
-        if (!Admob.isShowAllAds || listID.isEmpty() || !NetworkUtil.isNetworkActive(currentActivity)) {
-            builder.getCallback().onAdFailedToLoad();
-            builder.hideAd();
-            return;
-        }
-        if (state == State.LOADING)
-            return;
-        state = State.LOADING;
-        Log.d(TAG, "loadNativeFloor: " + listID.get(0));
-        AdLoader adLoader = new AdLoader.Builder(currentActivity, listID.get(0))
-                .forNativeAd(nativeAd -> {
-                    // Show the ad.
-                    Log.d(TAG, "showAd: ");
-                    state = State.LOADED;
-                    builder.showAd();
-                    builder.getCallback().onNativeAdLoaded(nativeAd);
-                    Admob.getInstance().pushAdsToViewCustom(nativeAd, builder.nativeAdView);
-                })
-                .withAdListener(new AdListener() {
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError adError) {
-                        Log.d(TAG, "onAdFailedToLoad: " + adError.getMessage());
-                        if (listID.size() > 0) {
-                            listID.remove(0);
-                            loadNativeFloor(listID);
-                        } else {
-                            state = State.LOADED;
-                            builder.getCallback().onAdFailedToLoad();
-                            builder.hideAd();
-                        }
+        if (Admob.isShowAllAds && !listID.isEmpty() && NetworkUtil.isNetworkActive(this.currentActivity)) {
+            Log.d(TAG, "loadNativeFloor: " + listID.get(0));
+            AdLoader adLoader = (new AdLoader.Builder(this.currentActivity, listID.get(0))).forNativeAd((nativeAd) -> {
+                Log.d(TAG, "showAd: ");
+                this.state = NativeManager.State.LOADED;
+                this.builder.showAd();
+                this.builder.getCallback().onNativeAdLoaded(nativeAd);
+                Admob.getInstance().pushAdsToViewCustom(nativeAd, this.builder.nativeAdView);
+            }).withAdListener(new AdListener() {
+                public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                    listID.remove(0);
+                    Log.d(TAG, "onAdFailedToLoad: " + adError.getMessage());
+                    Log.d(TAG, "listID: " + listID);
+                    if (!listID.isEmpty()) {
+                        NativeManager.this.loadNativeFloor(listID);
+                    } else {
+                        NativeManager.this.state = NativeManager.State.LOADED;
+                        NativeManager.this.builder.getCallback().onAdFailedToLoad();
+                        NativeManager.this.builder.hideAd();
                     }
 
-                    @Override
-                    public void onAdImpression() {
-                        super.onAdImpression();
-                        state = State.LOADED;
-                        Log.d(TAG, "onAdImpression: ");
-                    }
-                })
-                .withNativeAdOptions(new NativeAdOptions.Builder()
-                        .setVideoOptions(new VideoOptions.Builder()
-                                .setStartMuted(true).build())
-                        .build())
-                .build();
-        adLoader.loadAd(getAdRequest());
+                }
+
+                public void onAdImpression() {
+                    super.onAdImpression();
+                    NativeManager.this.state = NativeManager.State.LOADED;
+                    Log.d(TAG, "onAdImpression: ");
+                }
+            }).withNativeAdOptions((new NativeAdOptions.Builder()).setVideoOptions((new VideoOptions.Builder()).setStartMuted(true).build()).build()).build();
+            adLoader.loadAd(this.getAdRequest());
+        } else {
+            this.builder.getCallback().onAdFailedToLoad();
+            this.builder.hideAd();
+        }
     }
 
     public void setReloadAds() {
