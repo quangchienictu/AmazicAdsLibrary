@@ -26,7 +26,9 @@ public class AdsSplash {
     public static AdsSplash init(boolean showInter, boolean showOpen, String rate) {
         AdsSplash adsSplash = new AdsSplash();
         Log.d(TAG, "init: ");
-        if (showInter && showOpen) {
+        if (!Admob.isShowAllAds) {
+            adsSplash.setState(NO_ADS);
+        } else if (showInter && showOpen) {
             adsSplash.checkShowInterOpenSplash(rate);
         } else if (showInter) {
             adsSplash.setState(INTER);
@@ -69,7 +71,7 @@ public class AdsSplash {
     }
 
     public void showAdsSplashApi(AppCompatActivity activity, AdCallback openCallback, InterCallback interCallback) {
-        Log.d(TAG, "state show: "+getState() );
+        Log.d(TAG, "state show: " + getState());
         if (getState() == OPEN)
             AdmobApi.getInstance().loadOpenAppAdSplashFloor(activity, openCallback);
         else if (getState() == INTER)
