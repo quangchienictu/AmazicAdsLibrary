@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.LayoutRes;
 
 import com.amazic.ads.callback.NativeCallback;
+import com.amazic.ads.service.AdmobApi;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.ads.nativead.NativeAdView;
 
@@ -46,6 +47,11 @@ public class NativeBuilder {
     public void setListIdAd(List<String> listIdAd) {
         this.listIdAd.clear();
         this.listIdAd.addAll(listIdAd);
+    }
+
+    public void setListIdAd(String nameIdAd) {
+        this.listIdAd.clear();
+        this.listIdAd.addAll(AdmobApi.getInstance().getListIDByName(nameIdAd));
     }
 
     public NativeCallback getCallback() {

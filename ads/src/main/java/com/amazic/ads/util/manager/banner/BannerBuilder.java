@@ -38,6 +38,11 @@ public class BannerBuilder {
         return this;
     }
 
+    public void setListIdAd(String nameIdAd) {
+        this.listId.clear();
+        this.listId.addAll(AdmobApi.getInstance().getListIDByName(nameIdAd));
+    }
+
     public Activity getCurrentActivity() {
         return currentActivity;
     }
