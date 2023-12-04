@@ -248,6 +248,7 @@ public class Admob {
     public void loadBannerFloor(final Activity mActivity, List<String> listID, BannerCallBack bannerCallBack) {
         Log.e("Admob", "Load Native ID Floor");
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
+        adContainer.removeAllViews();
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
         containerShimmer.setVisibility(View.VISIBLE);
         adContainer.setVisibility(View.GONE);
