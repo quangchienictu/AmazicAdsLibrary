@@ -106,6 +106,7 @@ public class AdmobApi {
 
     public void init(Context context, String linkServerRelease, String AppID, ApiCallBack callBack) {
         this.context = context;
+        listAds.clear();
         this.packageName = context.getPackageName();
         if (linkServerRelease != null && AppID != null) {
             if (!linkServerRelease.trim().equals("")
