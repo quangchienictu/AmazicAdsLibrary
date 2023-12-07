@@ -60,14 +60,15 @@ public class NativeManager implements LifecycleEventObserver {
     }
 
     private void loadNative(boolean isShowLoading) {
-        if (isShowLoading)
-            builder.showLoading();
-        List<String> listID = new ArrayList<>(builder.listIdAd);
-        Log.d(TAG, "loadNative: " + builder.listIdAd);
+        if (Admob.isShowAllAds) {
+            if (isShowLoading)
+                builder.showLoading();
+            List<String> listID = new ArrayList<>(builder.listIdAd);
 
-        if (this.state != NativeManager.State.LOADING) {
-            this.state = NativeManager.State.LOADING;
-            loadNativeFloor(listID);
+            if (this.state != NativeManager.State.LOADING) {
+                this.state = NativeManager.State.LOADING;
+                loadNativeFloor(listID);
+            }
         }
     }
 
