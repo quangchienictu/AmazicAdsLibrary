@@ -69,6 +69,8 @@ public class NativeManager implements LifecycleEventObserver {
                 this.state = NativeManager.State.LOADING;
                 loadNativeFloor(listID);
             }
+        } else {
+            builder.hideAd();
         }
     }
 
