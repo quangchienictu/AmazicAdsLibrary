@@ -16,9 +16,8 @@ import com.google.android.ump.UserMessagingPlatform;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AdsConsentManager {
-
-    private ConsentInformation consentInformation;
-    private Activity activity;
+    private static final String TAG = "AdsConsentManager";
+    private final Activity activity;
     private final AtomicBoolean auAtomicBoolean;
 
     public interface UMPResultListener {
@@ -52,40 +51,28 @@ public class AdsConsentManager {
             params.setConsentDebugSettings(debugSettings);
         }
         ConsentRequestParameters consentRequestParameters = params.build();
-        consentInformation = UserMessagingPlatform.getConsentInformation(activity);
+        ConsentInformation consentInformation = UserMessagingPlatform.getConsentInformation(activity);
         if (resetData) {
             consentInformation.reset();
         }
 
-        ConsentInformation.OnConsentInfoUpdateSuccessListener onConsentInfoUpdateSuccessListener = new ConsentInformation.OnConsentInfoUpdateSuccessListener() {
-            @Override
-            public void onConsentInfoUpdateSuccess() {
-                UserMessagingPlatform.loadAndShowConsentFormIfRequired(
-                        activity,
-                        loadAndShowError -> {
-                            if (loadAndShowError != null) {
-                                // Consent gathering failed.
-                                Log.w("TAG", String.format("%s: %s",
-                                        loadAndShowError.getErrorCode(),
-                                        loadAndShowError.getMessage()));
-                                Toast.makeText(activity, "loadAndShowError", Toast.LENGTH_SHORT).show();
-                            }
-
-                            if (!auAtomicBoolean.getAndSet(true)) {
-                                umpResultListener.onCheckUMPSuccess(getConsentResult(activity));
-                                Toast.makeText(activity, "initAdsNetwork-Success", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                );
-            }
-        };
+        ConsentInformation.OnConsentInfoUpdateSuccessListener onConsentInfoUpdateSuccessListener = () -> UserMessagingPlatform.loadAndShowConsentFormIfRequired(
+                activity,
+                loadAndShowError -> {
+                    if (loadAndShowError != null)
+                        Log.e(TAG, "onConsentInfoUpdateSuccess: " + loadAndShowError.getMessage());
+                    if (!auAtomicBoolean.getAndSet(true)) {
+                        umpResultListener.onCheckUMPSuccess(getConsentResult(activity));
+                    }
+                }
+        );
 
         ConsentInformation.OnConsentInfoUpdateFailureListener onConsentInfoUpdateFailureListener = new ConsentInformation.OnConsentInfoUpdateFailureListener() {
             @Override
             public void onConsentInfoUpdateFailure(@NonNull FormError formError) {
                 if (!auAtomicBoolean.getAndSet(true)) {
+                    Log.e(TAG, "onConsentInfoUpdateFailure: " + formError.getMessage());
                     umpResultListener.onCheckUMPSuccess(getConsentResult(activity));
-                    Toast.makeText(activity, "initAdsNetwork-Failure", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -100,19 +87,13 @@ public class AdsConsentManager {
         // while checking for new consent information. Consent obtained in
         // the previous session can be used to request ads.
         if (consentInformation.canRequestAds() && auAtomicBoolean.getAndSet(true)) {
-            Toast.makeText(activity, "initializeMobileAdsSdk2", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "requestUMP: ");
         }
     }
 
     public void showPrivacyOption(Activity activity, UMPResultListener umpResultListener) {
         UserMessagingPlatform.showPrivacyOptionsForm(activity, (formError) -> {
-            if (formError != null) {
-                Log.d("TAG", "showPrivacyOption: " + formError.getMessage() + " - Code" + formError.getErrorCode());
-            }
-
-            if (getConsentResult(activity)) {
-                Toast.makeText(activity, "initAdsNetwork-PrivacyOption", Toast.LENGTH_SHORT).show();
-            }
+            Log.d(TAG, "showPrivacyOption: " + getConsentResult(activity));
 
             UMPResultListener var10000 = umpResultListener;
             var10000.onCheckUMPSuccess(getConsentResult(activity));
