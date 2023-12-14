@@ -87,6 +87,7 @@ public class AdsConsentManager {
         // while checking for new consent information. Consent obtained in
         // the previous session can be used to request ads.
         if (consentInformation.canRequestAds() && auAtomicBoolean.getAndSet(true)) {
+            umpResultListener.onCheckUMPSuccess(getConsentResult(activity));
             Log.d(TAG, "requestUMP: ");
         }
     }
