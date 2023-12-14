@@ -13,10 +13,10 @@ public abstract class AdsApplication extends Application{
         super.onCreate();
         AppUtil.BUILD_DEBUG = buildDebug();
         Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG);
-        Admob.getInstance().initAdmod(this, getListTestDeviceId());
-        if(enableAdsResume()) {
-            AppOpenManager.getInstance().init(this, getResumeAdId());
-        }
+//        Admob.getInstance().initAdmod(this, getListTestDeviceId());
+//        if(enableAdsResume()) {
+//            AppOpenManager.getInstance().init(this, getResumeAdId());
+//        }
     }
     public abstract boolean enableAdsResume();
 
