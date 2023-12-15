@@ -1172,6 +1172,7 @@ public class Admob {
                 Log.d(TAG, "handlerTimeOutSplash: timeout");
                 callback.onAdClosed();
                 callback.onNextAction();
+                Log.d("loloadskfo", "loadSplashInterAds3: 1");
                 handlerTimeOutSplash = null;
             };
             handlerTimeOutSplash.postDelayed(runnableTimeOutSplash, timeOut);
@@ -1182,6 +1183,7 @@ public class Admob {
             handlerTimeOutSplash.postDelayed(() -> {
                 Log.d(TAG, "handlerTimeOutSplash: size 0");
                 callback.onNextAction();
+                Log.d("loloadskfo", "loadSplashInterAds3: 2");
                 handlerTimeOutSplash = null;
             }, timeDelay);
         } else {
@@ -1233,6 +1235,7 @@ public class Admob {
             if (mInterstitialSplash == null) {
                 adListener.onAdClosed();
                 adListener.onNextAction();
+                Log.d("loloadskfo", "loadSplashInterAds3: 3");
                 return;
             } else {
                 mInterstitialSplash.setOnPaidEventListener(adValue -> {
@@ -1276,8 +1279,10 @@ public class Admob {
                             if (!openActivityAfterShowInterAds) {
                                 adListener.onAdClosed();
                                 adListener.onNextAction();
+                                Log.d("loloadskfo", "loadSplashInterAds3: 4");
                             } else {
                                 adListener.onAdClosedByUser();
+                                Log.d("loloadskfo", "loadSplashInterAds3: 5");
                             }
 
                             if (dialog != null) {
@@ -1296,6 +1301,7 @@ public class Admob {
                         if (adError.getCode() == 1) {
                             mInterstitialSplash = null;
                             adListener.onAdClosed();
+                            Log.d("loloadskfo", "loadSplashInterAds3: 6");
                         }
                         isShowLoadingSplash = false;
                         if (adListener != null) {
@@ -1328,6 +1334,7 @@ public class Admob {
                         } catch (Exception e) {
                             adListener.onAdClosed();
                             adListener.onNextAction();
+                            Log.d("loloadskfo", "loadSplashInterAds3: 7");
                             return;
                         }
                     } catch (Exception e) {
@@ -1342,6 +1349,7 @@ public class Admob {
                         if (openActivityAfterShowInterAds && adListener != null) {
                             adListener.onAdClosed();
                             adListener.onNextAction();
+                            Log.d("loloadskfo", "loadSplashInterAds3: 8");
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1361,6 +1369,7 @@ public class Admob {
                             }
                             adListener.onAdClosed();
                             adListener.onNextAction();
+                            Log.d("loloadskfo", "loadSplashInterAds3: 9");
                             isShowLoadingSplash = false;
                         }
                     }, 300);
@@ -1380,6 +1389,7 @@ public class Admob {
             Log.d(TAG, "loadSplashInterAds3: ");
             adListener.onAdClosed();
             adListener.onNextAction();
+            Log.d("loloadskfo", "loadSplashInterAds3: 10");
             return;
         }
         mInterstitialSplash.setOnPaidEventListener(adValue -> {
@@ -1420,8 +1430,10 @@ public class Admob {
                     if (!openActivityAfterShowInterAds) {
                         adListener.onAdClosed();
                         adListener.onNextAction();
+                        Log.d("loloadskfo", "loadSplashInterAds3: 11");
                     } else {
                         adListener.onAdClosedByUser();
+                        Log.d("loloadskfo", "loadSplashInterAds3: 12");
                     }
 
                     if (dialog != null) {
@@ -1441,6 +1453,7 @@ public class Admob {
                     if (!openActivityAfterShowInterAds) {
                         adListener.onAdFailedToShow(adError);
                         adListener.onNextAction();
+                        Log.d("loloadskfo", "loadSplashInterAds3: 13");
                     }
 
                     if (dialog != null) {
@@ -1470,6 +1483,7 @@ public class Admob {
                 } catch (Exception e) {
                     adListener.onAdClosed();
                     adListener.onNextAction();
+                    Log.d("loloadskfo", "loadSplashInterAds3: 14");
                     return;
                 }
             } catch (Exception e) {
@@ -1484,6 +1498,7 @@ public class Admob {
                 if (openActivityAfterShowInterAds && adListener != null) {
                     adListener.onAdClosed();
                     adListener.onNextAction();
+                    Log.d("loloadskfo", "loadSplashInterAds3: 15");
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -1503,6 +1518,7 @@ public class Admob {
                     }
                     adListener.onAdClosed();
                     adListener.onNextAction();
+                    Log.d("loloadskfo", "loadSplashInterAds3: 16");
                     isShowLoadingSplash = false;
                 }
             }, 500);
