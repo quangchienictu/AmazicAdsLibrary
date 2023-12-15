@@ -62,7 +62,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     private boolean isInterstitialShowing = false;
     private boolean enableScreenContentCallback = false; // default =  true when use splash & false after show splash
     private boolean disableAdResumeByClickAction = false;
-    private final List<Class> disabledAppOpenList;
+    private final List<Class> disabledAppOpenList = new ArrayList<>();
     private Class splashActivity;
     public static boolean checkLoadResume = false;
     private boolean isTimeout = false;
@@ -91,7 +91,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
      * Constructor
      */
     private AppOpenManager() {
-        disabledAppOpenList = new ArrayList<>();
     }
 
     public static synchronized AppOpenManager getInstance() {
@@ -165,7 +164,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
      *
      * @param activityClass
      */
-    public void disableAppResumeWithActivity(Class activityClass) {
+    public void disableAppResumeWithActivity(@NonNull Class activityClass) {
         Log.d(TAG, "disableAppResumeWithActivity: " + activityClass.getName());
         disabledAppOpenList.add(activityClass);
     }
@@ -685,12 +684,14 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             return;
         }
 
-        for (Class activity : disabledAppOpenList) {
-            if (activity.getName().equals(currentActivity.getClass().getName())) {
-                Log.d(TAG, "onStart: activity is disabled");
-                return;
+        if (currentActivity != null)
+            for (Class activity : disabledAppOpenList) {
+                if (activity != null)
+                    if (activity.getName().equals(currentActivity.getClass().getName())) {
+                        Log.d(TAG, "onStart: activity is disabled");
+                        return;
+                    }
             }
-        }
 
         if (splashActivity != null && splashActivity.getName().equals(currentActivity.getClass().getName())) {
             String adId = splashAdId;
@@ -702,7 +703,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             return;
         }
 
-        Log.d(TAG, "onStart: show resume ads :" + currentActivity.getClass().getName());
         showAdIfAvailable(false);
     }
 

@@ -1,7 +1,7 @@
 <resources>
 
     <string name="loading_ads">Loading Ads…</string>
-    <string name="ads_test_resume">ca-app-pub-3940256099942544/3419835294</string>
+    <string name="ads_test_resume">ca-app-pub-3940256099942544/9257395921</string>
     <string name="ads_test_native">ca-app-pub-3940256099942544/2247696110</string>
     <string name="ads_test_inter">ca-app-pub-3940256099942544/1033173712</string>
     <string name="ads_test_banner">ca-app-pub-3940256099942544/6300978111</string>
