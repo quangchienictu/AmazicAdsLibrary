@@ -1508,7 +1508,7 @@ public class Admob {
                     }, 1500);
                 }
 
-                if (activity != null) {
+                if (activity != null && mInterstitialSplash != null) {
                     mInterstitialSplash.show(activity);
                     Log.e(TAG, "onShowSplash: mInterstitialSplash.show");
                     isShowLoadingSplash = false;
