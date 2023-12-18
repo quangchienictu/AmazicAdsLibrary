@@ -1,30 +1,29 @@
 package com.amazicadslibrary;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
+import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.ApiCallBack;
+import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
+import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.AppOpenManager;
-import com.amazic.ads.util.manager.open_app.OpenAppBuilder;
-import com.amazic.ads.util.manager.open_app.AdOpenAppManager;
 
 public class Splash extends AppCompatActivity {
     private static final String TAG = "SplashActivity";
     AdCallback adCallback;
     public static String PRODUCT_ID_MONTH = "android.test.purchased";
-
+    InterCallback interCallback;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        String android_id = Settings.Secure.getString(this.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
+
         Admob.getInstance().setOpenShowAllAds(true);
         Admob.getInstance().setDisableAdResumeWhenClickAds(true);
         Admob.getInstance().setOpenEventLoadTimeLoadAdsSplash(true);
@@ -59,21 +58,43 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onNextAction() {
                 super.onNextAction();
-                startActivity(new Intent(Splash.this, MainManagerActivity.class));
+                startActivity(new Intent(Splash.this, MainActivity.class));
+                finish();
+            }
+        };
+         interCallback = new InterCallback() {
+            @Override
+            public void onNextAction() {
+                super.onNextAction();
+                startActivity(new Intent(Splash.this, MainActivity.class));
                 finish();
             }
         };
         AdmobApi.getInstance().setListIDOther("native_home");
+        Admob.getInstance().setOpenActivityAfterShowInterAds(false);
+//        AppOpenManager.getInstance().init(Splash.this.getApplication(), getString(R.string.ads_test_resume));
         AdmobApi.getInstance().init(this, null, getString(R.string.app_id), new ApiCallBack() {
             @Override
             public void onReady() {
                 super.onReady();
-                AdmobApi.getInstance().loadOpenAppAdSplashFloor(Splash.this, adCallback);
+                runOnUiThread(() -> {
+                    AppOpenManager.getInstance().init(Splash.this.getApplication(), getString(R.string.ads_test_resume));
+                });
+                AdmobApi.getInstance().loadInterAdSplashFloor(Splash.this,3000,200000, interCallback,true);
             }
         });
 
 
         initBilling();
+
+    }
+
+    private void setUpUMP() {
+        AdsConsentManager adsConsentManager = new AdsConsentManager(this);
+        adsConsentManager.requestUMP(true, "33BE2250B43518CCDA7DE426D04EE231", true, result -> {
+            Log.d("TAG1111", "setUpUMP: " + result);
+            Log.d("TAG1111", "setUpUMP: " + AdsConsentManager.getConsentResult(this));
+        });
     }
 
     private void initBilling() {
@@ -87,6 +108,6 @@ public class Splash extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        AppOpenManager.getInstance().onCheckShowSplashWhenFail(this, adCallback, 1000);
+        Admob.getInstance().onCheckShowSplashWhenFail(this, interCallback, 1000);
     }
 }
