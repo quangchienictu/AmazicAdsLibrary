@@ -4,15 +4,22 @@ import android.app.Activity;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 
+import com.adjust.sdk.Adjust;
+import com.adjust.sdk.AdjustAdRevenue;
+import com.adjust.sdk.AdjustConfig;
 import com.amazic.ads.util.Admob;
+import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.NetworkUtil;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdValue;
+import com.google.android.gms.ads.AdapterResponseInfo;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.VideoOptions;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
@@ -75,12 +82,16 @@ public class NativeManager implements LifecycleEventObserver {
     }
 
     private void loadNativeFloor(@NonNull List<String> listID) {
-        if (Admob.isShowAllAds && !listID.isEmpty() && NetworkUtil.isNetworkActive(this.currentActivity)) {
+        if (Admob.isShowAllAds && !listID.isEmpty() && NetworkUtil.isNetworkActive(this.currentActivity) && AdsConsentManager.getConsentResult(this.currentActivity)) {
             Log.d(TAG, "loadNativeFloor: " + listID.get(0));
             AdLoader adLoader = (new AdLoader.Builder(this.currentActivity, listID.get(0))).forNativeAd((nativeAd) -> {
                 Log.d(TAG, "showAd: ");
                 this.state = NativeManager.State.LOADED;
                 this.builder.showAd();
+                nativeAd.setOnPaidEventListener(adValue -> {
+                    if (nativeAd.getResponseInfo() != null)
+                        trackRevenue(nativeAd.getResponseInfo().getLoadedAdapterResponseInfo(), adValue);
+                });
                 this.builder.getCallback().onNativeAdLoaded(nativeAd);
                 Admob.getInstance().pushAdsToViewCustom(nativeAd, this.builder.nativeAdView);
             }).withAdListener(new AdListener() {
@@ -130,5 +141,19 @@ public class NativeManager implements LifecycleEventObserver {
 
     public void setShowLoadingNative(boolean showLoadingNative) {
         isShowLoadingNative = showLoadingNative;
+    }
+
+    //push adjust
+    private void trackRevenue(@Nullable AdapterResponseInfo loadedAdapterResponseInfo, AdValue adValue) {
+        String adName = "";
+        if (loadedAdapterResponseInfo != null)
+            adName = loadedAdapterResponseInfo.getAdSourceName();
+        double valueMicros = adValue.getValueMicros() / 1000000d;
+        Log.d("AdjustRevenue", "adName: " + adName + " - valueMicros: " + valueMicros);
+        // send ad revenue info to Adjust
+        AdjustAdRevenue adRevenue = new AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB);
+        adRevenue.setRevenue(valueMicros, adValue.getCurrencyCode());
+        adRevenue.setAdRevenueNetwork(adName);
+        Adjust.trackAdRevenue(adRevenue);
     }
 }
