@@ -507,7 +507,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                 e.printStackTrace();
             }
 //            new Handler().postDelayed(() -> {
-            if (appResumeAd != null) {
+            if (appResumeAd != null && AdsConsentManager.getConsentResult(currentActivity)) {
                 appResumeAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                     @Override
                     public void onAdDismissedFullScreenContent() {
@@ -889,7 +889,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     public void loadOpenAppAdSplash(Context context, String idResumeSplash, long timeDelay, long timeOut, boolean isShowAdIfReady, AdCallback adCallback) {
         this.splashAdId = idResumeSplash;
-        if (!isNetworkConnected(context) || !Admob.isShowAllAds) {
+        if (!isNetworkConnected(context) || !Admob.isShowAllAds || !AdsConsentManager.getConsentResult(context)) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -953,7 +953,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     }
 
     public void loadOpenAppAdSplashFloor(Context context, List<String> listIDResume, boolean isShowAdIfReady, AdCallback adCallback) {
-        if (!isNetworkConnected(context) || !Admob.isShowAllAds) {
+        if (!isNetworkConnected(context) || !Admob.isShowAllAds || !AdsConsentManager.getConsentResult(context)) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
