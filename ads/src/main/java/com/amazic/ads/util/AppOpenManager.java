@@ -462,7 +462,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                                         fullScreenContentCallback.onAdShowedFullScreenContent();
                                     }
                                     isShowingAd = true;
-                                    splashAd = null;
                                 }
 
 
@@ -558,7 +557,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                             fullScreenContentCallback.onAdShowedFullScreenContent();
                         }
                         isShowingAd = true;
-                        appResumeAd = null;
                     }
 
                     @Override
