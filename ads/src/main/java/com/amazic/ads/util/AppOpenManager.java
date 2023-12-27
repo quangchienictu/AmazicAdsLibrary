@@ -445,6 +445,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
                                 @Override
                                 public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                    AppOpenManager.this.appResumeAd = null;
                                     if (fullScreenContentCallback != null && enableScreenContentCallback) {
                                         fullScreenContentCallback.onAdFailedToShowFullScreenContent(adError);
                                     }
@@ -784,6 +785,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                             @Override
                             public void onAdFailedToShowFullScreenContent(AdError adError) {
                                 isShowLoadingSplash = true;
+                                AppOpenManager.this.splashAd = null;
                                 // adCallback.onNextAction();
                                 adCallback.onAdFailedToShow(adError);
                                 AppOpenManager.isShowingAd = false;
@@ -795,7 +797,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                                 adCallback.onAdImpression();
                                 AdmobEvent.logEvent(currentActivity, "splash_appopen_view", new Bundle());
                                 AppOpenManager.isShowingAd = true;
-                                AppOpenManager.this.splashAd = null;
                             }
 
                             @Override
@@ -867,6 +868,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                                 adCallback.onNextAction();
                                 adCallback.onAdFailedToShow(adError);
                                 AppOpenManager.isShowingAd = false;
+                                AppOpenManager.this.splashAd = null;
                                 AppOpenManager.this.dismissDialogLoading();
                             }
 
@@ -875,7 +877,6 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                                 adCallback.onAdImpression();
                                 AdmobEvent.logEvent(currentActivity, "splash_appopen_view", new Bundle());
                                 AppOpenManager.isShowingAd = true;
-                                AppOpenManager.this.splashAd = null;
                             }
 
                             @Override
