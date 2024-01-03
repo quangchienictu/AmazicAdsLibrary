@@ -141,6 +141,9 @@ public class Admob {
 
         this.context = context;
     }
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
     public void initAdmod(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
