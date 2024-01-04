@@ -117,6 +117,7 @@ public class NativeManager implements LifecycleEventObserver {
             }).withNativeAdOptions((new NativeAdOptions.Builder()).setVideoOptions((new VideoOptions.Builder()).setStartMuted(true).build()).build()).build();
             adLoader.loadAd(this.getAdRequest());
         } else {
+            this.state = NativeManager.State.LOADED;
             this.builder.getCallback().onAdFailedToLoad();
             this.builder.hideAd();
         }
