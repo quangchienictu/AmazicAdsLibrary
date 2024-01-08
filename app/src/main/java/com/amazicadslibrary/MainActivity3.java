@@ -23,7 +23,7 @@ public class MainActivity3 extends AppCompatActivity {
         fr_ads = findViewById(R.id.fr_ads);
         List<String> listID = new ArrayList<>();
         listID.add("getString(R.string.ads_test_inter)");
-        listID.add(getString(R.string.ads_test_banner));
+        listID.add(getString(com.amazic.ads.R.string.ads_test_banner));
         listID.add("getString(R.string.admod_banner_collap_id)");
         Admob.getInstance().loadBannerFloor(this, listID);
         Admob.getInstance().loadNativeAd(this, getString(R.string.admod_native_id), new NativeCallback(){

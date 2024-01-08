@@ -77,10 +77,8 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onReady() {
                 super.onReady();
-                runOnUiThread(() -> {
-                    AppOpenManager.getInstance().init(Splash.this.getApplication(), getString(R.string.ads_test_resume));
-                });
-                AdmobApi.getInstance().loadInterAdSplashFloor(Splash.this,3000,200000, interCallback,true);
+                interCallback.onNextAction();
+//                AdmobApi.getInstance().loadInterAdSplashFloor(Splash.this,3000,200000, interCallback,true);
             }
         });
 

@@ -11,24 +11,30 @@ import androidx.annotation.Nullable;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustConfig;
 import com.adjust.sdk.LogLevel;
-import com.amazic.ads.service.AdmobApi;
-
-import java.util.List;
+import com.amazic.ads.util.remote_update.UpdateRemoteConfig;
 
 public abstract class AdsApplication extends Application implements Application.ActivityLifecycleCallbacks {
+    private static final String TAG = "AdsApplication";
+
     @Override
     public void onCreate() {
         super.onCreate();
         AppUtil.BUILD_DEBUG = buildDebug();
+        UpdateRemoteConfig.init(this);
         Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG);
-        if (initAd()) {
-            Admob.getInstance().initAdmod(this, getListTestDeviceId());
-            if (enableAdsResume()) {
-                AppOpenManager.getInstance().init(this, getResumeAdId());
-            }
-        }
         setUpAdjust();
+        setUpAdmob();
         registerActivityLifecycleCallbacks(this);
+    }
+
+    private void setUpAdmob() {
+        if (initAdmob()) {
+            Admob.getInstance().initAdmod(this, null);
+            if (enableAdsResume())
+                AppOpenManager.getInstance().init(this, getIDAdsResume());
+        } else {
+            Admob.getInstance().setContext(this);
+        }
     }
 
     private void setUpAdjust() {
@@ -79,15 +85,17 @@ public abstract class AdsApplication extends Application implements Application.
     public void onActivityDestroyed(@NonNull Activity activity) {
 
     }
-    public abstract boolean initAd();
+
+    public abstract boolean initAdmob();
 
     public abstract boolean enableAdsResume();
 
-    public abstract List<String> getListTestDeviceId();
+    @NonNull
+    public abstract String getIDAdsResume();
 
-    public abstract String getResumeAdId();
     @NonNull
     public abstract String getAppTokenAdjust();
+
     @NonNull
     public abstract String getFacebookID();
 

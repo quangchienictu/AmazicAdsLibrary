@@ -15,6 +15,7 @@ import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
+import com.amazic.ads.util.remote_update.JsonRemoteUtils;
 import com.amazic.ads.view.NativeAdsView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
@@ -53,6 +54,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, MainActivity2.class));
+            }
+        });
+        findViewById(R.id.check_remote).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, ""+ JsonRemoteUtils.checkRemote("check_remote"), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -183,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
         List<String> listID = new ArrayList<>();
         listID.add("1");
         listID.add("2");
-        listID.add(getString(R.string.ads_test_native));
 
         // Admob.getInstance().loadNativeAdFloor(this, listID, native_ads,R.layout.ads_native_btn_ads_top);
         Admob.getInstance().loadNativeAd(this, listID, new NativeCallback() {

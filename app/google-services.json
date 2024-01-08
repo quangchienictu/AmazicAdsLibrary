@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "495399147315",
+    "project_id": "adsfa-36bfa",
+    "storage_bucket": "adsfa-36bfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495399147315:android:379a69bbcb7ac9fa891046",
+        "android_client_info": {
+          "package_name": "com.amazicadslibrary"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQjK3Csm1IR6XpLvsV4C-1RCOPFZlKR9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495399147315:android:db2dd30464ebe967891046",
+        "android_client_info": {
+          "package_name": "com.example.christmas.wallpaper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQjK3Csm1IR6XpLvsV4C-1RCOPFZlKR9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495399147315:android:cfdaa2fafe3eb53f891046",
+        "android_client_info": {
+          "package_name": "com.volumebooster.soundcore.equalizer.soundbooster"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQjK3Csm1IR6XpLvsV4C-1RCOPFZlKR9Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
