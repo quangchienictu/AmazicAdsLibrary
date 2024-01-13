@@ -17,22 +17,6 @@ public class MyApplication extends AdsApplication {
         AppsflyerEvent.getInstance().init(this, "1233", true);
     }
 
-    @Override
-    public boolean initAdmob() {
-        return false;
-    }
-
-    @Override
-    public boolean enableAdsResume() {
-        return false;
-    }
-
-    @NonNull
-    @Override
-    public String getIDAdsResume() {
-        return "ca-app-pub-3940256099942544/3419835294";
-    }
-
     @NonNull
     @Override
     public String getAppTokenAdjust() {

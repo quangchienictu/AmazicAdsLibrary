@@ -12,6 +12,7 @@ import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
+import com.amazic.ads.util.AdsSplash;
 import com.amazic.ads.util.AppOpenManager;
 
 public class Splash extends AppCompatActivity {
@@ -19,6 +20,7 @@ public class Splash extends AppCompatActivity {
     AdCallback adCallback;
     public static String PRODUCT_ID_MONTH = "android.test.purchased";
     InterCallback interCallback;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,26 +60,30 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onNextAction() {
                 super.onNextAction();
-                startActivity(new Intent(Splash.this, MainActivity.class));
+                startActivity(new Intent(Splash.this, MainActivity4.class));
                 finish();
             }
         };
-         interCallback = new InterCallback() {
+        interCallback = new InterCallback() {
             @Override
             public void onNextAction() {
                 super.onNextAction();
-                startActivity(new Intent(Splash.this, MainActivity.class));
+                startActivity(new Intent(Splash.this, MainActivity4.class));
                 finish();
             }
         };
         AdmobApi.getInstance().setListIDOther("native_home");
         Admob.getInstance().setOpenActivityAfterShowInterAds(false);
 //        AppOpenManager.getInstance().init(Splash.this.getApplication(), getString(R.string.ads_test_resume));
+
+        Admob.getInstance().initAdmod(this, null);
         AdmobApi.getInstance().init(this, null, getString(R.string.app_id), new ApiCallBack() {
             @Override
             public void onReady() {
                 super.onReady();
-                interCallback.onNextAction();
+                AppOpenManager.getInstance().initApi(getApplication());
+                AdsSplash adsSplash = AdsSplash.init(true, true, "30_70");
+                adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);
 //                AdmobApi.getInstance().loadInterAdSplashFloor(Splash.this,3000,200000, interCallback,true);
             }
         });

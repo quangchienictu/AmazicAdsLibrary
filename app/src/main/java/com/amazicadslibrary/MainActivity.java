@@ -16,7 +16,6 @@ import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.remote_update.JsonRemoteUtils;
-import com.amazic.ads.view.NativeAdsView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -46,9 +45,6 @@ public class MainActivity extends AppCompatActivity {
         Admob.getInstance().initRewardAds(this, getString(R.string.admod_app_reward_id));
         loadAdInter();
         loadAdsNative();
-
-        NativeAdsView nativeAdsView = findViewById(R.id.fr_ads_new);
-        nativeAdsView.loadNative(AdmobApi.getInstance().getListIDByName("native_test"));
 
         findViewById(R.id.clickFGM).setOnClickListener(new View.OnClickListener() {
             @Override

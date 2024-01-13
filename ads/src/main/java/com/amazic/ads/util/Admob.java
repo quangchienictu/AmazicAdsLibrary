@@ -141,6 +141,7 @@ public class Admob {
 
         this.context = context;
     }
+
     public void setContext(Context context) {
         this.context = context;
     }
@@ -1598,7 +1599,7 @@ public class Admob {
 
     public void loadInterAdsFloor(Context context, List<String> listID, InterCallback adCallback) {
         Log.d(TAG, "loadInterAdsFloor: ");
-        if (listID == null || !AdsConsentManager.getConsentResult(context)) {
+        if (listID == null || !AdsConsentManager.getConsentResult(context) || !Admob.isShowAllAds) {
             adCallback.onAdFailedToLoad(null);
             adCallback.onNextAction();
             return;
@@ -1739,6 +1740,7 @@ public class Admob {
                 }
                 Log.e(TAG, "onAdDismissedFullScreenContent");
             }
+
 
             @Override
             public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {

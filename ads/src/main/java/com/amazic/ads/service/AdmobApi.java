@@ -83,6 +83,9 @@ public class AdmobApi {
     public List<String> getListIDInterIntro() {
         return getListIDByName("inter_intro");
     }
+    public List<String> getListIDAppOpenResume() {
+        return getListIDByName("open_resume");
+    }
 
     public List<String> getListIDByName(String nameAds) {
         List<String> list = new ArrayList<>();
@@ -160,7 +163,9 @@ public class AdmobApi {
                         listIDAds.add(ads.getAds_id());
                         listAds.put(ads.getName(), listIDAds);
                     }
+                    Log.d(TAG, "getListIDInterSplash: " + getListIDInterSplash());
                     Log.d(TAG, "getListIDOpenSplash: " + getListIDOpenSplash());
+                    Log.d(TAG, "getListIDOpenResume: " + getListIDAppOpenResume());
                     Log.d(TAG, "getListIDNativeLanguage: " + getListIDNativeLanguage());
                     Log.d(TAG, "getListIDNativeIntro: " + getListIDNativeIntro());
                     Log.d(TAG, "getListIDNativePermission: " + getListIDNativePermission());

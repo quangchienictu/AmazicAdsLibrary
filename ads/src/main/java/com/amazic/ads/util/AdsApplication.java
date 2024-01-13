@@ -23,18 +23,7 @@ public abstract class AdsApplication extends Application implements Application.
         UpdateRemoteConfig.init(this);
         Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG);
         setUpAdjust();
-        setUpAdmob();
         registerActivityLifecycleCallbacks(this);
-    }
-
-    private void setUpAdmob() {
-        if (initAdmob()) {
-            Admob.getInstance().initAdmod(this, null);
-            if (enableAdsResume())
-                AppOpenManager.getInstance().init(this, getIDAdsResume());
-        } else {
-            Admob.getInstance().setContext(this);
-        }
     }
 
     private void setUpAdjust() {
@@ -85,13 +74,6 @@ public abstract class AdsApplication extends Application implements Application.
     public void onActivityDestroyed(@NonNull Activity activity) {
 
     }
-
-    public abstract boolean initAdmob();
-
-    public abstract boolean enableAdsResume();
-
-    @NonNull
-    public abstract String getIDAdsResume();
 
     @NonNull
     public abstract String getAppTokenAdjust();
