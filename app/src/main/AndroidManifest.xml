@@ -14,6 +14,9 @@
         android:theme="@style/Theme.AmazicAdsLibrary"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".MainActivity4"
+            android:exported="false" />
+        <activity
             android:name=".ResumeActivity"
             android:exported="false" />
         <activity android:name=".MainActivity3" />
