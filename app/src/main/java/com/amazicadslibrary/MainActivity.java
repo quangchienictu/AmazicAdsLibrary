@@ -15,7 +15,6 @@ import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
-import com.amazic.ads.util.remote_update.JsonRemoteUtils;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.check_remote).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, ""+ JsonRemoteUtils.checkRemote("check_remote"), Toast.LENGTH_SHORT).show();
             }
         });
 

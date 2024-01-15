@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustConfig;
 import com.adjust.sdk.LogLevel;
-import com.amazic.ads.util.remote_update.UpdateRemoteConfig;
 
 public abstract class AdsApplication extends Application implements Application.ActivityLifecycleCallbacks {
     private static final String TAG = "AdsApplication";
@@ -20,7 +19,6 @@ public abstract class AdsApplication extends Application implements Application.
     public void onCreate() {
         super.onCreate();
         AppUtil.BUILD_DEBUG = buildDebug();
-        UpdateRemoteConfig.init(this);
         Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG);
         setUpAdjust();
         registerActivityLifecycleCallbacks(this);
