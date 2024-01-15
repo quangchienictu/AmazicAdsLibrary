@@ -250,6 +250,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
     private void callResumeWithListID(boolean isSplash, List<String> listID) {
         List<String> _listID = new ArrayList<>(listID);
+        if (listID.isEmpty()) {
+            return;
+        }
         String appOpenID = listID.get(0);
         Log.d("opaflpd", "==========");
         Log.d("opaflpd", "callResumeWithListID: " + appOpenID);
