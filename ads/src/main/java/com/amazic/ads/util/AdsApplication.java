@@ -21,6 +21,7 @@ public abstract class AdsApplication extends Application implements Application.
         AppUtil.BUILD_DEBUG = buildDebug();
         Log.i("Application", " run debug: " + AppUtil.BUILD_DEBUG);
         setUpAdjust();
+        Admob.getInstance().setContext(this);
         registerActivityLifecycleCallbacks(this);
     }
 
