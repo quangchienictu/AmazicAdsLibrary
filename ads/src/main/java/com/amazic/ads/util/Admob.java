@@ -442,6 +442,8 @@ public class Admob {
     public void loadBannerFragmentFloor(final Activity mActivity, List<String> listID, final View rootView) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
+        containerShimmer.setVisibility(View.VISIBLE);
+        adContainer.setVisibility(View.GONE);
 
         if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(mActivity)) {
             adContainer.setVisibility(View.GONE);
@@ -469,6 +471,8 @@ public class Admob {
     public void loadBannerFragmentFloor(final Activity mActivity, List<String> listID, final View rootView, BannerCallBack bannerCallBack) {
         final FrameLayout adContainer = rootView.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = rootView.findViewById(R.id.shimmer_container_banner);
+        containerShimmer.setVisibility(View.VISIBLE);
+        adContainer.setVisibility(View.GONE);
 
         if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(mActivity)) {
             adContainer.setVisibility(View.GONE);

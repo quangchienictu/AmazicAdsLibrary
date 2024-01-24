@@ -17,6 +17,11 @@ public class MyApplication extends AdsApplication {
         AppsflyerEvent.getInstance().init(this, "1233", true);
     }
 
+    @Override
+    public boolean setCallRemoteConfig() {
+        return true;
+    }
+
     @NonNull
     @Override
     public String getAppTokenAdjust() {

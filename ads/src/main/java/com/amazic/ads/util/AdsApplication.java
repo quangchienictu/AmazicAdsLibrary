@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustConfig;
 import com.adjust.sdk.LogLevel;
+import com.amazic.ads.util.remote_config.RemoteConfig;
 
 public abstract class AdsApplication extends Application implements Application.ActivityLifecycleCallbacks {
     private static final String TAG = "AdsApplication";
@@ -23,6 +24,7 @@ public abstract class AdsApplication extends Application implements Application.
         setUpAdjust();
         Admob.getInstance().setContext(this);
         registerActivityLifecycleCallbacks(this);
+        RemoteConfig.getInstance().initFirebaseConfig(this, setCallRemoteConfig());
     }
 
     private void setUpAdjust() {
@@ -72,6 +74,10 @@ public abstract class AdsApplication extends Application implements Application.
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
 
+    }
+
+    public boolean setCallRemoteConfig() {
+        return false;
     }
 
     @NonNull

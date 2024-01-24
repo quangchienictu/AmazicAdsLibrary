@@ -14,6 +14,8 @@ import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.AdsSplash;
 import com.amazic.ads.util.AppOpenManager;
+import com.amazic.ads.util.remote_config.RemoteConfig;
+import com.amazic.ads.util.remote_config.SharePreRemoteConfig;
 
 public class Splash extends AppCompatActivity {
     private static final String TAG = "SplashActivity";
@@ -81,10 +83,14 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onReady() {
                 super.onReady();
-                AppOpenManager.getInstance().initApi(getApplication());
-                AdsSplash adsSplash = AdsSplash.init(true, true, "30_70");
-                adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);
-//                AdmobApi.getInstance().loadInterAdSplashFloor(Splash.this,3000,200000, interCallback,true);
+                RemoteConfig.getInstance().onRemoteConfigFetched(Splash.this, () -> {
+                    Log.d(TAG, "number_value remote: "+SharePreRemoteConfig.getConfigInt(Splash.this,"number_value"));
+                    Log.d(TAG, "boolean_value remote: "+SharePreRemoteConfig.getConfigBoolean(Splash.this,"boolean_value"));
+                    Log.d(TAG, "string_value remote: "+SharePreRemoteConfig.getConfigString(Splash.this,"string_value"));
+                    AppOpenManager.getInstance().initApi(getApplication());
+                    AdsSplash adsSplash = AdsSplash.init(true, true, "30_70");
+                    adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);
+                });
             }
         });
 
