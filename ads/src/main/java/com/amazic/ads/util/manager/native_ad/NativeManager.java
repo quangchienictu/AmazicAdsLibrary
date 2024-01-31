@@ -12,6 +12,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAdRevenue;
 import com.adjust.sdk.AdjustConfig;
+import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.NetworkUtil;
@@ -84,6 +85,7 @@ public class NativeManager implements LifecycleEventObserver {
     private void loadNativeFloor(@NonNull List<String> listID) {
         if (Admob.isShowAllAds && !listID.isEmpty() && NetworkUtil.isNetworkActive(this.currentActivity) && AdsConsentManager.getConsentResult(this.currentActivity)) {
             Log.d(TAG, "loadNativeFloor: " + listID.get(0));
+            NativeCallback callback = this.builder.getCallback();
             AdLoader adLoader = (new AdLoader.Builder(this.currentActivity, listID.get(0))).forNativeAd((nativeAd) -> {
                 Log.d(TAG, "showAd: ");
                 this.state = NativeManager.State.LOADED;
@@ -92,7 +94,7 @@ public class NativeManager implements LifecycleEventObserver {
                     if (nativeAd.getResponseInfo() != null)
                         trackRevenue(nativeAd.getResponseInfo().getLoadedAdapterResponseInfo(), adValue);
                 });
-                this.builder.getCallback().onNativeAdLoaded(nativeAd);
+                callback.onNativeAdLoaded(nativeAd);
                 Admob.getInstance().pushAdsToViewCustom(nativeAd, this.builder.nativeAdView);
             }).withAdListener(new AdListener() {
                 public void onAdFailedToLoad(@NonNull LoadAdError adError) {
@@ -107,6 +109,12 @@ public class NativeManager implements LifecycleEventObserver {
                         NativeManager.this.builder.hideAd();
                     }
 
+                }
+
+                @Override
+                public void onAdClicked() {
+                    super.onAdClicked();
+                    callback.onAdClicked();
                 }
 
                 public void onAdImpression() {
