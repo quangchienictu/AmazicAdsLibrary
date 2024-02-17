@@ -13,6 +13,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class RemoteConfig {
     private static final String TAG = "RemoteConfigLog";
@@ -59,9 +60,16 @@ public class RemoteConfig {
         }
     }
 
+    public static String getRemoteConfigStringSingleParam(String adUnitId) {
+        FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        return mFirebaseRemoteConfig.getString(adUnitId);
+    }
+
     public void onRemoteConfigFetched(@NonNull LifecycleOwner owner, @NonNull OnCompleteListener listener) {
-        isFinishedCallRemote.observe(owner, isFinish -> {
-            if (isFinish) {
+        AtomicBoolean action = new AtomicBoolean(true);
+        isFinishedCallRemote.observe(owner, finished -> {
+            if (finished && action.get()) {
+                action.set(false);
                 listener.onComplete();
             }
         });

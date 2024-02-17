@@ -24,7 +24,6 @@ public abstract class AdsApplication extends Application implements Application.
         setUpAdjust();
         Admob.getInstance().setContext(this);
         registerActivityLifecycleCallbacks(this);
-        RemoteConfig.getInstance().initFirebaseConfig(this, setCallRemoteConfig());
     }
 
     private void setUpAdjust() {
@@ -74,10 +73,6 @@ public abstract class AdsApplication extends Application implements Application.
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
 
-    }
-
-    public boolean setCallRemoteConfig() {
-        return false;
     }
 
     @NonNull

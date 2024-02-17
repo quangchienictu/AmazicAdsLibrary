@@ -1424,6 +1424,7 @@ public class Admob {
         isShowLoadingSplash = true;
         if (mInterstitialSplash == null) {
             Log.d(TAG, "loadSplashInterAds3: ");
+            AppOpenManager.getInstance().enableAppResume();
             adListener.onAdClosed();
             adListener.onNextAction();
             Log.d("loloadskfo", "loadSplashInterAds3: 10");
