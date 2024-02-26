@@ -95,7 +95,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <com.amazic.ads.view.NativeAdsView
+    <com.google.android.gms.ads.nativead.NativeAdView
         android:id="@+id/fr_ads_new"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

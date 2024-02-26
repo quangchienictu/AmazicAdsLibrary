@@ -42,6 +42,7 @@ dependencies {
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
     implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+    implementation 'com.google.android.material:material:1.6.1'
 
     def lifecycle_version = "2.0.0"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
@@ -77,4 +78,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.1.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-config'
+
+    //billing
+    implementation "com.android.billingclient:billing:6.1.0"
+    implementation 'com.google.guava:guava:31.1-jre'
 }

@@ -6,8 +6,10 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.ApiCallBack;
+import com.amazic.ads.callback.BillingListener;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
@@ -17,10 +19,12 @@ import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.remote_config.RemoteConfig;
 import com.amazic.ads.util.remote_config.SharePreRemoteConfig;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Splash extends AppCompatActivity {
     private static final String TAG = "SplashActivity";
     AdCallback adCallback;
-    public static String PRODUCT_ID_MONTH = "android.test.purchased";
     InterCallback interCallback;
 
     @Override
@@ -62,7 +66,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onNextAction() {
                 super.onNextAction();
-                startActivity(new Intent(Splash.this, MainActivity4.class));
+                startActivity(new Intent(Splash.this, MainActivity.class));
                 finish();
             }
         };
@@ -70,7 +74,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onNextAction() {
                 super.onNextAction();
-                startActivity(new Intent(Splash.this, MainActivity4.class));
+                startActivity(new Intent(Splash.this, MainActivity.class));
                 finish();
             }
         };
@@ -84,16 +88,17 @@ public class Splash extends AppCompatActivity {
             public void onReady() {
                 super.onReady();
                 RemoteConfig.getInstance().onRemoteConfigFetched(Splash.this, () -> {
-                    Log.d(TAG, "number_value remote: "+SharePreRemoteConfig.getConfigInt(Splash.this,"number_value"));
-                    Log.d(TAG, "boolean_value remote: "+SharePreRemoteConfig.getConfigBoolean(Splash.this,"boolean_value"));
-                    Log.d(TAG, "string_value remote: "+SharePreRemoteConfig.getConfigString(Splash.this,"string_value"));
+                    Log.d(TAG, "number_value remote: " + SharePreRemoteConfig.getConfigInt(Splash.this, "number_value"));
+                    Log.d(TAG, "boolean_value remote: " + SharePreRemoteConfig.getConfigBoolean(Splash.this, "boolean_value"));
+                    Log.d(TAG, "string_value remote: " + SharePreRemoteConfig.getConfigString(Splash.this, "string_value"));
                     AppOpenManager.getInstance().initApi(getApplication());
-                    AdsSplash adsSplash = AdsSplash.init(true, true, "30_70");
-                    adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);
+                    /*AdsSplash adsSplash = AdsSplash.init(true, true, "30_70");
+                    adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);*/
                 });
             }
         });
-
+        AdsSplash adsSplash = AdsSplash.init(true, true, "30_70");
+        adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);
 
         initBilling();
 
@@ -108,11 +113,12 @@ public class Splash extends AppCompatActivity {
     }
 
     private void initBilling() {
-       /* List<String> listINAPId = new ArrayList<>();
-        listINAPId.add(PRODUCT_ID_MONTH);
-        List<String> listSubsId = new ArrayList<>();
-        AppPurchase.getInstance().initBilling(getApplication(),listINAPId,listSubsId);*/
-
+        AppPurchase.getInstance().setBillingListener(new BillingListener() {
+            @Override
+            public void onInitBillingFinished(int resultCode) {
+                Log.d(TAG, "onInitBillingFinished: " + resultCode);
+            }
+        }, 5000);
     }
 
     @Override
