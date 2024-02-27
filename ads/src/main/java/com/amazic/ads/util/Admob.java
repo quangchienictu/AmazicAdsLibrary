@@ -2408,6 +2408,12 @@ public class Admob {
         adView.setCallToActionView(adView.findViewById(R.id.ad_call_to_action));
         adView.setIconView(adView.findViewById(R.id.ad_app_icon));
         adView.setAdvertiserView(adView.findViewById(R.id.ad_advertiser));
+        try {
+            adView.setPriceView(adView.findViewById(R.id.ad_price));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, "pushAdsToViewCustom: cannot find id \"ad_price\"", e);
+        }
 
         // The headline is guaranteed to be in every UnifiedNativeAd.
         try {
@@ -2456,7 +2462,7 @@ public class Admob {
             Log.e(TAG, "pushAdsToViewCustom 4: ", e);
         }
 
-        try {
+        /*try {
             if (nativeAd.getPrice() == null) {
                 Objects.requireNonNull(adView.getPriceView()).setVisibility(View.INVISIBLE);
             } else {
@@ -2466,7 +2472,7 @@ public class Admob {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, "pushAdsToViewCustom 5: ", e);
-        }
+        }*/
 
         try {
             if (nativeAd.getStore() == null) {

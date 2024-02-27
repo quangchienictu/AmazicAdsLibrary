@@ -66,7 +66,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onNextAction() {
                 super.onNextAction();
-                startActivity(new Intent(Splash.this, MainActivity.class));
+                startActivity(new Intent(Splash.this, MainActivity4.class));
                 finish();
             }
         };
@@ -74,7 +74,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onNextAction() {
                 super.onNextAction();
-                startActivity(new Intent(Splash.this, MainActivity.class));
+                startActivity(new Intent(Splash.this, MainActivity4.class));
                 finish();
             }
         };

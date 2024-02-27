@@ -11,6 +11,11 @@
         android:background="@drawable/bg_native"
         android:orientation="vertical">
         <TextView
+            android:id="@+id/ad_price"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_250sdp"
+            android:textSize="12sp"/>
+        <TextView
             style="@style/AppTheme.Ads"
             android:backgroundTint="@color/native_bg_ad" />
         <LinearLayout
