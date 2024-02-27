@@ -82,4 +82,7 @@ dependencies {
     //billing
     implementation "com.android.billingclient:billing:6.1.0"
     implementation 'com.google.guava:guava:31.1-jre'
+
+    //image to text
+    implementation 'com.google.android.gms:play-services-vision:20.1.3'
 }
