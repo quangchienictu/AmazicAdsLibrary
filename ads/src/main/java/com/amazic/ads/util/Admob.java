@@ -60,6 +60,8 @@ import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.VideoOptions;
 import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.initialization.AdapterStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -73,7 +75,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class Admob {
@@ -127,6 +131,8 @@ public class Admob {
         return INSTANCE;
     }
 
+    Map<String, AdapterStatus> admobAdapterStatusMap = new HashMap<>();
+
     public void initAdmod(Context context, List<String> testDeviceList) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             String processName = Application.getProcessName();
@@ -136,10 +142,18 @@ public class Admob {
             }
         }
         MobileAds.initialize(context, initializationStatus -> {
+            this.admobAdapterStatusMap = initializationStatus.getAdapterStatusMap();
+            for (AdapterStatus status : admobAdapterStatusMap.values()) {
+                Log.d(TAG, "initAdmod: " + status.getInitializationState());
+            }
         });
         MobileAds.setRequestConfiguration(new RequestConfiguration.Builder().setTestDeviceIds(testDeviceList).build());
 
         this.context = context;
+    }
+
+    public Boolean checkAdmobReady() {
+        return Objects.requireNonNull(MobileAds.getInitializationStatus()).getAdapterStatusMap().containsValue(AdapterStatus.State.READY);
     }
 
     public void setContext(Context context) {
@@ -157,6 +171,23 @@ public class Admob {
 
         MobileAds.initialize(context, initializationStatus -> {
         });
+        if (BuildConfig.DEBUG) {
+            MobileAds.setRequestConfiguration(new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList(getDeviceId((Activity) context))).build());
+        }
+
+        this.context = context;
+    }
+
+    public void initAdmod(Context context, OnInitializationCompleteListener listener) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            String processName = Application.getProcessName();
+            String packageName = context.getPackageName();
+            if (!packageName.equals(processName)) {
+                WebView.setDataDirectorySuffix(processName);
+            }
+        }
+
+        MobileAds.initialize(context, listener);
         if (BuildConfig.DEBUG) {
             MobileAds.setRequestConfiguration(new RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList(getDeviceId((Activity) context))).build());
         }

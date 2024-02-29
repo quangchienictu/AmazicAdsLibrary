@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -71,6 +72,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     private final List<Class> disabledAppOpenList = new ArrayList<>();
     private Class splashActivity;
     public static boolean checkLoadResume = false;
+    private Class welcomeBackClass = null;
     private boolean isTimeout = false;
     private static final int TIMEOUT_MSG = 11;
 
@@ -121,6 +123,20 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         this.myApplication.registerActivityLifecycleCallbacks(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
         this.appResumeAdId = appOpenAdId;
+//        if (!Purchase.getInstance().isPurchased(application.getApplicationContext()) &&
+//                !isAdAvailable(false) && appOpenAdId != null) {
+//            fetchAd(false);
+//        }
+    }
+
+    public void initWelcomeBackActivity(Application application, Class welcomeBackClass) {
+        isUsingApi = false;
+        isInitialized = true;
+        disableAdResumeByClickAction = false;
+        this.myApplication = application;
+        this.welcomeBackClass = welcomeBackClass;
+        this.myApplication.registerActivityLifecycleCallbacks(this);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 //        if (!Purchase.getInstance().isPurchased(application.getApplicationContext()) &&
 //                !isAdAvailable(false) && appOpenAdId != null) {
 //            fetchAd(false);
@@ -453,7 +469,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             Log.d(TAG, "Will show ad isSplash:" + isSplash);
             if (isSplash) {
                 showAdsWithLoading();
-            } else {
+            } else if (welcomeBackClass != null && currentActivity != null) {
+                currentActivity.startActivity(new Intent(currentActivity, welcomeBackClass));
+            } else if (welcomeBackClass == null) {
                 showResumeAds();
             }
 
