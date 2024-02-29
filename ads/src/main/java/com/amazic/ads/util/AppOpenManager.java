@@ -260,7 +260,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         if (Admob.isShowAllAds)
             if (isUsingApi)
                 callResumeWithListID(isSplash, listAppResumeID);
-            else
+            else if (appResumeAdId != null)
                 callResumeWithId(isSplash);
     }
 
@@ -686,7 +686,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         if (Admob.isShowAllAds)
             if (isUsingApi)
                 callResumeWithListID(true, listAppResumeID);
-            else
+            else if (appResumeAdId != null)
                 callResumeWithId(true);
 
         if (splashTimeout > 0) {
