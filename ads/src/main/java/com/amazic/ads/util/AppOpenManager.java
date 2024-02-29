@@ -464,13 +464,14 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
             return;
         }
-
+        if (!isShowingAd && welcomeBackClass != null && currentActivity != null) {
+            currentActivity.startActivity(new Intent(currentActivity, welcomeBackClass));
+            return;
+        }
         if (!isShowingAd && isAdAvailable(isSplash)) {
             Log.d(TAG, "Will show ad isSplash:" + isSplash);
             if (isSplash) {
                 showAdsWithLoading();
-            } else if (welcomeBackClass != null && currentActivity != null) {
-                currentActivity.startActivity(new Intent(currentActivity, welcomeBackClass));
             } else if (welcomeBackClass == null) {
                 showResumeAds();
             }
