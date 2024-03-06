@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
+import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.RewardCallback;
@@ -26,7 +27,13 @@ public class MainActivity4 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main4);
-        AdmobApi.getInstance().loadBanner(this);
+        AdmobApi.getInstance().loadCollapsibleBanner(this, new BannerCallBack(){
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
+                Log.d("TAG", "onAdImpressionxxx: ");
+            }
+        });
         AdmobApi.getInstance().loadInterAll(this);
         Admob.getInstance().initRewardAds(this, "ca-app-pub-3940256099942544/5224354917");
         Admob.getInstance().loadInterAds(this, "ca-app-pub-3940256099942544/8691691433", new InterCallback() {

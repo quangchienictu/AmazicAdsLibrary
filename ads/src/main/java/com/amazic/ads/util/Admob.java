@@ -1016,6 +1016,14 @@ public class Admob {
                         AppOpenManager.getInstance().disableAdResumeByClickAction();
                     FirebaseUtil.logClickAdsEvent(context, listId.get(0));
                 }
+
+                @Override
+                public void onAdImpression() {
+                    super.onAdImpression();
+                    if (bannerCallBack != null) {
+                        bannerCallBack.onAdImpression();
+                    }
+                }
             });
         } catch (Exception e) {
             e.printStackTrace();

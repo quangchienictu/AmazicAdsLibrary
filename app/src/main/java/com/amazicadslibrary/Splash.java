@@ -82,7 +82,7 @@ public class Splash extends AppCompatActivity {
         Admob.getInstance().setOpenActivityAfterShowInterAds(false);
 //        AppOpenManager.getInstance().init(Splash.this.getApplication(), getString(R.string.ads_test_resume));
 
-        Admob.getInstance().initAdmod(this, null);
+        Admob.getInstance().initAdmod(this);
         AdmobApi.getInstance().init(this, null, getString(R.string.app_id), new ApiCallBack() {
             @Override
             public void onReady() {
