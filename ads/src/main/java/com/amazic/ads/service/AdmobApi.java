@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleObserver;
 
 import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.ApiCallBack;
@@ -15,8 +16,10 @@ import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AppOpenManager;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.common.api.internal.LifecycleActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -211,6 +214,9 @@ public class AdmobApi {
 
     public void loadCollapsibleBanner(final Activity activity, BannerCallBack bannerCallBack) {
         Admob.getInstance().loadCollapsibleBannerFloor(activity, getListIDCollapseBannerAll(), "bottom", bannerCallBack);
+    }
+    public AdView loadCollapsibleBannerFloorWithReload(final Activity activity, BannerCallBack bannerCallBack) {
+        return Admob.getInstance().loadCollapsibleBannerFloorWithReload(activity, getListIDCollapseBannerAll(), "bottom", bannerCallBack);
     }
 
     public void loadInterAll(final Activity activity) {

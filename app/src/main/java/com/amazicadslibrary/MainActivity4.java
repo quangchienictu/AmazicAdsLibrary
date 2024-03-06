@@ -1,11 +1,11 @@
 package com.amazicadslibrary;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.callback.InterCallback;
@@ -15,6 +15,7 @@ import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.manager.native_ad.NativeBuilder;
 import com.amazic.ads.util.manager.native_ad.NativeManager;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
@@ -22,12 +23,33 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 
 public class MainActivity4 extends AppCompatActivity {
     InterstitialAd mInterstitialAd;
+    private AdView adView;
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (adView != null) {
+            adView.destroy();
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        adView = AdmobApi.getInstance().loadCollapsibleBannerFloorWithReload(this, new BannerCallBack() {
+            @Override
+            public void onAdImpression() {
+                super.onAdImpression();
+                Log.d("TAG", "onAdImpressionxxx: ");
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main4);
-        AdmobApi.getInstance().loadCollapsibleBanner(this, new BannerCallBack(){
+        adView = AdmobApi.getInstance().loadCollapsibleBannerFloorWithReload(this, new BannerCallBack() {
             @Override
             public void onAdImpression() {
                 super.onAdImpression();
@@ -70,7 +92,7 @@ public class MainActivity4 extends AppCompatActivity {
             });
         });
         findViewById(R.id.inter).setOnClickListener(v -> {
-            Admob.getInstance().showInterAds(this, mInterstitialAd, new InterCallback(){
+            Admob.getInstance().showInterAds(this, mInterstitialAd, new InterCallback() {
                 @Override
                 public void onLoadInter() {
                     super.onLoadInter();

@@ -123,6 +123,7 @@ public class Admob {
     private StateInter stateInter = StateInter.DISMISS;
 
     enum StateInter {SHOWING, SHOWED, DISMISS}
+    private AdView adView;
 
     public static Admob getInstance() {
         if (INSTANCE == null) {
@@ -466,8 +467,33 @@ public class Admob {
             checkLoadBannerCollap = false;
             loadCollapsibleBannerFloor(mActivity, idNew, gravity, adContainer, containerShimmer, bannerCallBack);
         }
+    }
 
-
+    public AdView loadCollapsibleBannerFloorWithReload(final Activity mActivity, List<String> listID, String gravity, BannerCallBack bannerCallBack) {
+        final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
+        final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(mActivity)) {
+            adContainer.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
+        } else {
+            if (listID == null) {
+                adContainer.setVisibility(View.GONE);
+                containerShimmer.setVisibility(View.GONE);
+                return null;
+            }
+            if (listID.size() < 1) {
+                adContainer.setVisibility(View.GONE);
+                containerShimmer.setVisibility(View.GONE);
+                return null;
+            }
+            List idNew = new ArrayList();
+            for (String id : listID) {
+                idNew.add(id);
+            }
+            checkLoadBannerCollap = false;
+            return loadCollapsibleBannerFloor(mActivity, idNew, gravity, adContainer, containerShimmer, bannerCallBack);
+        }
+        return null;
     }
 
     public void loadBannerFragmentFloor(final Activity mActivity, List<String> listID, final View rootView) {
@@ -956,15 +982,15 @@ public class Admob {
         }
     }
 
-    private void loadCollapsibleBannerFloor(final Activity mActivity, List<String> listId, String gravity, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, BannerCallBack bannerCallBack) {
+    private AdView loadCollapsibleBannerFloor(final Activity mActivity, List<String> listId, String gravity, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, BannerCallBack bannerCallBack) {
         if (checkLoadBannerCollap) {
-            return;
+            return null;
         }
         containerShimmer.setVisibility(View.VISIBLE);
         containerShimmer.startShimmer();
         try {
             Log.e("Admob", "load collap banner ID : " + listId.get(0));
-            AdView adView = new AdView(mActivity);
+            adView = new AdView(mActivity);
             adView.setAdUnitId(listId.get(0));
             adContainer.addView(adView);
             AdSize adSize = getAdSize(mActivity, false, "");
@@ -1028,6 +1054,7 @@ public class Admob {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return adView;
     }
 
     private AdSize getAdSize(Activity mActivity, Boolean useInlineAdaptive, String inlineStyle) {
