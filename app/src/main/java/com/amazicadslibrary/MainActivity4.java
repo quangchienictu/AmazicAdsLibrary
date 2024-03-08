@@ -123,7 +123,8 @@ public class MainActivity4 extends AppCompatActivity {
         NativeBuilder builder = new NativeBuilder(this, fl_native,
                 com.amazic.ads.R.layout.ads_native_shimer_small, com.amazic.ads.R.layout.ads_native_small);
         builder.setListIdAd(AdmobApi.getInstance().getListIDNativeAll());
-        NativeManager manager = new NativeManager(this, this, builder);
+        NativeManager manager = new NativeManager(this, this, builder, fl_native,
+                com.amazic.ads.R.layout.ads_native_shimer_small, com.amazic.ads.R.layout.layout_native_meta);
     }
 
     private void loadNativeFloor() {

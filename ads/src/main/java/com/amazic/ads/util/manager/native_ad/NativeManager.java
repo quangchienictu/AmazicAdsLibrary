@@ -2,6 +2,7 @@ package com.amazic.ads.util.manager.native_ad;
 
 import android.app.Activity;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,12 +40,25 @@ public class NativeManager implements LifecycleEventObserver {
     private boolean isAlwaysReloadOnResume = false;
     private boolean isShowLoadingNative = true;
     State state = State.LOADED;
+    private FrameLayout flAd;
+    private int idLayoutShimmer;
+    private int idLayoutNative;
 
     public NativeManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, NativeBuilder builder) {
         this.builder = builder;
         this.currentActivity = currentActivity;
         this.lifecycleOwner = lifecycleOwner;
         this.lifecycleOwner.getLifecycle().addObserver(this);
+    }
+
+    public NativeManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, NativeBuilder builder, FrameLayout flAd, int idLayoutShimmer, int idLayoutNative) {
+        this.builder = builder;
+        this.currentActivity = currentActivity;
+        this.lifecycleOwner = lifecycleOwner;
+        this.lifecycleOwner.getLifecycle().addObserver(this);
+        this.flAd = flAd;
+        this.idLayoutShimmer = idLayoutShimmer;
+        this.idLayoutNative = idLayoutNative;
     }
 
     @Override
@@ -88,13 +102,22 @@ public class NativeManager implements LifecycleEventObserver {
             NativeCallback callback = this.builder.getCallback();
             AdLoader adLoader = (new AdLoader.Builder(this.currentActivity, listID.get(0))).forNativeAd((nativeAd) -> {
                 Log.d(TAG, "showAd: ");
-                this.state = NativeManager.State.LOADED;
-                this.builder.showAd();
+                this.state = State.LOADED;
                 nativeAd.setOnPaidEventListener(adValue -> {
                     if (nativeAd.getResponseInfo() != null)
                         trackRevenue(nativeAd.getResponseInfo().getLoadedAdapterResponseInfo(), adValue);
                 });
                 callback.onNativeAdLoaded(nativeAd);
+                Log.d("TAG", "loadNativeFloor1: " + nativeAd.getResponseInfo().getMediationAdapterClassName());
+                Log.d("TAG", "loadNativeFloor2: " + nativeAd.getResponseInfo().getAdapterResponses());
+                Log.d("TAG", "loadNativeFloor3: " + nativeAd.getResponseInfo().getLoadedAdapterResponseInfo().getAdSourceName());
+                Log.d("TAG", "loadNativeFloor4: " + nativeAd.getResponseInfo().getLoadedAdapterResponseInfo().getAdapterClassName());
+                Log.d("TAG", "loadNativeFloor5: " + nativeAd.getResponseInfo().getLoadedAdapterResponseInfo().getAdapterClassName());
+                if (nativeAd.getResponseInfo().getMediationAdapterClassName().toString().toLowerCase().contains("facebook")) {
+                    this.builder.setLayoutAdsMeta(currentActivity, flAd, idLayoutShimmer, idLayoutNative);
+                    Log.d(TAG, "loadNativeFloor: case mediation facebook");
+                }
+                this.builder.showAd();
                 Admob.getInstance().pushAdsToViewCustom(nativeAd, this.builder.nativeAdView);
             }).withAdListener(new AdListener() {
                 public void onAdFailedToLoad(@NonNull LoadAdError adError) {
@@ -104,7 +127,7 @@ public class NativeManager implements LifecycleEventObserver {
                     if (!listID.isEmpty()) {
                         NativeManager.this.loadNativeFloor(listID);
                     } else {
-                        NativeManager.this.state = NativeManager.State.LOADED;
+                        NativeManager.this.state = State.LOADED;
                         NativeManager.this.builder.getCallback().onAdFailedToLoad();
                         NativeManager.this.builder.hideAd();
                     }
@@ -119,7 +142,7 @@ public class NativeManager implements LifecycleEventObserver {
 
                 public void onAdImpression() {
                     super.onAdImpression();
-                    NativeManager.this.state = NativeManager.State.LOADED;
+                    NativeManager.this.state = State.LOADED;
                     Log.d(TAG, "onAdImpression: ");
                 }
             }).withNativeAdOptions((new NativeAdOptions.Builder()).setVideoOptions((new VideoOptions.Builder()).setStartMuted(true).build()).build()).build();

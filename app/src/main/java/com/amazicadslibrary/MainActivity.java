@@ -19,6 +19,8 @@ import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AppOpenManager;
+import com.amazic.ads.util.manager.native_ad.NativeBuilder;
+import com.amazic.ads.util.manager.native_ad.NativeManager;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -187,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadAdsNative() {
-        List<String> listID = new ArrayList<>();
+        /*List<String> listID = new ArrayList<>();
         listID.add("1");
         listID.add("2");
 
@@ -221,7 +223,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        Admob.getInstance().loadNativeAd(this, "id native", native_ads, R.layout.ads_native);
+        Admob.getInstance().loadNativeAd(this, "id native", native_ads, R.layout.ads_native);*/
+
+        FrameLayout fl_native = findViewById(R.id.native_ads);
+        NativeBuilder builder = new NativeBuilder(this, fl_native,
+                com.amazic.ads.R.layout.ads_native_shimer, R.layout.ads_native);
+        builder.setListIdAd(AdmobApi.getInstance().getListIDNativeAll());
+        NativeManager manager = new NativeManager(this, this, builder, fl_native,
+                com.amazic.ads.R.layout.ads_native_shimer, com.amazic.ads.R.layout.layout_native_meta);
     }
 
     private void loadAdInter() {

@@ -2448,6 +2448,7 @@ public class Admob {
 
     public void pushAdsToViewCustom(NativeAd nativeAd, NativeAdView adView) {
         adView.setMediaView(adView.findViewById(R.id.ad_media));
+        Log.d(TAG, "pushAdsToViewCustom: " + nativeAd.getResponseInfo().getMediationAdapterClassName());
         if (adView.getMediaView() != null) {
             adView.getMediaView().postDelayed(new Runnable() {
                 @Override

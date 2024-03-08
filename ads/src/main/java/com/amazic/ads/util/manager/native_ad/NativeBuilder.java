@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.LayoutRes;
 
+import com.amazic.ads.R;
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -42,6 +43,10 @@ public class NativeBuilder {
             flAd.addView(shimmerFrameLayout);
         }
         showLoading();
+    }
+
+    public void setLayoutAdsMeta(Context context, FrameLayout flAd, @LayoutRes int idLayoutShimmer, @LayoutRes int idLayoutNativeMeta) {
+        setLayoutAds(context, flAd, idLayoutShimmer, idLayoutNativeMeta);
     }
 
     public void setListIdAd(List<String> listIdAd) {
