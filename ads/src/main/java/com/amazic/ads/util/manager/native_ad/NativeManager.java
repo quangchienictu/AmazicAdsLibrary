@@ -40,9 +40,9 @@ public class NativeManager implements LifecycleEventObserver {
     private boolean isAlwaysReloadOnResume = false;
     private boolean isShowLoadingNative = true;
     State state = State.LOADED;
-    private FrameLayout flAd;
-    private int idLayoutShimmer;
-    private int idLayoutNative;
+    private FrameLayout flAd = null;
+    private int idLayoutShimmer = 0;
+    private int idLayoutNative = 0;
 
     public NativeManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, NativeBuilder builder) {
         this.builder = builder;
@@ -113,7 +113,7 @@ public class NativeManager implements LifecycleEventObserver {
                 Log.d("TAG", "loadNativeFloor3: " + nativeAd.getResponseInfo().getLoadedAdapterResponseInfo().getAdSourceName());
                 Log.d("TAG", "loadNativeFloor4: " + nativeAd.getResponseInfo().getLoadedAdapterResponseInfo().getAdapterClassName());
                 Log.d("TAG", "loadNativeFloor5: " + nativeAd.getResponseInfo().getLoadedAdapterResponseInfo().getAdapterClassName());
-                if (nativeAd.getResponseInfo().getMediationAdapterClassName().toString().toLowerCase().contains("facebook")) {
+                if (nativeAd.getResponseInfo().getMediationAdapterClassName().toString().toLowerCase().contains("facebook") && this.flAd != null && this.idLayoutShimmer != 0 && this.idLayoutNative != 0) {
                     this.builder.setLayoutAdsMeta(currentActivity, flAd, idLayoutShimmer, idLayoutNative);
                     Log.d(TAG, "loadNativeFloor: case mediation facebook");
                 }
