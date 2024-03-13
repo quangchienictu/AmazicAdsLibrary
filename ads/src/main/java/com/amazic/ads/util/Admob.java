@@ -123,6 +123,7 @@ public class Admob {
     private StateInter stateInter = StateInter.DISMISS;
 
     enum StateInter {SHOWING, SHOWED, DISMISS}
+
     private AdView adView;
 
     public static Admob getInstance() {
@@ -449,6 +450,7 @@ public class Admob {
         if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(mActivity)) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
+            bannerCallBack.onAdFailedToLoad(null);
         } else {
             if (listID == null) {
                 adContainer.setVisibility(View.GONE);
@@ -475,6 +477,7 @@ public class Admob {
         if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(mActivity)) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
+            bannerCallBack.onAdFailedToLoad(null);
         } else {
             if (listID == null) {
                 adContainer.setVisibility(View.GONE);
@@ -534,6 +537,7 @@ public class Admob {
         if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(mActivity)) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
+            bannerCallBack.onAdFailedToLoad(null);
         } else {
             if (listID == null) {
                 adContainer.setVisibility(View.GONE);
@@ -581,6 +585,7 @@ public class Admob {
         if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(mActivity)) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
+            callback.onAdFailedToLoad(null);
         } else {
             loadBanner(mActivity, id, adContainer, containerShimmer, callback, false, BANNER_INLINE_LARGE_STYLE);
         }
@@ -629,6 +634,7 @@ public class Admob {
         if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(mActivity)) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
+            callback.onAdFailedToLoad(null);
         } else {
             loadBanner(mActivity, id, adContainer, containerShimmer, callback, useInlineAdaptive, BANNER_INLINE_LARGE_STYLE);
         }
@@ -645,6 +651,7 @@ public class Admob {
         if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(activity)) {
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
+            callback.onAdFailedToLoad(null);
         } else {
             loadBanner(activity, id, adContainer, containerShimmer, callback, true, inlineStyle);
         }
