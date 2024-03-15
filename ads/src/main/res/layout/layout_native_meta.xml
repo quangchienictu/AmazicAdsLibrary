@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.gms.ads.nativead.NativeAdView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/_5sdp">
 
@@ -13,12 +13,12 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
@@ -36,13 +36,15 @@
                         android:layout_width="32dip"
                         android:layout_height="32dip"
                         android:adjustViewBounds="true"
+                        android:clickable="false"
+                        android:enabled="false"
                         android:src="@color/colorPrimary" />
                 </androidx.cardview.widget.CardView>
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -53,14 +55,17 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:enabled="false"
                             android:src="@drawable/ic_ads" />
 
                         <TextView
                             android:id="@+id/ad_headline"
-                            android:layout_width="fill_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:ellipsize="end"
+                            android:clickable="false"
+                            android:enabled="false"
                             android:maxLines="1"
                             android:text="askfhasdjkfhajksf"
                             android:textColor="#148DFD"
@@ -69,10 +74,12 @@
 
                     <TextView
                         android:id="@+id/ad_advertiser"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"
+                        android:clickable="false"
                         android:ellipsize="end"
+                        android:enabled="false"
                         android:gravity="bottom"
                         android:maxLines="2"
                         android:text="@string/app_name"
@@ -88,9 +95,11 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="6dp"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:clickable="false"
+                android:enabled="false" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
@@ -99,22 +108,30 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/ad_body"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:lines="2"
-                    android:maxLines="2"
-                    android:text="@string/app_name"
-                    android:textColor="#626262"
-                    android:textSize="12sp" />
+                    android:layout_toStartOf="@id/ad_call_to_action">
+
+                    <TextView
+                        android:id="@+id/ad_body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"
+                        android:ellipsize="end"
+                        android:enabled="false"
+                        android:lines="2"
+                        android:maxLines="2"
+                        android:text="@string/app_name"
+                        android:textColor="#626262"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/ad_call_to_action"
                     android:layout_width="wrap_content"
                     android:layout_height="34dp"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginStart="14dp"
                     android:background="@drawable/bg_btn_ads_native"
                     android:gravity="center"
@@ -123,7 +140,7 @@
                     android:textColor="#FFFFFF"
                     android:textSize="14sp" />
 
-            </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
 </com.google.android.gms.ads.nativead.NativeAdView>
