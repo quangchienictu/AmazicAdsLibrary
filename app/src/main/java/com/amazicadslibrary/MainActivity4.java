@@ -11,6 +11,7 @@ import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.RewardCallback;
+import com.amazic.ads.iap.IAPManager;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.manager.native_ad.NativeBuilder;

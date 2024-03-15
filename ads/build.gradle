@@ -52,7 +52,7 @@ dependencies {
 
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
-    implementation 'com.facebook.android:facebook-android-sdk:16.0.1'
+    implementation 'com.facebook.android:facebook-android-sdk:16.1.2'
     // appsflyer
     implementation 'com.appsflyer:af-android-sdk:6.8.2'
     implementation 'com.appsflyer:adrevenue:6.4.3'
@@ -66,7 +66,7 @@ dependencies {
     implementation 'com.applovin:applovin-sdk:11.9.0'
 
     //ads
-    implementation 'com.google.android.gms:play-services-ads:22.6.0'
+    implementation 'com.google.android.gms:play-services-ads:23.0.0'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
     implementation 'com.google.android.gms:play-services-appset:16.0.2'
     implementation 'com.google.android.gms:play-services-basement:18.2.0'
@@ -80,7 +80,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-config'
 
     //billing
-    implementation "com.android.billingclient:billing:6.1.0"
+    implementation "com.android.billingclient:billing:6.2.0"
     implementation 'com.google.guava:guava:31.1-jre'
 
     //image to text
