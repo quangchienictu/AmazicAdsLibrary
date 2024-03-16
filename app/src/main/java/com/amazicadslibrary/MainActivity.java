@@ -3,19 +3,16 @@ package com.amazicadslibrary;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.InterCallback;
-import com.amazic.ads.callback.NativeCallback;
-import com.amazic.ads.callback.PurchaseListener;
-import com.amazic.ads.callback.PurchaseListioner;
 import com.amazic.ads.callback.RewardCallback;
+import com.amazic.ads.iap.IAPManager;
+import com.amazic.ads.iap.PurchaseCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AppOpenManager;
@@ -23,8 +20,6 @@ import com.amazic.ads.util.manager.native_ad.NativeBuilder;
 import com.amazic.ads.util.manager.native_ad.NativeManager;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.nativead.NativeAd;
-import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.gms.ads.rewarded.RewardItem;
 
 import java.util.ArrayList;
@@ -144,14 +139,29 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //AppPurchase.getInstance().consumePurchase(PRODUCT_ID_MONTH);
                 //AppPurchase.getInstance().purchase(MainActivity.this, PRODUCT_ID_MONTH);
-                AppPurchase.getInstance().subscribe(MainActivity.this, PRODUCT_ID_MONTH);
+                //AppPurchase.getInstance().subscribe(MainActivity.this, PRODUCT_ID_MONTH);
                 //real
                 // AppPurchase.getInstance().subscribe(MainActivity.this, SubID);
+                IAPManager.getInstance().purchase(MainActivity.this, IAPManager.PRODUCT_ID_TEST);
+            }
+        });
+
+        IAPManager.getInstance().setPurchaseListener(new PurchaseCallback() {
+            @Override
+            public void onProductPurchased(String productId, String transactionDetails) {
+                super.onProductPurchased(productId, transactionDetails);
+                Toast.makeText(MainActivity.this, "Purchase success: " + IAPManager.getInstance().isPurchase(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onUserCancelBilling() {
+                super.onUserCancelBilling();
+                Toast.makeText(MainActivity.this, "Purchase cancel", Toast.LENGTH_SHORT).show();
             }
         });
 
 
-        AppPurchase.getInstance().setPurchaseListener(new PurchaseListener() {
+        /*AppPurchase.getInstance().setPurchaseListener(new PurchaseListener() {
             @Override
             public void onProductPurchased(String productId,String transactionDetails) {
                Toast.makeText(MainActivity.this,"Purchase success",Toast.LENGTH_SHORT).show();
@@ -166,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Toast.makeText(MainActivity.this,"Purchase cancel",Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
         // reset pay Purchase
        /*AppPurchase.getInstance().consumePurchase(Constants.PRODUCT_ID_MONTH);
         AppPurchase.getInstance().consumePurchase(Constants.PRODUCT_ID_YEAR);
@@ -186,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });*/
+
     }
 
     private void loadAdsNative() {

@@ -4,6 +4,11 @@ public class ProductDetailCustom {
     private String productId;
     private String productType;
 
+    public ProductDetailCustom(String productId, String productType) {
+        this.productId = productId;
+        this.productType = productType;
+    }
+
     public String getProductId() {
         return productId;
     }

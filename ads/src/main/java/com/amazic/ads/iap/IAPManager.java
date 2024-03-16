@@ -14,8 +14,10 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
+import com.android.billingclient.api.QueryPurchasesParams;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -25,16 +27,20 @@ import java.util.Map;
 
 public class IAPManager {
     private static final String TAG = "IAPManager";
+    public static final String PRODUCT_ID_TEST = "android.test.purchased";
     private static IAPManager instance;
     private PurchasesUpdatedListener purchasesUpdatedListener;
     private BillingClient billingClient;
     public static String typeIAP = BillingClient.ProductType.INAPP, typeSub = BillingClient.ProductType.SUBS;
-    private ArrayList<QueryProductDetailsParams.Product> listIAPProduct;
-    private ArrayList<QueryProductDetailsParams.Product> listSubProduct;
-    private List<ProductDetails> productDetailsListIAP;
-    private List<ProductDetails> productDetailsListSub;
+    private ArrayList<QueryProductDetailsParams.Product> listIAPProduct = new ArrayList<>();
+    private ArrayList<QueryProductDetailsParams.Product> listSubProduct = new ArrayList<>();
+    private List<ProductDetails> productDetailsListIAP = new ArrayList<>();
+    private List<ProductDetails> productDetailsListSub = new ArrayList<>();
     final private Map<String, ProductDetails> productDetailsINAPMap = new HashMap<>();
     final private Map<String, ProductDetails> productDetailsSubsMap = new HashMap<>();
+    private boolean isPurchase = false;
+    private PurchaseCallback purchaseCallback;
+    private boolean isPurchaseTest = false;
 
     public static IAPManager getInstance() {
         if (instance == null) {
@@ -43,7 +49,23 @@ public class IAPManager {
         return instance;
     }
 
-    public void initBilling(Context context, ArrayList<ProductDetailCustom> listProductDetailCustoms, IAPCallback iapCallback) {
+    public boolean isPurchase() {
+        return this.isPurchase;
+    }
+
+    public void setPurchase(boolean isPurchase) {
+        this.isPurchase = isPurchase;
+    }
+
+    public void setPurchaseTest(boolean isPurchaseTest) {
+        this.isPurchaseTest = isPurchaseTest;
+    }
+
+    public void setPurchaseListener(PurchaseCallback purchaseCallback) {
+        this.purchaseCallback = purchaseCallback;
+    }
+
+    public void initBilling(Context context, ArrayList<ProductDetailCustom> listProductDetailCustoms, BillingCallback billingCallback) {
         setListProductDetails(listProductDetailCustoms);
         purchasesUpdatedListener = new PurchasesUpdatedListener() {
             @Override
@@ -52,9 +74,11 @@ public class IAPManager {
                     for (Purchase purchase : list) {
                         handlePurchase(purchase);
                     }
+                    Log.d(TAG, "onPurchasesUpdated OK");
                 } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
                     // Handle an error caused by a user cancelling the purchase flow.
-                    iapCallback.onUserCancelBilling();
+                    purchaseCallback.onUserCancelBilling();
+                    Log.d(TAG, "user cancelling the purchase flow");
                 } else {
                     // Handle any other error codes.
                     Log.d(TAG, "onPurchasesUpdated:... ");
@@ -65,10 +89,17 @@ public class IAPManager {
                 .setListener(purchasesUpdatedListener)
                 .enablePendingPurchases()
                 .build();
-        connectToGooglePlay(iapCallback);
+        connectToGooglePlay(billingCallback);
     }
 
-    public void setListProductDetails(ArrayList<ProductDetailCustom> listProductDetailCustoms) {
+    private void setListProductDetails(ArrayList<ProductDetailCustom> listProductDetailCustoms) {
+        //check case purchase test -> auto add id product test to list
+        if (isPurchaseTest) {
+            listIAPProduct.add(QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(PRODUCT_ID_TEST)
+                    .setProductType(typeIAP)
+                    .build());
+        }
         for (ProductDetailCustom productDetailCustom : listProductDetailCustoms) {
             if (productDetailCustom.getProductType().equals(typeIAP)) {
                 listIAPProduct.add(QueryProductDetailsParams.Product.newBuilder()
@@ -84,27 +115,30 @@ public class IAPManager {
         }
     }
 
-    public void connectToGooglePlay(IAPCallback iapCallback) {
+    private void connectToGooglePlay(BillingCallback billingCallback) {
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(BillingResult billingResult) {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    iapCallback.onBillingSetupFinished();
+                    billingCallback.onBillingSetupFinished();
                     // The BillingClient is ready. You can query purchases here.
+                    verifyPurchased();
                     showProductsAvailableToBuy(listIAPProduct, listSubProduct);
+                    Log.d(TAG, "onBillingSetupFinished OK");
                 }
             }
 
             @Override
             public void onBillingServiceDisconnected() {
-                iapCallback.onBillingServiceDisconnected();
+                billingCallback.onBillingServiceDisconnected();
                 // Try to restart the connection on the next request to
                 // Google Play by calling the startConnection() method.
+                Log.d(TAG, "onBillingServiceDisconnected");
             }
         });
     }
 
-    public void showProductsAvailableToBuy(ArrayList<QueryProductDetailsParams.Product> listIAPProduct, ArrayList<QueryProductDetailsParams.Product> listSubProduct) {
+    private void showProductsAvailableToBuy(ArrayList<QueryProductDetailsParams.Product> listIAPProduct, ArrayList<QueryProductDetailsParams.Product> listSubProduct) {
         if (listIAPProduct.size() > 0) {
             QueryProductDetailsParams queryProductDetailsParamsIAP =
                     QueryProductDetailsParams.newBuilder()
@@ -155,6 +189,11 @@ public class IAPManager {
 
     public String purchase(Activity activity, String productId) {
         ProductDetails productDetails = productDetailsINAPMap.get(productId);
+        if (isPurchaseTest) {
+            PurchaseTestBottomSheet purchaseTestBottomSheet = new PurchaseTestBottomSheet(typeIAP, productDetails, activity, purchaseCallback);
+            purchaseTestBottomSheet.show();
+            return "Purchase Test BottomSheet";
+        }
         if (productDetails == null) {
             return "Product id invalid";
         }
@@ -200,6 +239,9 @@ public class IAPManager {
     }
 
     public String subscribe(Activity activity, String productId) {
+        if (isPurchaseTest) {
+            purchase(activity, PRODUCT_ID_TEST);
+        }
         ProductDetails productDetails = productDetailsSubsMap.get(productId);
         if (productDetails == null) {
             return "Product id invalid";
@@ -252,7 +294,43 @@ public class IAPManager {
     }
 
     private void handlePurchase(Purchase purchase) {
+        isPurchase = true;
+        purchaseCallback.onProductPurchased(purchase.getOrderId(), purchase.getOriginalJson());
+    }
 
+    private void verifyPurchased() {
+        if (listIAPProduct != null && listIAPProduct.size() > 0) {
+            billingClient.queryPurchasesAsync(QueryPurchasesParams.newBuilder().setProductType(typeIAP).build(), new PurchasesResponseListener() {
+                @Override
+                public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                        for (Purchase purchase : list) {
+                            for (QueryProductDetailsParams.Product id : listIAPProduct) {
+                                if (purchase.getProducts().contains(id.zza())) {
+                                    isPurchase = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        if (listSubProduct != null && listSubProduct.size() > 0) {
+            billingClient.queryPurchasesAsync(QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.SUBS).build(), new PurchasesResponseListener() {
+                @Override
+                public void onQueryPurchasesResponse(@NonNull BillingResult billingResult, @NonNull List<Purchase> list) {
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                        for (Purchase purchase : list) {
+                            for (QueryProductDetailsParams.Product id : listSubProduct) {
+                                if (purchase.getProducts().contains(id.zza())) {
+                                    isPurchase = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 
     public String getPrice(String productId) {

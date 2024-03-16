@@ -3,6 +3,7 @@ package com.amazicadslibrary;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +12,9 @@ import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.ApiCallBack;
 import com.amazic.ads.callback.BillingListener;
 import com.amazic.ads.callback.InterCallback;
+import com.amazic.ads.iap.BillingCallback;
+import com.amazic.ads.iap.IAPManager;
+import com.amazic.ads.iap.ProductDetailCustom;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
@@ -20,7 +24,6 @@ import com.amazic.ads.util.remote_config.RemoteConfig;
 import com.amazic.ads.util.remote_config.SharePreRemoteConfig;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Splash extends AppCompatActivity {
     private static final String TAG = "SplashActivity";
@@ -82,6 +85,19 @@ public class Splash extends AppCompatActivity {
         Admob.getInstance().setOpenActivityAfterShowInterAds(false);
 //        AppOpenManager.getInstance().init(Splash.this.getApplication(), getString(R.string.ads_test_resume));
 
+        initBilling();
+
+    }
+
+    private void setUpUMP() {
+        AdsConsentManager adsConsentManager = new AdsConsentManager(this);
+        adsConsentManager.requestUMP(true, "33BE2250B43518CCDA7DE426D04EE231", true, result -> {
+            Log.d("TAG1111", "setUpUMP: " + result);
+            Log.d("TAG1111", "setUpUMP: " + AdsConsentManager.getConsentResult(this));
+        });
+    }
+
+    private void loadAndShowSplashAds(){
         Admob.getInstance().initAdmod(this);
         AdmobApi.getInstance().init(this, null, getString(R.string.app_id), new ApiCallBack() {
             @Override
@@ -99,26 +115,34 @@ public class Splash extends AppCompatActivity {
         });
         AdsSplash adsSplash = AdsSplash.init(true, true, "30_70");
         adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);
-
-        initBilling();
-
-    }
-
-    private void setUpUMP() {
-        AdsConsentManager adsConsentManager = new AdsConsentManager(this);
-        adsConsentManager.requestUMP(true, "33BE2250B43518CCDA7DE426D04EE231", true, result -> {
-            Log.d("TAG1111", "setUpUMP: " + result);
-            Log.d("TAG1111", "setUpUMP: " + AdsConsentManager.getConsentResult(this));
-        });
     }
 
     private void initBilling() {
-        AppPurchase.getInstance().setBillingListener(new BillingListener() {
+        /*AppPurchase.getInstance().setBillingListener(new BillingListener() {
             @Override
             public void onInitBillingFinished(int resultCode) {
                 Log.d(TAG, "onInitBillingFinished: " + resultCode);
             }
-        }, 5000);
+        }, 5000);*/
+
+        ArrayList<ProductDetailCustom> listProductDetailCustoms = new ArrayList<>();
+        listProductDetailCustoms.add(new ProductDetailCustom(IAPManager.typeIAP, IAPManager.PRODUCT_ID_TEST));
+        IAPManager.getInstance().setPurchaseTest(true);
+        IAPManager.getInstance().initBilling(this, listProductDetailCustoms, new BillingCallback() {
+            @Override
+            public void onBillingSetupFinished() {
+                super.onBillingSetupFinished();
+                runOnUiThread(() -> {
+                    Toast.makeText(Splash.this, "IAPManager: " + IAPManager.getInstance().isPurchase(), Toast.LENGTH_SHORT).show();
+                    loadAndShowSplashAds();
+                });
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+                super.onBillingServiceDisconnected();
+            }
+        });
     }
 
     @Override
