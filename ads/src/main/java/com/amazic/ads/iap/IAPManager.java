@@ -41,6 +41,8 @@ public class IAPManager {
     private boolean isPurchase = false;
     private PurchaseCallback purchaseCallback;
     private boolean isPurchaseTest = false;
+    private boolean isVerifyIAP = false;
+    private boolean isVerifySub = false;
 
     public static IAPManager getInstance() {
         if (instance == null) {
@@ -85,32 +87,21 @@ public class IAPManager {
                 }
             }
         };
-        billingClient = BillingClient.newBuilder(context)
-                .setListener(purchasesUpdatedListener)
-                .enablePendingPurchases()
-                .build();
+        billingClient = BillingClient.newBuilder(context).setListener(purchasesUpdatedListener).enablePendingPurchases().build();
         connectToGooglePlay(billingCallback);
     }
 
     private void setListProductDetails(ArrayList<ProductDetailCustom> listProductDetailCustoms) {
         //check case purchase test -> auto add id product test to list
         if (isPurchaseTest) {
-            listIAPProduct.add(QueryProductDetailsParams.Product.newBuilder()
-                    .setProductId(PRODUCT_ID_TEST)
-                    .setProductType(typeIAP)
-                    .build());
+            listIAPProduct.add(QueryProductDetailsParams.Product.newBuilder().setProductId(PRODUCT_ID_TEST).setProductType(typeIAP).build());
+            listSubProduct.add(QueryProductDetailsParams.Product.newBuilder().setProductId(PRODUCT_ID_TEST).setProductType(typeSub).build());
         }
         for (ProductDetailCustom productDetailCustom : listProductDetailCustoms) {
             if (productDetailCustom.getProductType().equals(typeIAP)) {
-                listIAPProduct.add(QueryProductDetailsParams.Product.newBuilder()
-                        .setProductId(productDetailCustom.getProductId())
-                        .setProductType(productDetailCustom.getProductType())
-                        .build());
+                listIAPProduct.add(QueryProductDetailsParams.Product.newBuilder().setProductId(productDetailCustom.getProductId()).setProductType(productDetailCustom.getProductType()).build());
             } else if (productDetailCustom.getProductType().equals(typeSub)) {
-                listSubProduct.add(QueryProductDetailsParams.Product.newBuilder()
-                        .setProductId(productDetailCustom.getProductId())
-                        .setProductType(productDetailCustom.getProductType())
-                        .build());
+                listSubProduct.add(QueryProductDetailsParams.Product.newBuilder().setProductId(productDetailCustom.getProductId()).setProductType(productDetailCustom.getProductType()).build());
             }
         }
     }
@@ -120,9 +111,8 @@ public class IAPManager {
             @Override
             public void onBillingSetupFinished(BillingResult billingResult) {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    billingCallback.onBillingSetupFinished();
                     // The BillingClient is ready. You can query purchases here.
-                    verifyPurchased();
+                    verifyPurchased(billingCallback);
                     showProductsAvailableToBuy(listIAPProduct, listSubProduct);
                     Log.d(TAG, "onBillingSetupFinished OK");
                 }
@@ -140,38 +130,30 @@ public class IAPManager {
 
     private void showProductsAvailableToBuy(ArrayList<QueryProductDetailsParams.Product> listIAPProduct, ArrayList<QueryProductDetailsParams.Product> listSubProduct) {
         if (listIAPProduct.size() > 0) {
-            QueryProductDetailsParams queryProductDetailsParamsIAP =
-                    QueryProductDetailsParams.newBuilder()
-                            .setProductList(listIAPProduct)
-                            .build();
+            QueryProductDetailsParams queryProductDetailsParamsIAP = QueryProductDetailsParams.newBuilder().setProductList(listIAPProduct).build();
             billingClient.queryProductDetailsAsync(queryProductDetailsParamsIAP, new ProductDetailsResponseListener() {
-                        public void onProductDetailsResponse(BillingResult billingResult, List<ProductDetails> productDetailsList) {
-                            // check billingResult
-                            // process returned productDetailsList
-                            if (productDetailsList != null) {
-                                productDetailsListIAP = productDetailsList;
-                                addProductDetailsINAPToMap(productDetailsList);
-                            }
-                        }
+                public void onProductDetailsResponse(BillingResult billingResult, List<ProductDetails> productDetailsList) {
+                    // check billingResult
+                    // process returned productDetailsList
+                    if (productDetailsList != null) {
+                        productDetailsListIAP = productDetailsList;
+                        addProductDetailsINAPToMap(productDetailsList);
                     }
-            );
+                }
+            });
         }
         if (listSubProduct.size() > 0) {
-            QueryProductDetailsParams queryProductDetailsParamsSub =
-                    QueryProductDetailsParams.newBuilder()
-                            .setProductList(listSubProduct)
-                            .build();
+            QueryProductDetailsParams queryProductDetailsParamsSub = QueryProductDetailsParams.newBuilder().setProductList(listSubProduct).build();
             billingClient.queryProductDetailsAsync(queryProductDetailsParamsSub, new ProductDetailsResponseListener() {
-                        public void onProductDetailsResponse(BillingResult billingResult, List<ProductDetails> productDetailsList) {
-                            // check billingResult
-                            // process returned productDetailsList
-                            if (productDetailsList != null) {
-                                productDetailsListSub = productDetailsList;
-                                addProductDetailsSubsToMap(productDetailsList);
-                            }
-                        }
+                public void onProductDetailsResponse(BillingResult billingResult, List<ProductDetails> productDetailsList) {
+                    // check billingResult
+                    // process returned productDetailsList
+                    if (productDetailsList != null) {
+                        productDetailsListSub = productDetailsList;
+                        addProductDetailsSubsToMap(productDetailsList);
                     }
-            );
+                }
+            });
         }
     }
 
@@ -197,16 +179,9 @@ public class IAPManager {
         if (productDetails == null) {
             return "Product id invalid";
         }
-        ImmutableList<BillingFlowParams.ProductDetailsParams> productDetailsParamsList =
-                ImmutableList.of(
-                        BillingFlowParams.ProductDetailsParams.newBuilder()
-                                .setProductDetails(productDetails)
-                                .build()
-                );
+        ImmutableList<BillingFlowParams.ProductDetailsParams> productDetailsParamsList = ImmutableList.of(BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(productDetails).build());
 
-        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                .setProductDetailsParamsList(productDetailsParamsList)
-                .build();
+        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(productDetailsParamsList).build();
 
         // Launch the billing flow
         BillingResult billingResult = billingClient.launchBillingFlow(activity, billingFlowParams);
@@ -251,17 +226,9 @@ public class IAPManager {
             return "Get Subscription Offer Details fail";
         }
         String offerToken = subsDetail.get(subsDetail.size() - 1).getOfferToken();
-        ImmutableList<BillingFlowParams.ProductDetailsParams> productDetailsParamsList =
-                ImmutableList.of(
-                        BillingFlowParams.ProductDetailsParams.newBuilder()
-                                .setProductDetails(productDetails)
-                                .setOfferToken(offerToken)
-                                .build()
-                );
+        ImmutableList<BillingFlowParams.ProductDetailsParams> productDetailsParamsList = ImmutableList.of(BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(productDetails).setOfferToken(offerToken).build());
 
-        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                .setProductDetailsParamsList(productDetailsParamsList)
-                .build();
+        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(productDetailsParamsList).build();
 
         // Launch the billing flow
         BillingResult billingResult = billingClient.launchBillingFlow(activity, billingFlowParams);
@@ -298,7 +265,7 @@ public class IAPManager {
         purchaseCallback.onProductPurchased(purchase.getOrderId(), purchase.getOriginalJson());
     }
 
-    private void verifyPurchased() {
+    private void verifyPurchased(BillingCallback billingCallback) {
         if (listIAPProduct != null && listIAPProduct.size() > 0) {
             billingClient.queryPurchasesAsync(QueryPurchasesParams.newBuilder().setProductType(typeIAP).build(), new PurchasesResponseListener() {
                 @Override
@@ -311,6 +278,10 @@ public class IAPManager {
                                 }
                             }
                         }
+                    }
+                    isVerifyIAP = true;
+                    if (isVerifySub) {
+                        billingCallback.onBillingSetupFinished(billingResult.getResponseCode());
                     }
                 }
             });
@@ -328,6 +299,10 @@ public class IAPManager {
                             }
                         }
                     }
+                    isVerifySub = true;
+                    if (isVerifyIAP) {
+                        billingCallback.onBillingSetupFinished(billingResult.getResponseCode());
+                    }
                 }
             });
         }
@@ -344,8 +319,7 @@ public class IAPManager {
 
     public String getPriceSub(String productId) {
         ProductDetails productDetails = productDetailsSubsMap.get(productId);
-        if (productDetails == null)
-            return "";
+        if (productDetails == null) return "";
         List<ProductDetails.SubscriptionOfferDetails> subsDetail = productDetails.getSubscriptionOfferDetails();
         if (subsDetail == null) {
             return "";
