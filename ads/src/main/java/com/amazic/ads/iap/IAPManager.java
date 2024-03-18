@@ -280,7 +280,11 @@ public class IAPManager {
                         }
                     }
                     isVerifyIAP = true;
-                    if (isVerifySub) {
+                    if (listSubProduct != null && listSubProduct.size() > 0) {
+                        if (isVerifySub) {
+                            billingCallback.onBillingSetupFinished(billingResult.getResponseCode());
+                        }
+                    } else {
                         billingCallback.onBillingSetupFinished(billingResult.getResponseCode());
                     }
                 }
@@ -300,7 +304,11 @@ public class IAPManager {
                         }
                     }
                     isVerifySub = true;
-                    if (isVerifyIAP) {
+                    if (listIAPProduct != null && listIAPProduct.size() > 0) {
+                        if (isVerifyIAP) {
+                            billingCallback.onBillingSetupFinished(billingResult.getResponseCode());
+                        }
+                    } else {
                         billingCallback.onBillingSetupFinished(billingResult.getResponseCode());
                     }
                 }

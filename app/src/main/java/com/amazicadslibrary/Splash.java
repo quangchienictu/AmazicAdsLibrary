@@ -126,7 +126,6 @@ public class Splash extends AppCompatActivity {
         }, 5000);*/
 
         ArrayList<ProductDetailCustom> listProductDetailCustoms = new ArrayList<>();
-        listProductDetailCustoms.add(new ProductDetailCustom(IAPManager.typeIAP, IAPManager.PRODUCT_ID_TEST));
         listProductDetailCustoms.add(new ProductDetailCustom(IAPManager.typeSub, IAPManager.PRODUCT_ID_TEST));
         IAPManager.getInstance().setPurchaseTest(true);
         IAPManager.getInstance().initBilling(this, listProductDetailCustoms, new BillingCallback() {
