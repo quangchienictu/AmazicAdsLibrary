@@ -336,4 +336,32 @@ public class IAPManager {
         Log.e(TAG, "getPriceSub: " + pricingPhaseList.get(pricingPhaseList.size() - 1).getFormattedPrice());
         return pricingPhaseList.get(pricingPhaseList.size() - 1).getFormattedPrice();
     }
+
+    public String getCurrency(String productId, String type) {
+        ProductDetails productDetails = type.equals(typeIAP) ? productDetailsINAPMap.get(productId) : productDetailsSubsMap.get(productId);
+        if (productDetails == null) {
+            return "";
+        }
+        if (type.equals(typeIAP))
+            return productDetails.getOneTimePurchaseOfferDetails().getPriceCurrencyCode();
+        else {
+            List<ProductDetails.SubscriptionOfferDetails> subsDetail = productDetails.getSubscriptionOfferDetails();
+            List<ProductDetails.PricingPhase> pricingPhaseList = subsDetail.get(subsDetail.size() - 1).getPricingPhases().getPricingPhaseList();
+            return pricingPhaseList.get(pricingPhaseList.size() - 1).getPriceCurrencyCode();
+        }
+    }
+
+    public double getPriceWithoutCurrency(String productId, String type) {
+        ProductDetails productDetails = type.equals(typeIAP) ? productDetailsINAPMap.get(productId) : productDetailsSubsMap.get(productId);
+        if (productDetails == null) {
+            return 0;
+        }
+        if (type.equals(typeIAP))
+            return productDetails.getOneTimePurchaseOfferDetails().getPriceAmountMicros();
+        else {
+            List<ProductDetails.SubscriptionOfferDetails> subsDetail = productDetails.getSubscriptionOfferDetails();
+            List<ProductDetails.PricingPhase> pricingPhaseList = subsDetail.get(subsDetail.size() - 1).getPricingPhases().getPricingPhaseList();
+            return pricingPhaseList.get(pricingPhaseList.size() - 1).getPriceAmountMicros();
+        }
+    }
 }
