@@ -114,7 +114,10 @@ public class IAPManager {
                     // The BillingClient is ready. You can query purchases here.
                     verifyPurchased(billingCallback);
                     showProductsAvailableToBuy(listIAPProduct, listSubProduct);
-                    Log.d(TAG, "onBillingSetupFinished OK");
+                    Log.d(TAG, "onBillingSetupFinished OK: " + billingResult.getResponseCode());
+                } else {
+                    billingCallback.onBillingSetupFinished(billingResult.getResponseCode());
+                    Log.d(TAG, "onBillingSetupFinished NOT OK: " + billingResult.getResponseCode() + ": " + billingResult.getDebugMessage());
                 }
             }
 
