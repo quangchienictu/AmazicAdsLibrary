@@ -2158,6 +2158,10 @@ public class Admob {
         });
     }
 
+    public RewardedAd getRewardedAdLoaded(){
+        return Admob.this.rewardedAd;
+    }
+
     /* =============================  End Rewarded Ads ==========================================*/
 
 
