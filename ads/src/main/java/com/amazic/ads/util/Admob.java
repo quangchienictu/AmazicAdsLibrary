@@ -59,7 +59,6 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.VideoOptions;
-import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.initialization.AdapterStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
@@ -125,6 +124,7 @@ public class Admob {
     enum StateInter {SHOWING, SHOWED, DISMISS}
 
     private AdView adView;
+    private Dialog dialogLoadingLoadAndShowReward;
 
     public static Admob getInstance() {
         if (INSTANCE == null) {
@@ -2072,6 +2072,89 @@ public class Admob {
 
     /* =============================  Rewarded Ads ==========================================*/
 
+    public void loadAndShowReward(Context context, Activity activity, String id, RewardCallback adCallback) {
+        if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(context)) {
+            adCallback.onAdClosed();
+            return;
+        }
+        dialogLoadingLoadAndShowReward = new LoadingAdsDialog(context);
+        dialogLoadingLoadAndShowReward.show();
+        RewardedAd.load(context, id, getAdRequest(), new RewardedAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                //Track revenue
+                rewardedAd.setOnPaidEventListener(adValue -> {
+                    trackRevenue(rewardedAd.getResponseInfo().getLoadedAdapterResponseInfo(), adValue);
+                    Log.d(TAG, "OnPaidEvent Reward:" + adValue.getValueMicros());
+                    FirebaseUtil.logPaidAdImpression(context,
+                            adValue,
+                            rewardedAd.getAdUnitId(),
+                            AdType.REWARDED);
+                });
+                //Show reward
+                showReward(activity, rewardedAd, adCallback);
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                Log.e(TAG, "RewardedAd onAdFailedToLoad: " + loadAdError.getMessage());
+                adCallback.onAdClosed();
+            }
+        });
+    }
+
+    private void showReward(Activity activity, RewardedAd rewardedAd, RewardCallback adCallback) {
+        rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+            @Override
+            public void onAdDismissedFullScreenContent() {
+                super.onAdDismissedFullScreenContent();
+                if (adCallback != null)
+                    adCallback.onAdClosed();
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().enableAppResume();
+                }
+            }
+
+            @Override
+            public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                super.onAdFailedToShowFullScreenContent(adError);
+                if (dialogLoadingLoadAndShowReward != null && dialogLoadingLoadAndShowReward.isShowing()) {
+                    dialogLoadingLoadAndShowReward.dismiss();
+                }
+                if (adCallback != null)
+                    adCallback.onAdFailedToShow(adError.getCode());
+            }
+
+            @Override
+            public void onAdShowedFullScreenContent() {
+                super.onAdShowedFullScreenContent();
+                if (dialogLoadingLoadAndShowReward != null && dialogLoadingLoadAndShowReward.isShowing()) {
+                    dialogLoadingLoadAndShowReward.dismiss();
+                }
+                if (AppOpenManager.getInstance().isInitialized()) {
+                    AppOpenManager.getInstance().disableAppResume();
+                }
+                adCallback.onAdImpression();
+            }
+
+            public void onAdClicked() {
+                super.onAdClicked();
+                if (disableAdResumeWhenClickAds)
+                    AppOpenManager.getInstance().disableAdResumeByClickAction();
+                FirebaseUtil.logClickAdsEvent(activity, rewardedAd.getAdUnitId());
+            }
+        });
+        rewardedAd.show(activity, new OnUserEarnedRewardListener() {
+            @Override
+            public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                if (adCallback != null) {
+                    adCallback.onEarnedReward(rewardItem);
+                }
+            }
+        });
+    }
+
     public void showRewardAds(final Activity context, final RewardCallback adCallback) {
         if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(context)) {
             adCallback.onAdClosed();
@@ -2107,8 +2190,8 @@ public class Admob {
                     if (AppOpenManager.getInstance().isInitialized()) {
                         AppOpenManager.getInstance().disableAppResume();
                     }
-                    initRewardAds(context, rewardedId);
                     rewardedAd = null;
+                    initRewardAds(context, rewardedId);
                     adCallback.onAdImpression();
                 }
 
@@ -2158,7 +2241,7 @@ public class Admob {
         });
     }
 
-    public RewardedAd getRewardedAdLoaded(){
+    public RewardedAd getRewardedAdLoaded() {
         return Admob.this.rewardedAd;
     }
 

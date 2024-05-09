@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnClickReward).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Admob.getInstance().showRewardAds(MainActivity.this, new RewardCallback() {
+                /*Admob.getInstance().showRewardAds(MainActivity.this, new RewardCallback() {
                     @Override
                     public void onEarnedReward(RewardItem rewardItem) {
                         Toast.makeText(MainActivity.this, "Trả thưởng thành công", Toast.LENGTH_SHORT).show();
@@ -108,6 +108,27 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAdImpression() {
                         Toast.makeText(MainActivity.this, "onAdImpression", Toast.LENGTH_SHORT).show();
+                    }
+                });*/
+                Admob.getInstance().loadAndShowReward(MainActivity.this, MainActivity.this, getString(R.string.admod_app_reward_id), new RewardCallback() {
+                    @Override
+                    public void onEarnedReward(RewardItem rewardItem) {
+                        Log.d("loadAndShowReward", "onEarnedReward: ");
+                    }
+
+                    @Override
+                    public void onAdClosed() {
+                        Log.d("loadAndShowReward", "onAdClosed: ");
+                    }
+
+                    @Override
+                    public void onAdFailedToShow(int codeError) {
+                        Log.d("loadAndShowReward", "onAdFailedToShow: ");
+                    }
+
+                    @Override
+                    public void onAdImpression() {
+                        Log.d("loadAndShowReward", "onAdImpression: ");
                     }
                 });
             }
