@@ -263,6 +263,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setListIdAd(AdmobApi.getInstance().getListIDNativeAll());
         NativeManager manager = new NativeManager(this, this, builder, fl_native,
                 com.amazic.ads.R.layout.ads_native_shimer, com.amazic.ads.R.layout.layout_native_meta);
+        manager.setIntervalReloadNative(5000);
     }
 
     private void loadAdInter() {

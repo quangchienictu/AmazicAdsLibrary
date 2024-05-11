@@ -1,6 +1,7 @@
 package com.amazic.ads.util.manager.native_ad;
 
 import android.app.Activity;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.FrameLayout;
 
@@ -43,6 +44,24 @@ public class NativeManager implements LifecycleEventObserver {
     private FrameLayout flAd = null;
     private int idLayoutShimmer = 0;
     private int idLayoutNative = 0;
+    private int intervalReloadNative = 0;
+    private boolean isStop = false;
+    private CountDownTimer countDownTimer;
+
+    public void setIntervalReloadNative(int intervalReloadNative) {
+        this.intervalReloadNative = intervalReloadNative;
+        countDownTimer = new CountDownTimer(this.intervalReloadNative, 1000) {
+            @Override
+            public void onTick(long l) {
+
+            }
+
+            @Override
+            public void onFinish() {
+                loadNative(true);
+            }
+        };
+    }
 
     public NativeManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, NativeBuilder builder) {
         this.builder = builder;
@@ -69,10 +88,20 @@ public class NativeManager implements LifecycleEventObserver {
                 loadNative(true);
                 break;
             case ON_RESUME:
+                if (countDownTimer != null && isStop) {
+                    countDownTimer.start();
+                    isStop = false;
+                }
                 if (isReloadAds || isAlwaysReloadOnResume) {
                     Log.d(TAG, "onStateChanged: resume");
                     isReloadAds = false;
                     loadNative(isShowLoadingNative);
+                }
+                break;
+            case ON_STOP:
+                isStop = true;
+                if (countDownTimer != null) {
+                    countDownTimer.cancel();
                 }
                 break;
             case ON_DESTROY:
@@ -144,6 +173,10 @@ public class NativeManager implements LifecycleEventObserver {
                     super.onAdImpression();
                     NativeManager.this.state = State.LOADED;
                     Log.d(TAG, "onAdImpression: ");
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        countDownTimer.start();
+                    }
                 }
             }).withNativeAdOptions((new NativeAdOptions.Builder()).setVideoOptions((new VideoOptions.Builder()).setStartMuted(true).build()).build()).build();
             adLoader.loadAd(this.getAdRequest());
