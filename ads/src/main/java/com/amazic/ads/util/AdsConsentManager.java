@@ -86,10 +86,10 @@ public class AdsConsentManager {
         // Check if you can initialize the Google Mobile Ads SDK in parallel
         // while checking for new consent information. Consent obtained in
         // the previous session can be used to request ads.
-        if (consentInformation.canRequestAds() && !auAtomicBoolean.getAndSet(true)) {
+        /*if (consentInformation.canRequestAds() && !auAtomicBoolean.getAndSet(true)) {
             umpResultListener.onCheckUMPSuccess(getConsentResult(activity));
             Log.d(TAG, "requestUMP: ");
-        }
+        }*/
     }
 
     public void showPrivacyOption(Activity activity, UMPResultListener umpResultListener) {
