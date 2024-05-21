@@ -90,13 +90,13 @@ public class NativeManager implements LifecycleEventObserver {
             case ON_RESUME:
                 if (countDownTimer != null && isStop) {
                     countDownTimer.start();
-                    isStop = false;
                 }
-                if (isReloadAds || isAlwaysReloadOnResume) {
+                if (isStop && (isReloadAds || isAlwaysReloadOnResume)) {
                     Log.d(TAG, "onStateChanged: resume");
                     isReloadAds = false;
                     loadNative(isShowLoadingNative);
                 }
+                isStop = false;
                 break;
             case ON_STOP:
                 isStop = true;
