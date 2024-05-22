@@ -302,15 +302,18 @@ public class Admob {
         containerShimmer.setVisibility(View.VISIBLE);
         adContainer.setVisibility(View.GONE);
         if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(mActivity)) {
+            bannerCallBack.onAdFailedToLoad(new LoadAdError(-1, "not allow", "local", null, null));
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
         } else {
             if (listID == null) {
+                bannerCallBack.onAdFailedToLoad(new LoadAdError(-1, "not have id", "local", null, null));
                 adContainer.setVisibility(View.GONE);
                 containerShimmer.setVisibility(View.GONE);
                 return;
             }
             if (listID.size() == 0) {
+                bannerCallBack.onAdFailedToLoad(new LoadAdError(-1, "not have id", "local", null, null));
                 adContainer.setVisibility(View.GONE);
                 containerShimmer.setVisibility(View.GONE);
                 return;
