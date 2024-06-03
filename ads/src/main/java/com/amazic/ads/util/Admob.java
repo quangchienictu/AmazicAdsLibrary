@@ -43,6 +43,8 @@ import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.amazic.ads.event.AdType;
 import com.amazic.ads.event.FirebaseUtil;
+import com.amazic.ads.util.reward.RewardAdCallback;
+import com.amazic.ads.util.reward.RewardAdModel;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdError;
@@ -2249,6 +2251,148 @@ public class Admob {
     }
 
     /* =============================  End Rewarded Ads ==========================================*/
+    /* =============================  Start New Rewarded Ads ==========================================*/
+
+    private final List<RewardAdModel> listReward = new ArrayList<>();
+
+    public void loadNewReward(Context context, String listAdIDName, RewardAdCallback callback) {
+        RewardAdModel rewardAdModel = null;
+        for (RewardAdModel item : listReward) {
+            if (item.getListAdIDName().equals(listAdIDName)) {
+                rewardAdModel = item;
+            }
+        }
+        if (rewardAdModel == null) {
+            rewardAdModel = new RewardAdModel(listAdIDName);
+            listReward.add(rewardAdModel);
+        }
+        dialogLoadingLoadAndShowReward = new LoadingAdsDialog(context);
+        dialogLoadingLoadAndShowReward.show();
+        rewardAdModel.loadReward(context, new RewardAdCallback() {
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                callback.onAdFailedToLoad(loadAdError);
+            }
+
+            public void onAdLoaded(Boolean isSuccessful) {
+                if (dialogLoadingLoadAndShowReward.isShowing())
+                    dialogLoadingLoadAndShowReward.dismiss();
+                callback.onAdLoaded(isSuccessful);
+            }
+        });
+    }
+
+    public void showNewReward(Context context, String listAdIDName, RewardAdCallback callback) {
+        AppOpenManager.getInstance().disableAppResume();
+        RewardAdModel rewardAdModel = null;
+        for (RewardAdModel item : listReward) {
+            if (item.getListAdIDName().equals(listAdIDName)) {
+                rewardAdModel = item;
+            }
+        }
+        if (rewardAdModel == null) {
+            rewardAdModel = new RewardAdModel(listAdIDName);
+            listReward.add(rewardAdModel);
+        }
+        dialogLoadingLoadAndShowReward = new LoadingAdsDialog(context);
+        dialogLoadingLoadAndShowReward.show();
+        rewardAdModel.showReward(context, new RewardAdCallback() {
+            public void onAdDismissed() {
+                callback.onAdDismissed();
+                AppOpenManager.getInstance().enableAppResume();
+            }
+
+            public void onAdFailedToShow(@NonNull AdError adError) {
+                callback.onAdFailedToShow(adError);
+                AppOpenManager.getInstance().enableAppResume();
+            }
+
+            public void onAdShowed() {
+                callback.onAdShowed();
+            }
+
+            public void onAdClicked() {
+                callback.onAdClicked();
+            }
+
+            public void onNextAction() {
+                callback.onNextAction();
+            }
+
+            public void onAdImpression() {
+                callback.onAdImpression();
+            }
+
+            public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                callback.onUserEarnedReward(rewardItem);
+
+            }
+        });
+    }
+
+    public void loadAndShowReward(Context context, String listAdIDName, RewardAdCallback callback) {
+        AppOpenManager.getInstance().disableAppResume();
+        RewardAdModel rewardAdModel = null;
+        for (RewardAdModel item : listReward) {
+            if (item.getListAdIDName().equals(listAdIDName)) {
+                rewardAdModel = item;
+            }
+        }
+        if (rewardAdModel == null) {
+            rewardAdModel = new RewardAdModel(listAdIDName);
+            listReward.add(rewardAdModel);
+        }
+        dialogLoadingLoadAndShowReward = new LoadingAdsDialog(context);
+        dialogLoadingLoadAndShowReward.show();
+        rewardAdModel.loadAndShowReward(context, new RewardAdCallback() {
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                callback.onAdFailedToLoad(loadAdError);
+                AppOpenManager.getInstance().enableAppResume();
+            }
+
+            public void onAdLoaded(Boolean isSuccessful) {
+                if (!isSuccessful) {
+                    if (dialogLoadingLoadAndShowReward.isShowing())
+                        dialogLoadingLoadAndShowReward.dismiss();
+                }
+                callback.onAdLoaded(isSuccessful);
+            }
+
+            public void onAdDismissed() {
+                if (dialogLoadingLoadAndShowReward.isShowing())
+                    dialogLoadingLoadAndShowReward.dismiss();
+                callback.onAdDismissed();
+                AppOpenManager.getInstance().enableAppResume();
+            }
+
+            public void onAdFailedToShow(@NonNull AdError adError) {
+                if (dialogLoadingLoadAndShowReward.isShowing())
+                    dialogLoadingLoadAndShowReward.dismiss();
+                callback.onAdFailedToShow(adError);
+            }
+
+            public void onAdShowed() {
+                callback.onAdShowed();
+            }
+
+            public void onAdClicked() {
+                callback.onAdClicked();
+            }
+
+            public void onNextAction() {
+                callback.onNextAction();
+            }
+
+            public void onAdImpression() {
+                callback.onAdImpression();
+            }
+
+            public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                callback.onUserEarnedReward(rewardItem);
+            }
+        });
+    }
+
+    /* =============================  End New Rewarded Ads ==========================================*/
 
 
 

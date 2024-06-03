@@ -103,14 +103,14 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onReady() {
                 super.onReady();
-                RemoteConfig.getInstance().onRemoteConfigFetched(Splash.this, () -> {
+//                RemoteConfig.getInstance().onRemoteConfigFetched(Splash.this, () -> {
                     Log.d(TAG, "number_value remote: " + SharePreRemoteConfig.getConfigInt(Splash.this, "number_value"));
                     Log.d(TAG, "boolean_value remote: " + SharePreRemoteConfig.getConfigBoolean(Splash.this, "boolean_value"));
                     Log.d(TAG, "string_value remote: " + SharePreRemoteConfig.getConfigString(Splash.this, "string_value"));
                     AppOpenManager.getInstance().initApi(getApplication());
                     /*AdsSplash adsSplash = AdsSplash.init(true, true, "30_70");
                     adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);*/
-                });
+//                });
             }
         });
         AdsSplash adsSplash = AdsSplash.init(true, true, "30_70");

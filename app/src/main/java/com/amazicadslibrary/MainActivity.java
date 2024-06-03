@@ -7,10 +7,10 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.amazic.ads.callback.InterCallback;
-import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.iap.IAPManager;
 import com.amazic.ads.iap.PurchaseCallback;
 import com.amazic.ads.service.AdmobApi;
@@ -18,9 +18,10 @@ import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.manager.native_ad.NativeBuilder;
 import com.amazic.ads.util.manager.native_ad.NativeManager;
+import com.amazic.ads.util.reward.RewardAdCallback;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.rewarded.RewardItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public static String PRODUCT_ID_MONTH = "android.test.purchased";
     public static List<String> listID;
 
+    boolean firstItem = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         Admob.getInstance().initRewardAds(this, getString(R.string.admod_app_reward_id));
         loadAdInter();
         loadAdsNative();
-        AppOpenManager.getInstance().disableAppResumeWithActivity(getClass());
+//        AppOpenManager.getInstance().disableAppResumeWithActivity(getClass());
 
         findViewById(R.id.clickFGM).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,54 +86,48 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
-
-
-        findViewById(R.id.btnClickReward).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*Admob.getInstance().showRewardAds(MainActivity.this, new RewardCallback() {
-                    @Override
-                    public void onEarnedReward(RewardItem rewardItem) {
-                        Toast.makeText(MainActivity.this, "Trả thưởng thành công", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onAdClosed() {
-                        Toast.makeText(MainActivity.this, "Close ads", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onAdFailedToShow(int codeError) {
-                        Toast.makeText(MainActivity.this, "Loa ads err", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onAdImpression() {
-                        Toast.makeText(MainActivity.this, "onAdImpression", Toast.LENGTH_SHORT).show();
-                    }
-                });*/
-                Admob.getInstance().loadAndShowReward(MainActivity.this, MainActivity.this, getString(R.string.admod_app_reward_id), new RewardCallback() {
-                    @Override
-                    public void onEarnedReward(RewardItem rewardItem) {
-                        Log.d("loadAndShowReward", "onEarnedReward: ");
-                    }
-
-                    @Override
-                    public void onAdClosed() {
-                        Log.d("loadAndShowReward", "onAdClosed: ");
-                    }
-
-                    @Override
-                    public void onAdFailedToShow(int codeError) {
-                        Log.d("loadAndShowReward", "onAdFailedToShow: ");
-                    }
-
-                    @Override
-                    public void onAdImpression() {
-                        Log.d("loadAndShowReward", "onAdImpression: ");
-                    }
-                });
+        final List<String> idReward = new ArrayList<>();
+        idReward.add("rewarded_vip_1");
+        idReward.add("rewarded_vip");
+        findViewById(R.id.btnClickReward).setOnClickListener(v -> {
+            String name = idReward.get(1);
+            if (firstItem) {
+                name = idReward.get(0);
             }
+            firstItem = !firstItem;
+            Log.d("RewardAdModel_Check", "onCreate: " + name);
+
+            Admob.getInstance().loadAndShowReward(this, name, new RewardAdCallback() {
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    super.onAdFailedToLoad(loadAdError);
+                    Log.e("RewardAdModel_Check", "onAdFailedToLoad: "+loadAdError.getMessage());
+                }
+
+                @Override
+                public void onAdFailedToShow(@NonNull AdError adError) {
+                    super.onAdFailedToShow(adError);
+                    Log.e("RewardAdModel_Check", "onAdFailedToShow: "+adError.getMessage());
+                }
+
+                @Override
+                public void onAdShowed() {
+                    super.onAdShowed();
+                    Log.d("RewardAdModel_Check", "onAdShowed: ");
+                }
+
+                @Override
+                public void onNextAction() {
+                    super.onNextAction();
+                    Log.d("RewardAdModel_Check", "onNextAction: ");
+                }
+
+                @Override
+                public void onAdLoaded(Boolean isSuccessful) {
+                    super.onAdLoaded(isSuccessful);
+                    Log.d("RewardAdModel_Check", "onAdLoaded: " + isSuccessful);
+                }
+            });
         });
 
 
@@ -257,13 +253,13 @@ public class MainActivity extends AppCompatActivity {
 
         Admob.getInstance().loadNativeAd(this, "id native", native_ads, R.layout.ads_native);*/
 
-        FrameLayout fl_native = findViewById(R.id.native_ads);
-        NativeBuilder builder = new NativeBuilder(this, fl_native,
-                com.amazic.ads.R.layout.ads_native_shimer, R.layout.ads_native);
-        builder.setListIdAd(AdmobApi.getInstance().getListIDNativeAll());
-        NativeManager manager = new NativeManager(this, this, builder, fl_native,
-                com.amazic.ads.R.layout.ads_native_shimer, com.amazic.ads.R.layout.layout_native_meta);
-        manager.setIntervalReloadNative(5000);
+//        FrameLayout fl_native = findViewById(R.id.native_ads);
+//        NativeBuilder builder = new NativeBuilder(this, fl_native,
+//                com.amazic.ads.R.layout.ads_native_shimer, R.layout.ads_native);
+//        builder.setListIdAd(AdmobApi.getInstance().getListIDNativeAll());
+//        NativeManager manager = new NativeManager(this, this, builder, fl_native,
+//                com.amazic.ads.R.layout.ads_native_shimer, com.amazic.ads.R.layout.layout_native_meta);
+//        manager.setIntervalReloadNative(5000);
     }
 
     private void loadAdInter() {
