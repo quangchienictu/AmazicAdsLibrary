@@ -143,6 +143,8 @@ public class RewardAdModel {
                 ((Activity) context).runOnUiThread(() -> {
                     mRewardedAd.show((Activity) context, callback::onUserEarnedReward);
                 });
+            }else {
+                callback.onAdFailedToShow(Constant.CONVERT_ACTIVITY_ERROR);
             }
         }
     }
