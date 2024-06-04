@@ -2256,6 +2256,10 @@ public class Admob {
     private final List<RewardAdModel> listReward = new ArrayList<>();
 
     public void loadNewReward(Context context, String listAdIDName, RewardAdCallback callback) {
+        if (!isShowAllAds || !AdsConsentManager.getConsentResult(context)) {
+            callback.onAdLoaded(false);
+            return;
+        }
         RewardAdModel rewardAdModel = null;
         for (RewardAdModel item : listReward) {
             if (item.getListAdIDName().equals(listAdIDName)) {
@@ -2282,6 +2286,10 @@ public class Admob {
     }
 
     public void showNewReward(Context context, String listAdIDName, RewardAdCallback callback) {
+        if (!isShowAllAds || !AdsConsentManager.getConsentResult(context)) {
+            callback.onNextAction();
+            return;
+        }
         AppOpenManager.getInstance().disableAppResume();
         RewardAdModel rewardAdModel = null;
         for (RewardAdModel item : listReward) {
@@ -2330,6 +2338,10 @@ public class Admob {
     }
 
     public void loadAndShowReward(Context context, String listAdIDName, RewardAdCallback callback) {
+        if (!isShowAllAds || !AdsConsentManager.getConsentResult(context)) {
+            callback.onNextAction();
+            return;
+        }
         AppOpenManager.getInstance().disableAppResume();
         RewardAdModel rewardAdModel = null;
         for (RewardAdModel item : listReward) {
