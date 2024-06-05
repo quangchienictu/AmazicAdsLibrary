@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,9 +17,6 @@ import com.amazic.ads.iap.IAPManager;
 import com.amazic.ads.iap.PurchaseCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
-import com.amazic.ads.util.AppOpenManager;
-import com.amazic.ads.util.manager.native_ad.NativeBuilder;
-import com.amazic.ads.util.manager.native_ad.NativeManager;
 import com.amazic.ads.util.reward.RewardAdCallback;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.LoadAdError;
@@ -36,6 +35,22 @@ public class MainActivity extends AppCompatActivity {
 
     boolean firstItem = true;
 
+    private boolean detectTestAd(ViewGroup viewGroup) {
+        Log.d("detectTestAd", "viewGroup: " + viewGroup.getClass());
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View viewChild = viewGroup.getChildAt(i);
+            Log.d("detectTestAd", "viewChild: " + viewChild.getClass());
+            if (viewChild instanceof ViewGroup) {
+                if (detectTestAd((ViewGroup) viewChild))
+                    return true;
+            }
+            if (viewChild instanceof TextView) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         loadAdInter();
         loadAdsNative();
 //        AppOpenManager.getInstance().disableAppResumeWithActivity(getClass());
-
+        Log.d("fakljfksdafkas", "onCreate: " + detectTestAd(findViewById(R.id.layout_check)));
         findViewById(R.id.clickFGM).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,13 +116,13 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
-                    Log.e("RewardAdModel_Check", "onAdFailedToLoad: "+loadAdError.getMessage());
+                    Log.e("RewardAdModel_Check", "onAdFailedToLoad: " + loadAdError.getMessage());
                 }
 
                 @Override
                 public void onAdFailedToShow(@NonNull AdError adError) {
                     super.onAdFailedToShow(adError);
-                    Log.e("RewardAdModel_Check", "onAdFailedToShow: "+adError.getMessage());
+                    Log.e("RewardAdModel_Check", "onAdFailedToShow: " + adError.getMessage());
                 }
 
                 @Override

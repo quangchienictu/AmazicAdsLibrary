@@ -3,8 +3,6 @@ package com.amazicadslibrary;
 import androidx.annotation.NonNull;
 
 import com.amazic.ads.billing.AppPurchase;
-import com.amazic.ads.event.AppsflyerEvent;
-import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsApplication;
 import com.amazic.ads.util.AppOpenManager;
 
@@ -17,7 +15,6 @@ public class MyApplication extends AdsApplication {
     public void onCreate() {
         super.onCreate();
         AppOpenManager.getInstance().disableAppResumeWithActivity(Splash.class);
-        AppsflyerEvent.getInstance().init(this, "1233", true);
         List<String> listINAPId = new ArrayList<>();
         listINAPId.add(PRODUCT_ID_MONTH);
         List<String> listSubsId = new ArrayList<>();

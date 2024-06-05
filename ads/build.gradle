@@ -50,12 +50,7 @@ dependencies {
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
     implementation("com.google.android.ump:user-messaging-platform:2.1.0")
 
-    implementation 'com.facebook.shimmer:shimmer:0.5.0'
-
     implementation 'com.facebook.android:facebook-android-sdk:16.1.2'
-    // appsflyer
-    implementation 'com.appsflyer:af-android-sdk:6.8.2'
-    implementation 'com.appsflyer:adrevenue:6.4.3'
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
@@ -82,7 +77,4 @@ dependencies {
     //billing
     implementation "com.android.billingclient:billing:6.2.0"
     implementation 'com.google.guava:guava:31.1-jre'
-
-    //image to text
-    implementation 'com.google.android.gms:play-services-vision:20.1.3'
 }

@@ -18,6 +18,7 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -43,6 +44,7 @@ import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.amazic.ads.event.AdType;
 import com.amazic.ads.event.FirebaseUtil;
+import com.amazic.ads.util.detect_test_ad.DetectTestAd;
 import com.amazic.ads.util.reward.RewardAdCallback;
 import com.amazic.ads.util.reward.RewardAdModel;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -327,6 +329,49 @@ public class Admob {
             checkLoadBanner = false;
             loadBannerFloor(mActivity, idNew, adContainer, containerShimmer, bannerCallBack, false, BANNER_INLINE_LARGE_STYLE);
         }
+    }
+
+    public void loadBannerFloorSplash(final Activity mActivity, List<String> listID, BannerCallBack bannerCallBack) {
+        final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
+        adContainer.removeAllViews();
+        final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        containerShimmer.setVisibility(View.VISIBLE);
+        adContainer.setVisibility(View.GONE);
+        if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(mActivity)) {
+            bannerCallBack.onAdFailedToLoad(new LoadAdError(-1, "not allow", "local", null, null));
+            adContainer.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
+        } else {
+            if (listID == null) {
+                bannerCallBack.onAdFailedToLoad(new LoadAdError(-1, "not have id", "local", null, null));
+                adContainer.setVisibility(View.GONE);
+                containerShimmer.setVisibility(View.GONE);
+                return;
+            }
+            if (listID.isEmpty()) {
+                bannerCallBack.onAdFailedToLoad(new LoadAdError(-1, "not have id", "local", null, null));
+                adContainer.setVisibility(View.GONE);
+                containerShimmer.setVisibility(View.GONE);
+                return;
+            }
+            List<String> idNew = new ArrayList<>(listID);
+            checkLoadBanner = false;
+            loadBannerFloor(mActivity, idNew, adContainer, containerShimmer, bannerCallBack, false, BANNER_INLINE_LARGE_STYLE);
+        }
+    }
+
+    private boolean detectTestAd(ViewGroup viewGroup) {
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View viewChild = viewGroup.getChildAt(i);
+            if (viewChild instanceof ViewGroup) {
+                if (detectTestAd((ViewGroup) viewChild))
+                    return true;
+            }
+            if (viewChild instanceof TextView) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -782,7 +827,7 @@ public class Admob {
         if (checkLoadBanner) {
             return;
         }
-        if (listID.size() == 0) {
+        if (listID.isEmpty()) {
             containerShimmer.stopShimmer();
             adContainer.setVisibility(View.GONE);
             containerShimmer.setVisibility(View.GONE);
@@ -829,6 +874,7 @@ public class Admob {
                 public void onAdLoaded() {
                     checkLoadBanner = true;
                     //lỗi: chưa kiểm tra null
+                    DetectTestAd.getInstance().setShowAds(detectTestAd(adView), mActivity);
                     if (callback != null)
                         callback.onAdLoadSuccess();
                     Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
