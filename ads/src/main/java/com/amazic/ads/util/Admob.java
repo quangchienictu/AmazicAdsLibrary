@@ -2400,6 +2400,7 @@ public class Admob {
             listReward.add(rewardAdModel);
         }
         dialogLoadingLoadAndShowReward = new LoadingAdsDialog(context);
+        dialogLoadingLoadAndShowReward.setCancelable(false);
         dialogLoadingLoadAndShowReward.show();
         rewardAdModel.loadAndShowReward(context, new RewardAdCallback() {
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
