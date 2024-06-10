@@ -2083,6 +2083,7 @@ public class Admob {
             return;
         }
         dialogLoadingLoadAndShowReward = new LoadingAdsDialog(context);
+        dialogLoadingLoadAndShowReward.setCancelable(false);
         dialogLoadingLoadAndShowReward.show();
         RewardedAd.load(context, id, getAdRequest(), new RewardedAdLoadCallback() {
             @Override
