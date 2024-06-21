@@ -35,6 +35,7 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAdRevenue;
 import com.adjust.sdk.AdjustConfig;
+import com.adjust.sdk.AdjustEvent;
 import com.amazic.ads.BuildConfig;
 import com.amazic.ads.R;
 import com.amazic.ads.callback.BannerCallBack;
@@ -3092,6 +3093,12 @@ public class Admob {
         this.timeInterval = timeInterval;
     }
 
+    private String tokenEventAdjust = "";
+
+    public void setTokenEventAdjust(String tokenEventAdjust) {
+        this.tokenEventAdjust = tokenEventAdjust;
+    }
+
     //push adjust
     private void trackRevenue(@Nullable AdapterResponseInfo loadedAdapterResponseInfo, AdValue adValue) {
         String adName = "";
@@ -3103,6 +3110,11 @@ public class Admob {
         AdjustAdRevenue adRevenue = new AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB);
         adRevenue.setRevenue(valueMicros, adValue.getCurrencyCode());
         adRevenue.setAdRevenueNetwork(adName);
+        if (!tokenEventAdjust.isEmpty()) {
+            AdjustEvent event = new AdjustEvent(tokenEventAdjust);
+            adRevenue.setRevenue(valueMicros, adValue.getCurrencyCode());
+            Adjust.trackEvent(event);
+        }
         Adjust.trackAdRevenue(adRevenue);
     }
 }
