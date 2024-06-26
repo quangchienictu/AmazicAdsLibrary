@@ -93,16 +93,14 @@ public class Admob {
     private int maxClickAds = 100;
     private Handler handlerTimeout;
     private Runnable rdTimeout;
-    private boolean isTimeLimited;
     private boolean isShowLoadingSplash = false; //kiểm tra trạng thái ad splash, ko cho load, show khi đang show loading ads splash
-    boolean checkTimeDelay = false;
     private boolean openActivityAfterShowInterAds = true;
     private Context context;
     boolean isTimeDelay = false; //xử lý delay time show ads, = true mới show ads
     private boolean isTimeout; // xử lý timeout show ads
 
     private RewardedAd rewardedAd;
-    private String rewardedId;
+    private String rewardedId = "";
     InterstitialAd mInterstitialSplash;
     InterstitialAd interstitialAd;
     private boolean disableAdResumeWhenClickAds = false;
@@ -117,7 +115,6 @@ public class Admob {
     private boolean logTimeLoadAdsSplash = false;
     private boolean logLogTimeShowAds = false;
     public static boolean isShowAllAds = true;
-    private boolean isFan = false;
     private long currentTime;
     private long currentTimeShowAds;
     private boolean checkLoadBanner = false;
@@ -200,10 +197,6 @@ public class Admob {
         }
 
         this.context = context;
-    }
-
-    public void setFan(boolean fan) {
-        isFan = fan;
     }
 
     /* =======================   Banner ================================= */

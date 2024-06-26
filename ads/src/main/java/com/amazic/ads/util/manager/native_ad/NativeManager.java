@@ -91,8 +91,8 @@ public class NativeManager implements LifecycleEventObserver {
                 if (countDownTimer != null && isStop) {
                     countDownTimer.start();
                 }
+                Log.d(TAG, "onStateChanged: resume");
                 if (isStop && (isReloadAds || isAlwaysReloadOnResume)) {
-                    Log.d(TAG, "onStateChanged: resume");
                     isReloadAds = false;
                     loadNative(isShowLoadingNative);
                 }
@@ -137,11 +137,6 @@ public class NativeManager implements LifecycleEventObserver {
                         trackRevenue(nativeAd.getResponseInfo().getLoadedAdapterResponseInfo(), adValue);
                 });
                 callback.onNativeAdLoaded(nativeAd);
-                Log.d("TAG", "loadNativeFloor1: " + nativeAd.getResponseInfo().getMediationAdapterClassName());
-                Log.d("TAG", "loadNativeFloor2: " + nativeAd.getResponseInfo().getAdapterResponses());
-                Log.d("TAG", "loadNativeFloor3: " + nativeAd.getResponseInfo().getLoadedAdapterResponseInfo().getAdSourceName());
-                Log.d("TAG", "loadNativeFloor4: " + nativeAd.getResponseInfo().getLoadedAdapterResponseInfo().getAdapterClassName());
-                Log.d("TAG", "loadNativeFloor5: " + nativeAd.getResponseInfo().getLoadedAdapterResponseInfo().getAdapterClassName());
                 if (nativeAd.getResponseInfo().getMediationAdapterClassName().toString().toLowerCase().contains("facebook") && this.flAd != null && this.idLayoutShimmer != 0 && this.idLayoutNative != 0) {
                     this.builder.setLayoutAdsMeta(currentActivity, flAd, idLayoutShimmer, idLayoutNative);
                     Log.d(TAG, "loadNativeFloor: case mediation facebook");
@@ -152,7 +147,6 @@ public class NativeManager implements LifecycleEventObserver {
                 public void onAdFailedToLoad(@NonNull LoadAdError adError) {
                     listID.remove(0);
                     Log.d(TAG, "onAdFailedToLoad: " + adError.getMessage());
-                    Log.d(TAG, "listID: " + listID);
                     if (!listID.isEmpty()) {
                         NativeManager.this.loadNativeFloor(listID);
                     } else {
