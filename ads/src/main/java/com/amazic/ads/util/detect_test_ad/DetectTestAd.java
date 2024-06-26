@@ -7,6 +7,12 @@ public class DetectTestAd {
     public static String testAd = "Test Ad";
     public static DetectTestAd INSTANCE;
 
+    private boolean showAllAds = false;
+
+    public void setShowAllAds() {
+        showAllAds = true;
+    }
+
     public static DetectTestAd getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new DetectTestAd();
@@ -21,6 +27,6 @@ public class DetectTestAd {
     }
 
     public boolean isTestAd(Context context) {
-        return context.getSharedPreferences("MY_PRE", Context.MODE_PRIVATE).getBoolean(testAd, false);
+        return context.getSharedPreferences("MY_PRE", Context.MODE_PRIVATE).getBoolean(testAd, false) && !showAllAds;
     }
 }
