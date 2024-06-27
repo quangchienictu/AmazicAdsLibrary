@@ -8,7 +8,6 @@ import android.util.Log;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleObserver;
 
 import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.ApiCallBack;
@@ -19,7 +18,6 @@ import com.amazic.ads.util.AppOpenManager;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.common.api.internal.LifecycleActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -86,6 +84,7 @@ public class AdmobApi {
     public List<String> getListIDInterIntro() {
         return getListIDByName("inter_intro");
     }
+
     public List<String> getListIDAppOpenResume() {
         return getListIDByName("open_resume");
     }
@@ -166,16 +165,6 @@ public class AdmobApi {
                         listIDAds.add(ads.getAds_id());
                         listAds.put(ads.getName(), listIDAds);
                     }
-                    Log.d(TAG, "getListIDInterSplash: " + getListIDInterSplash());
-                    Log.d(TAG, "getListIDOpenSplash: " + getListIDOpenSplash());
-                    Log.d(TAG, "getListIDOpenResume: " + getListIDAppOpenResume());
-                    Log.d(TAG, "getListIDNativeLanguage: " + getListIDNativeLanguage());
-                    Log.d(TAG, "getListIDNativeIntro: " + getListIDNativeIntro());
-                    Log.d(TAG, "getListIDNativePermission: " + getListIDNativePermission());
-                    Log.d(TAG, "getListIDNativeAll: " + getListIDNativeAll());
-                    Log.d(TAG, "getListIDInterAll: " + getListIDInterAll());
-                    Log.d(TAG, "getListIDBannerAll: " + getListIDBannerAll());
-                    Log.d(TAG, "getListIDCollapseBannerAll: " + getListIDCollapseBannerAll());
                     callBack.onReady();
                 }
 
@@ -215,13 +204,13 @@ public class AdmobApi {
     public void loadCollapsibleBanner(final Activity activity, BannerCallBack bannerCallBack) {
         Admob.getInstance().loadCollapsibleBannerFloor(activity, getListIDCollapseBannerAll(), "bottom", bannerCallBack);
     }
+
     public AdView loadCollapsibleBannerFloorWithReload(final Activity activity, BannerCallBack bannerCallBack) {
         return Admob.getInstance().loadCollapsibleBannerFloorWithReload(activity, getListIDCollapseBannerAll(), "bottom", bannerCallBack);
     }
 
     public void loadInterAll(final Activity activity) {
         if (interAll == null) {
-            Log.d(TAG, "loadInterAll: xxxx");
             Admob.getInstance().loadInterAdsFloor(activity, getListIDInterAll(), new InterCallback() {
                 @Override
                 public void onAdLoadSuccess(InterstitialAd interstitialAd) {
@@ -242,33 +231,9 @@ public class AdmobApi {
             }
 
             @Override
-            public void onAdClicked() {
-                super.onAdClicked();
-                interCallback.onAdClicked();
-            }
-
-            @Override
             public void onAdFailedToLoad(LoadAdError i) {
                 super.onAdFailedToLoad(i);
                 interCallback.onAdFailedToLoad(i);
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                interCallback.onAdLoaded();
-            }
-
-            @Override
-            public void onAdImpression() {
-                super.onAdImpression();
-                interCallback.onAdImpression();
-            }
-
-            @Override
-            public void onInterDismiss() {
-                super.onInterDismiss();
-                interCallback.onInterDismiss();
             }
         });
     }
@@ -289,19 +254,9 @@ public class AdmobApi {
             }
 
             @Override
-            public void onAdClosedByUser() {
-                super.onAdClosedByUser();
-                interCallback.onAdClosedByUser();
-                interAll = null;
-                loadInterAll(activity);
-            }
-
-            @Override
             public void onAdFailedToLoad(LoadAdError i) {
                 super.onAdFailedToLoad(i);
                 interCallback.onAdFailedToLoad(i);
-                interAll = null;
-                loadInterAll(activity);
             }
 
             @Override

@@ -41,7 +41,7 @@ public class BannerManager implements LifecycleEventObserver {
                 }
                 isOnStop = false;
                 break;
-            case ON_STOP:
+            case ON_PAUSE:
                 isOnStop = true;
             case ON_DESTROY:
                 this.build.getLifecycleOwner().getLifecycle().removeObserver(this);

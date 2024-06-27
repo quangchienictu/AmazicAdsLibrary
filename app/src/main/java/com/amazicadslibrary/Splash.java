@@ -7,10 +7,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.ApiCallBack;
-import com.amazic.ads.callback.BillingListener;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.iap.BillingCallback;
 import com.amazic.ads.iap.IAPManager;
@@ -20,7 +18,6 @@ import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.AdsSplash;
 import com.amazic.ads.util.AppOpenManager;
-import com.amazic.ads.util.remote_config.RemoteConfig;
 import com.amazic.ads.util.remote_config.SharePreRemoteConfig;
 
 import java.util.ArrayList;
@@ -82,7 +79,6 @@ public class Splash extends AppCompatActivity {
             }
         };
         AdmobApi.getInstance().setListIDOther("native_home");
-        Admob.getInstance().setOpenActivityAfterShowInterAds(false);
 //        AppOpenManager.getInstance().init(Splash.this.getApplication(), getString(R.string.ads_test_resume));
 
         initBilling();
@@ -97,24 +93,19 @@ public class Splash extends AppCompatActivity {
         });
     }
 
-    private void loadAndShowSplashAds(){
+    private void loadAndShowSplashAds() {
         Admob.getInstance().initAdmod(this);
         AdmobApi.getInstance().init(this, null, getString(R.string.app_id), new ApiCallBack() {
             @Override
             public void onReady() {
                 super.onReady();
 //                RemoteConfig.getInstance().onRemoteConfigFetched(Splash.this, () -> {
-                    Log.d(TAG, "number_value remote: " + SharePreRemoteConfig.getConfigInt(Splash.this, "number_value"));
-                    Log.d(TAG, "boolean_value remote: " + SharePreRemoteConfig.getConfigBoolean(Splash.this, "boolean_value"));
-                    Log.d(TAG, "string_value remote: " + SharePreRemoteConfig.getConfigString(Splash.this, "string_value"));
-                    AppOpenManager.getInstance().initApi(getApplication());
-                    /*AdsSplash adsSplash = AdsSplash.init(true, true, "30_70");
-                    adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);*/
-//                });
+                Admob.getInstance().setOpenActivityAfterShowInterAds(true);
+                AppOpenManager.getInstance().initApi(getApplication());
+                AdsSplash adsSplash = AdsSplash.init(true, false, "30_70");
+                adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);
             }
         });
-        AdsSplash adsSplash = AdsSplash.init(true, true, "30_70");
-        adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);
     }
 
     private void initBilling() {

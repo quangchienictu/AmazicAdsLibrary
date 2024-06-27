@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-
+    boolean showAfter = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,26 +77,24 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
         findViewById(R.id.btnClickInter).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showAfter = !showAfter;
+                Admob.getInstance().setOpenActivityAfterShowInterAds(showAfter);
                 AdmobApi.getInstance().showInterAll(MainActivity.this, new InterCallback() {
                     @Override
                     public void onNextAction() {
                         super.onNextAction();
+                        Log.d(TAG, "onNextAction: ");
                         startActivity(new Intent(MainActivity.this, MainActivity3.class));
                     }
 
                     @Override
-                    public void onAdImpression() {
-                        super.onAdImpression();
-                        Log.e("xxxx", "onAdImpression");
-                    }
-
-                    @Override
-                    public void onAdClicked() {
-                        super.onAdClicked();
-                        Log.e("xxxx", "onAdClicked");
+                    public void onLoadInter() {
+                        super.onLoadInter();
+                        Log.d(TAG, "onLoadInter: ");
                     }
                 });
             }
@@ -279,7 +277,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadAdInter() {
         AdmobApi.getInstance().loadInterAll(this, new InterCallback() {
+            @Override
+            public void onAdLoadSuccess(InterstitialAd interstitialAd) {
+                super.onAdLoadSuccess(interstitialAd);
+                Log.d(TAG, "onAdLoadSuccess: ");
+            }
         });
     }
 
+    private static final String TAG = "MainActivityX";
 }

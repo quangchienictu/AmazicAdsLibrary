@@ -98,7 +98,7 @@ public class NativeManager implements LifecycleEventObserver {
                 }
                 isStop = false;
                 break;
-            case ON_STOP:
+            case ON_PAUSE:
                 isStop = true;
                 if (countDownTimer != null) {
                     countDownTimer.cancel();
