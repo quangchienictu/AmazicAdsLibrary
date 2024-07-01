@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustConfig;
 import com.adjust.sdk.LogLevel;
-import com.amazic.ads.util.remote_config.RemoteConfig;
 
 public abstract class AdsApplication extends Application implements Application.ActivityLifecycleCallbacks {
     private static final String TAG = "AdsApplication";
