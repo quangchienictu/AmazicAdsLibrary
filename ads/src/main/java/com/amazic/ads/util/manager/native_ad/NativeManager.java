@@ -47,6 +47,11 @@ public class NativeManager implements LifecycleEventObserver {
     private int intervalReloadNative = 0;
     private boolean isStop = false;
     private CountDownTimer countDownTimer;
+    private boolean isStopReload = false;
+
+    public void notReloadInNextResume() {
+        isStopReload = true;
+    }
 
     public void setIntervalReloadNative(int intervalReloadNative) {
         this.intervalReloadNative = intervalReloadNative;
@@ -92,10 +97,11 @@ public class NativeManager implements LifecycleEventObserver {
                     countDownTimer.start();
                 }
                 Log.d(TAG, "onStateChanged: resume");
-                if (isStop && (isReloadAds || isAlwaysReloadOnResume)) {
+                if (isStop && (isReloadAds || isAlwaysReloadOnResume) && !isStopReload) {
                     isReloadAds = false;
                     loadNative(isShowLoadingNative);
                 }
+                isStopReload = false;
                 isStop = false;
                 break;
             case ON_PAUSE:

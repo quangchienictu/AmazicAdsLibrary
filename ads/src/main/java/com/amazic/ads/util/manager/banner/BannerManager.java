@@ -20,6 +20,12 @@ public class BannerManager implements LifecycleEventObserver {
     private final BannerBuilder build;
     State state = State.LOADED;
     private boolean isOnStop = false;
+    private boolean isStopReload = false;
+
+    public void notReloadInNextResume() {
+        isStopReload = true;
+    }
+
 
     public BannerManager(BannerBuilder build) {
         this.build = build;
@@ -34,11 +40,12 @@ public class BannerManager implements LifecycleEventObserver {
                 loadBanner();
                 break;
             case ON_RESUME:
-                if (isOnStop && (isReloadAds || isAlwaysReloadOnResume)) {
+                if (isOnStop && (isReloadAds || isAlwaysReloadOnResume) && !isStopReload) {
                     Log.d(TAG, "onStateChanged: resume");
                     isReloadAds = false;
                     loadBanner();
                 }
+                isStopReload = false;
                 isOnStop = false;
                 break;
             case ON_PAUSE:
