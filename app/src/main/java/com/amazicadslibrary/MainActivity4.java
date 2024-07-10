@@ -11,7 +11,6 @@ import com.amazic.ads.callback.BannerCallBack;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.RewardCallback;
-import com.amazic.ads.iap.IAPManager;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.manager.native_ad.NativeBuilder;
@@ -122,10 +121,9 @@ public class MainActivity4 extends AppCompatActivity {
     private void loadNativeAuto() {
         FrameLayout fl_native = findViewById(R.id.fr_native_auto);
         NativeBuilder builder = new NativeBuilder(this, fl_native,
-                com.amazic.ads.R.layout.ads_native_shimer_small, com.amazic.ads.R.layout.ads_native_small);
+                com.amazic.ads.R.layout.ads_native_shimer_small, com.amazic.ads.R.layout.ads_native_small, com.amazic.ads.R.layout.ads_native_small);
         builder.setListIdAd(AdmobApi.getInstance().getListIDNativeAll());
-        NativeManager manager = new NativeManager(this, this, builder, fl_native,
-                com.amazic.ads.R.layout.ads_native_shimer_small, com.amazic.ads.R.layout.layout_native_meta);
+        NativeManager manager = new NativeManager(this, this, builder);
     }
 
     private void loadNativeFloor() {

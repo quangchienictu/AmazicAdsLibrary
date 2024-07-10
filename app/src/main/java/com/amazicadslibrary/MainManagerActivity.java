@@ -45,6 +45,7 @@ public class MainManagerActivity extends AppCompatActivity {
                 this,
                 findViewById(R.id.fr_ads),
                 com.amazic.ads.R.layout.ads_native_shimer,
+                R.layout.ads_native,
                 R.layout.ads_native);
         nativeBuilder.setListIdAd(AdmobApi.getInstance().getListIDNativePermission());
         NativeManager nativeManager = new NativeManager(this, this, nativeBuilder);

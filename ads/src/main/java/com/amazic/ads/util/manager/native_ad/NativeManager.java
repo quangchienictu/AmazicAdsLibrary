@@ -3,7 +3,6 @@ package com.amazic.ads.util.manager.native_ad;
 import android.app.Activity;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,9 +40,6 @@ public class NativeManager implements LifecycleEventObserver {
     private boolean isAlwaysReloadOnResume = false;
     private boolean isShowLoadingNative = true;
     State state = State.LOADED;
-    private FrameLayout flAd = null;
-    private int idLayoutShimmer = 0;
-    private int idLayoutNative = 0;
     private int intervalReloadNative = 0;
     private boolean isStop = false;
     private CountDownTimer countDownTimer;
@@ -73,16 +69,6 @@ public class NativeManager implements LifecycleEventObserver {
         this.currentActivity = currentActivity;
         this.lifecycleOwner = lifecycleOwner;
         this.lifecycleOwner.getLifecycle().addObserver(this);
-    }
-
-    public NativeManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, NativeBuilder builder, FrameLayout flAd, int idLayoutShimmer, int idLayoutNative) {
-        this.builder = builder;
-        this.currentActivity = currentActivity;
-        this.lifecycleOwner = lifecycleOwner;
-        this.lifecycleOwner.getLifecycle().addObserver(this);
-        this.flAd = flAd;
-        this.idLayoutShimmer = idLayoutShimmer;
-        this.idLayoutNative = idLayoutNative;
     }
 
     @Override
@@ -143,12 +129,13 @@ public class NativeManager implements LifecycleEventObserver {
                         trackRevenue(nativeAd.getResponseInfo().getLoadedAdapterResponseInfo(), adValue);
                 });
                 callback.onNativeAdLoaded(nativeAd);
-                if (nativeAd.getResponseInfo().getMediationAdapterClassName().toString().toLowerCase().contains("facebook") && this.flAd != null && this.idLayoutShimmer != 0 && this.idLayoutNative != 0) {
-                    this.builder.setLayoutAdsMeta(currentActivity, flAd, idLayoutShimmer, idLayoutNative);
-                    Log.d(TAG, "loadNativeFloor: case mediation facebook");
+                if (nativeAd.getResponseInfo().getMediationAdapterClassName().toString().toLowerCase().contains("facebook")) {
+                    this.builder.showAdMeta();
+                    Admob.getInstance().pushAdsToViewCustom(nativeAd, this.builder.nativeMetaAdView);
+                } else {
+                    this.builder.showAd();
+                    Admob.getInstance().pushAdsToViewCustom(nativeAd, this.builder.nativeAdView);
                 }
-                this.builder.showAd();
-                Admob.getInstance().pushAdsToViewCustom(nativeAd, this.builder.nativeAdView);
             }).withAdListener(new AdListener() {
                 public void onAdFailedToLoad(@NonNull LoadAdError adError) {
                     listID.remove(0);

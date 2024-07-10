@@ -1,7 +1,6 @@
 package com.amazic.ads.util.manager.native_ad;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -22,31 +21,28 @@ public class NativeBuilder {
     private NativeCallback callback = new NativeCallback();
     List<String> listIdAd = new ArrayList<>();
     NativeAdView nativeAdView;
+    NativeAdView nativeMetaAdView;
     ShimmerFrameLayout shimmerFrameLayout;
 
-    public NativeBuilder(Context context, FrameLayout flAd, @LayoutRes int idLayoutShimmer, @LayoutRes int idLayoutNative) {
-        setLayoutAds(context, flAd, idLayoutShimmer, idLayoutNative);
+    public NativeBuilder(Context context, FrameLayout flAd, @LayoutRes int idLayoutShimmer, @LayoutRes int idLayoutNative, @LayoutRes int idLayoutNativeMeta) {
+        setLayoutAds(context, flAd, idLayoutShimmer, idLayoutNative, idLayoutNativeMeta);
     }
 
-    private void setLayoutAds(Context context, FrameLayout flAd, @LayoutRes int idLayoutShimmer, @LayoutRes int idLayoutNative) {
-        View viewAd = LayoutInflater.from(context).inflate(idLayoutNative, null);
-        View shimmer = LayoutInflater.from(context).inflate(idLayoutShimmer, null);
+    private void setLayoutAds(Context context, FrameLayout flAd, @LayoutRes int idLayoutShimmer, @LayoutRes int idLayoutNative, @LayoutRes int idLayoutNativeMeta) {
+        try {
+            nativeAdView = (NativeAdView) LayoutInflater.from(context).inflate(idLayoutNative, null);
+            nativeMetaAdView = (NativeAdView) LayoutInflater.from(context).inflate(idLayoutNativeMeta, null);
+            shimmerFrameLayout = (ShimmerFrameLayout) LayoutInflater.from(context).inflate(idLayoutShimmer, null);
+        } catch (ClassCastException classCastException) {
+            nativeAdView = (NativeAdView) LayoutInflater.from(context).inflate(R.layout.ads_native_large, null);
+            nativeMetaAdView = (NativeAdView) LayoutInflater.from(context).inflate(R.layout.ads_native_meta_large, null);
+            shimmerFrameLayout = (ShimmerFrameLayout) LayoutInflater.from(context).inflate(R.layout.ads_shimmer_large, null);
+        }
         flAd.removeAllViews();
-        if (viewAd instanceof NativeAdView) {
-            Log.d(TAG, "setLayoutAds: NativeAdView");
-            nativeAdView = (NativeAdView) viewAd;
-            flAd.addView(nativeAdView);
-        }
-        if (shimmer instanceof ShimmerFrameLayout) {
-            Log.d(TAG, "setLayoutAds: ShimmerFrameLayout");
-            shimmerFrameLayout = (ShimmerFrameLayout) shimmer;
-            flAd.addView(shimmerFrameLayout);
-        }
+        flAd.addView(nativeMetaAdView);
+        flAd.addView(nativeAdView);
+        flAd.addView(shimmerFrameLayout);
         showLoading();
-    }
-
-    public void setLayoutAdsMeta(Context context, FrameLayout flAd, @LayoutRes int idLayoutShimmer, @LayoutRes int idLayoutNativeMeta) {
-        setLayoutAds(context, flAd, idLayoutShimmer, idLayoutNativeMeta);
     }
 
     public void setListIdAd(List<String> listIdAd) {
@@ -70,11 +66,19 @@ public class NativeBuilder {
     public void showAd() {
         nativeAdView.setVisibility(View.VISIBLE);
         shimmerFrameLayout.setVisibility(View.GONE);
+        nativeMetaAdView.setVisibility(View.GONE);
+    }
+
+    public void showAdMeta() {
+        nativeMetaAdView.setVisibility(View.VISIBLE);
+        nativeAdView.setVisibility(View.GONE);
+        shimmerFrameLayout.setVisibility(View.GONE);
     }
 
     public void showLoading() {
         shimmerFrameLayout.setVisibility(View.VISIBLE);
         nativeAdView.setVisibility(View.GONE);
+        nativeMetaAdView.setVisibility(View.GONE);
     }
 
     public void hideAd() {
