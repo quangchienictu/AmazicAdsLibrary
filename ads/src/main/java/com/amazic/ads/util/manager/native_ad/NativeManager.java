@@ -40,7 +40,7 @@ public class NativeManager implements LifecycleEventObserver {
     private boolean isAlwaysReloadOnResume = false;
     private boolean isShowLoadingNative = true;
     State state = State.LOADED;
-    private int intervalReloadNative = 0;
+    private long intervalReloadNative = 0;
     private boolean isStop = false;
     private CountDownTimer countDownTimer;
     private boolean isStopReload = false;
@@ -49,8 +49,9 @@ public class NativeManager implements LifecycleEventObserver {
         isStopReload = true;
     }
 
-    public void setIntervalReloadNative(int intervalReloadNative) {
-        this.intervalReloadNative = intervalReloadNative;
+    public void setIntervalReloadNative(long intervalReloadNative) {
+        if (intervalReloadNative > 0)
+            this.intervalReloadNative = intervalReloadNative;
         countDownTimer = new CountDownTimer(this.intervalReloadNative, 1000) {
             @Override
             public void onTick(long l) {
