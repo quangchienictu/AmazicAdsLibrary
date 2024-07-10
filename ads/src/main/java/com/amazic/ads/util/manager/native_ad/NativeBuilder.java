@@ -35,9 +35,9 @@ public class NativeBuilder {
 
         if (_nativeAdView instanceof NativeAdView) nativeAdView = (NativeAdView) _nativeAdView;
         else nativeAdView = (NativeAdView) LayoutInflater.from(context).inflate(R.layout.ads_native_large, null);
-        if (_nativeMetaAdView instanceof NativeAdView) nativeMetaAdView = (NativeAdView) _nativeMetaAdView
+        if (_nativeMetaAdView instanceof NativeAdView) nativeMetaAdView = (NativeAdView) _nativeMetaAdView;
         else nativeMetaAdView = (NativeAdView) LayoutInflater.from(context).inflate(R.layout.ads_native_meta_large, null);
-        if (_shimmerFrameLayout instanceof ShimmerFrameLayout) shimmerFrameLayout = (ShimmerFrameLayout) _shimmerFrameLayout
+        if (_shimmerFrameLayout instanceof ShimmerFrameLayout) shimmerFrameLayout = (ShimmerFrameLayout) _shimmerFrameLayout;
         else shimmerFrameLayout = (ShimmerFrameLayout) LayoutInflater.from(context).inflate(R.layout.ads_shimmer_large, null);
 
         flAd.removeAllViews();
