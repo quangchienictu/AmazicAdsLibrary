@@ -29,15 +29,17 @@ public class NativeBuilder {
     }
 
     private void setLayoutAds(Context context, FrameLayout flAd, @LayoutRes int idLayoutShimmer, @LayoutRes int idLayoutNative, @LayoutRes int idLayoutNativeMeta) {
-        try {
-            nativeAdView = (NativeAdView) LayoutInflater.from(context).inflate(idLayoutNative, null);
-            nativeMetaAdView = (NativeAdView) LayoutInflater.from(context).inflate(idLayoutNativeMeta, null);
-            shimmerFrameLayout = (ShimmerFrameLayout) LayoutInflater.from(context).inflate(idLayoutShimmer, null);
-        } catch (ClassCastException classCastException) {
-            nativeAdView = (NativeAdView) LayoutInflater.from(context).inflate(R.layout.ads_native_large, null);
-            nativeMetaAdView = (NativeAdView) LayoutInflater.from(context).inflate(R.layout.ads_native_meta_large, null);
-            shimmerFrameLayout = (ShimmerFrameLayout) LayoutInflater.from(context).inflate(R.layout.ads_shimmer_large, null);
-        }
+        View _nativeAdView = LayoutInflater.from(context).inflate(idLayoutNative, null);
+        View _nativeMetaAdView = LayoutInflater.from(context).inflate(idLayoutNativeMeta, null);
+        View _shimmerFrameLayout = LayoutInflater.from(context).inflate(idLayoutShimmer, null);
+
+        if (_nativeAdView instanceof NativeAdView) nativeAdView = (NativeAdView) _nativeAdView;
+        else nativeAdView = (NativeAdView) LayoutInflater.from(context).inflate(R.layout.ads_native_large, null);
+        if (_nativeMetaAdView instanceof NativeAdView) nativeMetaAdView = (NativeAdView) _nativeMetaAdView
+        else nativeMetaAdView = (NativeAdView) LayoutInflater.from(context).inflate(R.layout.ads_native_meta_large, null);
+        if (_shimmerFrameLayout instanceof ShimmerFrameLayout) shimmerFrameLayout = (ShimmerFrameLayout) _shimmerFrameLayout
+        else shimmerFrameLayout = (ShimmerFrameLayout) LayoutInflater.from(context).inflate(R.layout.ads_shimmer_large, null);
+
         flAd.removeAllViews();
         flAd.addView(nativeMetaAdView);
         flAd.addView(nativeAdView);
