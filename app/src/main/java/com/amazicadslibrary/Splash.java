@@ -18,7 +18,6 @@ import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.AdsSplash;
 import com.amazic.ads.util.AppOpenManager;
-import com.amazic.ads.util.remote_config.SharePreRemoteConfig;
 
 import java.util.ArrayList;
 
