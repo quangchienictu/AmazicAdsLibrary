@@ -27,6 +27,6 @@ public class DetectTestAd {
     }
 
     public boolean isTestAd(Context context) {
-        return context.getSharedPreferences("MY_PRE", Context.MODE_PRIVATE).getBoolean(testAd, false) || !showAllAds;
+        return context.getSharedPreferences("MY_PRE", Context.MODE_PRIVATE).getBoolean(testAd, false) && !showAllAds;
     }
 }
