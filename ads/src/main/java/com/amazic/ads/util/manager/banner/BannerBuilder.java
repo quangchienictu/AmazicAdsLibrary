@@ -11,14 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BannerBuilder {
-    private final Activity currentActivity;
-    private final LifecycleOwner lifecycleOwner;
     private BannerCallBack callBack = new BannerCallBack();
     private final List<String> listId = new ArrayList<>();
 
-    public BannerBuilder(Activity activity, LifecycleOwner lifecycleOwner) {
-        this.currentActivity = activity;
-        this.lifecycleOwner = lifecycleOwner;
+    public BannerBuilder() {
     }
 
     public BannerBuilder setListId(List<String> listId) {
@@ -41,14 +37,6 @@ public class BannerBuilder {
     public void setListIdAd(String nameIdAd) {
         this.listId.clear();
         this.listId.addAll(AdmobApi.getInstance().getListIDByName(nameIdAd));
-    }
-
-    public Activity getCurrentActivity() {
-        return currentActivity;
-    }
-
-    public LifecycleOwner getLifecycleOwner() {
-        return lifecycleOwner;
     }
 
     public BannerCallBack getCallBack() {

@@ -1,5 +1,6 @@
 package com.amazic.ads.util.manager.banner;
 
+import android.app.Activity;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,8 @@ import com.google.android.gms.ads.LoadAdError;
 public class BannerManager implements LifecycleEventObserver {
     enum State {LOADING, LOADED}
 
+    private final Activity currentActivity;
+    private final LifecycleOwner lifecycleOwner;
     private static final String TAG = "BannerManager";
     private boolean isReloadAds = false;
     private boolean isAlwaysReloadOnResume = false;
@@ -27,9 +30,11 @@ public class BannerManager implements LifecycleEventObserver {
     }
 
 
-    public BannerManager(BannerBuilder build) {
+    public BannerManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner,BannerBuilder build) {
         this.build = build;
-        this.build.getLifecycleOwner().getLifecycle().addObserver(this);
+        this.currentActivity = currentActivity;
+        this.lifecycleOwner = lifecycleOwner;
+        this.lifecycleOwner.getLifecycle().addObserver(this);
     }
 
     @Override
@@ -54,7 +59,7 @@ public class BannerManager implements LifecycleEventObserver {
                 isOnStop = true;
             case ON_DESTROY:
                 Log.d(TAG, "onStateChanged: ON_DESTROY");
-                this.build.getLifecycleOwner().getLifecycle().removeObserver(this);
+               lifecycleOwner.getLifecycle().removeObserver(this);
                 break;
         }
     }
@@ -89,9 +94,9 @@ public class BannerManager implements LifecycleEventObserver {
                     build.getCallBack().onAdImpression();
                 }
             };
-            Admob.getInstance().loadBannerFloor(build.getCurrentActivity(), build.getListId(), bannerCallBack);
+            Admob.getInstance().loadBannerFloor(currentActivity, build.getListId(), bannerCallBack);
         } else
-            Admob.getInstance().hideBanner(build.getCurrentActivity());
+            Admob.getInstance().hideBanner(currentActivity);
     }
 
     public void setReloadAds() {
