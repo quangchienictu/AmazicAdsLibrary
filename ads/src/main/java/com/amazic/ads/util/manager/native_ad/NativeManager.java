@@ -33,13 +33,13 @@ public class NativeManager implements LifecycleEventObserver {
     enum State {LOADING, LOADED}
 
     private static final String TAG = "NativeManager";
-    final NativeBuilder builder;
+    private final NativeBuilder builder;
     private final Activity currentActivity;
     private final LifecycleOwner lifecycleOwner;
     private boolean isReloadAds = false;
     private boolean isAlwaysReloadOnResume = false;
     private boolean isShowLoadingNative = true;
-    State state = State.LOADED;
+    private State state = State.LOADED;
     private long intervalReloadNative = 0;
     private boolean isStop = false;
     private CountDownTimer countDownTimer;

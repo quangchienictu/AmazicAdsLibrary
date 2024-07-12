@@ -33,9 +33,10 @@ public class MainManagerActivity extends AppCompatActivity {
 
     @NonNull
     private BannerManager initBannerManager() {
-        BannerBuilder bannerBuilder = new BannerBuilder(this, this)
+        BannerBuilder bannerBuilder = new BannerBuilder()
                 .isIdApi();
-        BannerManager bannerManager = new BannerManager(bannerBuilder);
+        BannerManager bannerManager = new BannerManager(this, this,bannerBuilder);
+        bannerManager.setAlwaysReloadOnResume(true);
         return bannerManager;
     }
 
