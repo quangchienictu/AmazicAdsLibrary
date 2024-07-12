@@ -83,7 +83,8 @@ public class NativeManager implements LifecycleEventObserver {
                 if (countDownTimer != null && isStop) {
                     countDownTimer.start();
                 }
-                Log.d(TAG, "onStateChanged: resume");
+                String valueLog = isStop + " && " + (isReloadAds || isAlwaysReloadOnResume) + " && " + !isStopReload;
+                Log.d(TAG, "onStateChanged: resume\n" + valueLog);
                 if (isStop && (isReloadAds || isAlwaysReloadOnResume) && !isStopReload) {
                     isReloadAds = false;
                     loadNative(isShowLoadingNative);
@@ -92,12 +93,14 @@ public class NativeManager implements LifecycleEventObserver {
                 isStop = false;
                 break;
             case ON_PAUSE:
+                Log.d(TAG, "onStateChanged: ON_PAUSE");
                 isStop = true;
                 if (countDownTimer != null) {
                     countDownTimer.cancel();
                 }
                 break;
             case ON_DESTROY:
+                Log.d(TAG, "onStateChanged: ON_DESTROY");
                 this.lifecycleOwner.getLifecycle().removeObserver(this);
                 break;
         }
