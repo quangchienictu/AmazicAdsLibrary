@@ -868,7 +868,8 @@ public class Admob {
                 public void onAdLoaded() {
                     checkLoadBanner = true;
                     //lỗi: chưa kiểm tra null
-                    DetectTestAd.getInstance().detectedTestAd(detectTestAd(adView), mActivity);
+                    if (!DetectTestAd.getInstance().isTestAd(context))
+                        DetectTestAd.getInstance().detectedTestAd(detectTestAd(adView), mActivity);
                     if (callback != null)
                         callback.onAdLoadSuccess();
                     Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
