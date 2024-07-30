@@ -20,6 +20,7 @@ import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.AdsSplash;
 import com.amazic.ads.util.AppOpenManager;
+import com.amazic.ads.util.organic.OrganicManager;
 import com.amazic.ads.util.remote_config.RemoteConfig;
 import com.amazic.ads.util.remote_config.SharePreRemoteConfig;
 
@@ -87,6 +88,12 @@ public class Splash extends AppCompatActivity {
 
         initBilling();
 
+        /*OrganicManager.getInstance().getGAID(this, "", new OrganicManager.OnCheckResultCallback() {
+            @Override
+            public void onResult(Boolean result) {
+
+            }
+        });*/
     }
 
     private void setUpUMP() {
