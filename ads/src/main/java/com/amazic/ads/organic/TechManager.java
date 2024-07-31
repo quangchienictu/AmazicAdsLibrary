@@ -71,6 +71,7 @@ public class TechManager {
                         Log.d(TAG, "onResponse Success" + responseData.getTrackerName());
                         onResponse.onResponse(responseData.getTrackerName());
                     } else {
+                        Log.d(TAG, "onResponse Success null");
                         onResponse.onResponse("");
                     }
                 } else {

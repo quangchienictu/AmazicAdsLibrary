@@ -27,6 +27,9 @@
 -keep class com.amazic.ads.iap.**{ *; }
 -keep class com.amazic.ads.service.**{ *; }
 -keep class com.amazic.ads.util.**{ *; }
+-keep class com.amazic.ads.organic.AdjustOutputModel.**{ *; }
+-keep class com.amazic.ads.organic.ApiServiceAdjust.**{ *; }
+-keep class com.amazic.ads.organic.RetrofitClientAdjust.**{ *; }
 -keep class com.amazic.ads.organic.TechManager {
     public *;
 }
