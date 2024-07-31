@@ -30,6 +30,7 @@
 -keep class com.amazic.ads.organic.AdjustOutputModel.**{ *; }
 -keep class com.amazic.ads.organic.ApiServiceAdjust.**{ *; }
 -keep class com.amazic.ads.organic.RetrofitClientAdjust.**{ *; }
+-keep class com.amazic.ads.organic.Constant.**{ *; }
 -keep class com.amazic.ads.organic.TechManager {
     public *;
 }
