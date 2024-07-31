@@ -19,7 +19,11 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -80,7 +84,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-config'
 
     //billing
-    implementation "com.android.billingclient:billing:6.2.0"
+    implementation "com.android.billingclient:billing:7.0.0"
     implementation 'com.google.guava:guava:31.1-jre'
 
     //image to text

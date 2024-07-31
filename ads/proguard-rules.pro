@@ -20,5 +20,5 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.amazic.ads.**{ *; }
+#-keep class com.amazic.ads.**{ *; }
 -keep class retrofit2.**{ *; }

@@ -88,12 +88,12 @@ public class Splash extends AppCompatActivity {
 
         initBilling();
 
-        /*OrganicManager.getInstance().getGAID(this, "", new OrganicManager.OnCheckResultCallback() {
+        OrganicManager.getInstance().getGAID(this, "", new OrganicManager.OnCheckResultCallback() {
             @Override
             public void onResult(Boolean result) {
 
             }
-        });*/
+        });
     }
 
     private void setUpUMP() {
