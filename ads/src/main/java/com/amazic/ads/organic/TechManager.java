@@ -60,7 +60,7 @@ public class TechManager {
         Call<AdjustOutputModel> callAdjust = apiServiceAdjust.sendData(
                 advertId,
                 adjustKey,
-                "Bearer mpBYiG4WNndUpojp7pez"
+                Constant.apiKey
         );
         callAdjust.enqueue(new Callback<AdjustOutputModel>() {
             @Override

@@ -7,7 +7,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClientAdjust {
-    private static final String BASE_URL = "https://api.adjust.com/device_service/api/v1/";
+    private static final String BASE_URL = Constant.baseUrl;
 
     public static ApiServiceAdjust createService() {
         OkHttpClient httpClient = new OkHttpClient.Builder()
