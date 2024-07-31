@@ -7,10 +7,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.ApiCallBack;
-import com.amazic.ads.callback.BillingListener;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.iap.BillingCallback;
 import com.amazic.ads.iap.IAPManager;
@@ -20,7 +18,7 @@ import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.AdsSplash;
 import com.amazic.ads.util.AppOpenManager;
-import com.amazic.ads.util.organic.OrganicManager;
+import com.amazic.ads.organic.TechManager;
 import com.amazic.ads.util.remote_config.RemoteConfig;
 import com.amazic.ads.util.remote_config.SharePreRemoteConfig;
 
@@ -88,7 +86,7 @@ public class Splash extends AppCompatActivity {
 
         initBilling();
 
-        OrganicManager.getInstance().getGAID(this, "", new OrganicManager.OnCheckResultCallback() {
+        TechManager.getInstance().getResult(this, "", new TechManager.OnCheckResultCallback() {
             @Override
             public void onResult(Boolean result) {
 

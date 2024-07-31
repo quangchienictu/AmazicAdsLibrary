@@ -1,4 +1,4 @@
-package com.amazic.ads.util.organic;
+package com.amazic.ads.organic;
 
 import android.content.Context;
 import android.os.Handler;
@@ -17,22 +17,25 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OrganicManager {
+public class TechManager {
     private String advertId = "";
-    private String keyCheck = "Organic";
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private Handler handler = new Handler(Looper.getMainLooper());
-    public static OrganicManager INSTANCE;
-    public String TAG = "OrganicManager";
+    public static TechManager INSTANCE;
+    public String TAG = "TechManager";
 
-    public static OrganicManager getInstance() {
+    public static TechManager getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new OrganicManager();
+            INSTANCE = new TechManager();
         }
         return INSTANCE;
     }
 
-    public void getGAID(Context context, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
+    public void getResult(Context context, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
+        getGAID(context, adjustKey, onCheckResultCallback);
+    }
+
+    private void getGAID(Context context, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
         executorService.execute(() -> {
             AdvertisingIdClient.Info idInfo;
             try {
@@ -46,7 +49,7 @@ public class OrganicManager {
             handler.post(() -> getAdjustResponse(adjustKey, advertId, new OnResponseCallback() {
                 @Override
                 public void onResponse(String result) {
-                    onCheckResultCallback.onResult(result.equals(keyCheck));
+                    onCheckResultCallback.onResult(result.equals(Constant.keyCheck));
                 }
             }));
         });

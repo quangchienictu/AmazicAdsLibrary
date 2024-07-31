@@ -1,4 +1,4 @@
-package com.amazic.ads.util.organic;
+package com.amazic.ads.organic;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
