@@ -1,10 +1,9 @@
-package com.amazicadslibrary;
+package com.drawingapps.tracedrawing.drawingsketch.drawingapps;
 
 import androidx.annotation.NonNull;
 
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.event.AppsflyerEvent;
-import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsApplication;
 import com.amazic.ads.util.AppOpenManager;
 

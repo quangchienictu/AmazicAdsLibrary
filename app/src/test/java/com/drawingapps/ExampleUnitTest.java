@@ -1,4 +1,4 @@
-package com.amazicadslibrary;
+package com.drawingapps;
 
 import org.junit.Test;
 

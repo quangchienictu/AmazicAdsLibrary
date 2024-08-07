@@ -1,4 +1,4 @@
-package com.amazicadslibrary;
+package com.drawingapps.tracedrawing.drawingsketch.drawingapps;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.organic.TechManager;
 import com.amazic.ads.util.remote_config.RemoteConfig;
 import com.amazic.ads.util.remote_config.SharePreRemoteConfig;
+import com.ardrawing.tracedrawing.drawingsketch.drawingapps.R;
 
 import java.util.ArrayList;
 
@@ -86,7 +87,7 @@ public class Splash extends AppCompatActivity {
 
         initBilling();
 
-        TechManager.getInstance().getResult(this, "", new TechManager.OnCheckResultCallback() {
+        TechManager.getInstance().getResult(this, "n2j8vj5m59mo", new TechManager.OnCheckResultCallback() {
             @Override
             public void onResult(Boolean result) {
 
