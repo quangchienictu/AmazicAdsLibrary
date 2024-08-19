@@ -13,6 +13,7 @@ import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.iap.BillingCallback;
 import com.amazic.ads.iap.IAPManager;
 import com.amazic.ads.iap.ProductDetailCustom;
+import com.amazic.ads.organic.TechManager;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
@@ -82,6 +83,12 @@ public class Splash extends AppCompatActivity {
 
         initBilling();
 
+        TechManager.getInstance().getResult(this, "", new TechManager.OnCheckResultCallback() {
+            @Override
+            public void onResult(Boolean result) {
+
+            }
+        });
     }
 
     private void setUpUMP() {
