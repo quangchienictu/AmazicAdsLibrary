@@ -1,4 +1,4 @@
-package com.amazicadslibrary;
+package com.drawingapps.tracedrawing.drawingsketch.drawingapps;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import com.amazic.ads.iap.PurchaseCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.reward.RewardAdCallback;
+import com.amazicadslibrary.R;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
@@ -50,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+
     boolean showAfter = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
             }
         });
-
 
 
         findViewById(R.id.btnClickInter).setOnClickListener(new View.OnClickListener() {

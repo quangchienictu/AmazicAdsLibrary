@@ -1,4 +1,4 @@
-package com.amazicadslibrary;
+package com.drawingapps.tracedrawing.drawingsketch.drawingapps;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +19,7 @@ import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.AdsSplash;
 import com.amazic.ads.util.AppOpenManager;
+import com.amazicadslibrary.R;
 
 import java.util.ArrayList;
 
@@ -83,7 +84,7 @@ public class Splash extends AppCompatActivity {
 
         initBilling();
 
-        TechManager.getInstance().getResult(this, "", new TechManager.OnCheckResultCallback() {
+        TechManager.getInstance().getResult(this, 0,"", new TechManager.OnCheckResultCallback() {
             @Override
             public void onResult(Boolean result) {
 

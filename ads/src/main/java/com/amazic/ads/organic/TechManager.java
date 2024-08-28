@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.amazic.ads.util.Admob;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -31,11 +32,11 @@ public class TechManager {
         return INSTANCE;
     }
 
-    public void getResult(Context context, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
-        getGAID(context, adjustKey, onCheckResultCallback);
+    public void getResult(Context context, long interInterval, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
+        getGAID(context, interInterval, adjustKey, onCheckResultCallback);
     }
 
-    private void getGAID(Context context, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
+    private void getGAID(Context context, long interInterval, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
         executorService.execute(() -> {
             AdvertisingIdClient.Info idInfo;
             try {
@@ -49,6 +50,11 @@ public class TechManager {
             handler.post(() -> getAdjustResponse(adjustKey, advertId, new OnResponseCallback() {
                 @Override
                 public void onResponse(String result) {
+                    if (result.equals(Constant.keyCheck)) {
+                        if (interInterval > 0) {
+                            Admob.getInstance().setTimeInterval(interInterval);
+                        }
+                    }
                     onCheckResultCallback.onResult(result.equals(Constant.keyCheck));
                 }
             }));

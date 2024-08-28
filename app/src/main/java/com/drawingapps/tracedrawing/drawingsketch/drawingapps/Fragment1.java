@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.BannerGravity;
-import com.ardrawing.tracedrawing.drawingsketch.drawingapps.R;
+import com.amazicadslibrary.R;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 
@@ -21,7 +21,7 @@ public class Fragment1 extends Fragment {
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment1,container,false);
-        Admob.getInstance().loadCollapsibleBannerFragmentFloor(requireActivity(),MainActivity.listID,view, BannerGravity.bottom);
+        Admob.getInstance().loadCollapsibleBannerFragmentFloor(requireActivity(), MainActivity.listID,view, BannerGravity.bottom);
         return view;
 
     }
