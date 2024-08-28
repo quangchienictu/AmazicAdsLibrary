@@ -1,11 +1,11 @@
 package com.amazic.ads.organic;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.amazic.ads.util.Admob;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -32,11 +32,42 @@ public class TechManager {
         return INSTANCE;
     }
 
-    public void getResult(Context context, long interInterval, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
-        getGAID(context, interInterval, adjustKey, onCheckResultCallback);
+    public void detectedTech(Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences("MY_PRE", Context.MODE_PRIVATE).edit();
+        editor.putBoolean(TAG, true);
+        editor.apply();
+        Log.d(TAG, "detectedTech: ");
     }
 
-    private void getGAID(Context context, long interInterval, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
+    public boolean isTech(Context context) {
+        Log.d(TAG, "isTech: " + context.getSharedPreferences("MY_PRE", Context.MODE_PRIVATE).getBoolean(TAG, false));
+        return context.getSharedPreferences("MY_PRE", Context.MODE_PRIVATE).getBoolean(TAG, false);
+    }
+
+    public void getResult(boolean isDebug, Context context, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
+        if (isDebug) {
+            onCheckResultCallback.onResult(false);
+        } else {
+            if (isTech(context)) {
+                onCheckResultCallback.onResult(true);
+                Log.d(TAG, "getResult1: " + isTech(context));
+            } else {
+                getGAID(context, adjustKey, onCheckResultCallback);
+                Log.d(TAG, "getResult2: " + isTech(context));
+            }
+        }
+    }
+    public void getResult(Context context, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
+        if (isTech(context)) {
+            onCheckResultCallback.onResult(true);
+            Log.d(TAG, "getResult1: " + isTech(context));
+        } else {
+            getGAID(context, adjustKey, onCheckResultCallback);
+            Log.d(TAG, "getResult2: " + isTech(context));
+        }
+    }
+
+    private void getGAID(Context context, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
         executorService.execute(() -> {
             AdvertisingIdClient.Info idInfo;
             try {
@@ -46,14 +77,14 @@ public class TechManager {
             } catch (GooglePlayServicesNotAvailableException |
                      GooglePlayServicesRepairableException | IOException | NullPointerException e) {
                 e.printStackTrace();
+                Log.d(TAG, "getGAID fail");
             }
             handler.post(() -> getAdjustResponse(adjustKey, advertId, new OnResponseCallback() {
                 @Override
                 public void onResponse(String result) {
+                    Log.d(TAG, "onResponse " + result);
                     if (result.equals(Constant.keyCheck)) {
-                        if (interInterval > 0) {
-                            Admob.getInstance().setTimeInterval(interInterval);
-                        }
+                        detectedTech(context);
                     }
                     onCheckResultCallback.onResult(result.equals(Constant.keyCheck));
                 }
