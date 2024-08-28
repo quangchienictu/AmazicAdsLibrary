@@ -1,4 +1,4 @@
-package com.amazicadslibrary;
+package com.drawingapps.tracedrawing.drawingsketch.drawingapps;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import com.amazic.ads.util.manager.banner.BannerBuilder;
 import com.amazic.ads.util.manager.banner.BannerManager;
 import com.amazic.ads.util.manager.native_ad.NativeBuilder;
 import com.amazic.ads.util.manager.native_ad.NativeManager;
+import com.ardrawing.tracedrawing.drawingsketch.drawingapps.R;
 
 public class MainManagerActivity extends AppCompatActivity {
 

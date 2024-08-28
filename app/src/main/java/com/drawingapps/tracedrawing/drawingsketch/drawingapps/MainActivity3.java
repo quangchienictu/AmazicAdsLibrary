@@ -1,4 +1,4 @@
-package com.amazicadslibrary;
+package com.drawingapps.tracedrawing.drawingsketch.drawingapps;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.util.Admob;
+import com.ardrawing.tracedrawing.drawingsketch.drawingapps.R;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 

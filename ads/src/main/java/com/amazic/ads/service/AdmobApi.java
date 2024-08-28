@@ -91,7 +91,7 @@ public class AdmobApi {
 
     public List<String> getListIDByName(String nameAds) {
         List<String> list = new ArrayList<>();
-        if (listAds.get(nameAds) != null)
+        if (listAds.get(nameAds.toLowerCase().trim()) != null)
             list.addAll(Objects.requireNonNull(listAds.get(nameAds)));
         return list;
     }
@@ -163,7 +163,7 @@ public class AdmobApi {
                             listIDAds = new ArrayList<>();
                         }
                         listIDAds.add(ads.getAds_id());
-                        listAds.put(ads.getName(), listIDAds);
+                        listAds.put(ads.getName().toLowerCase().trim(), listIDAds);
                     }
                     callBack.onReady();
                 }

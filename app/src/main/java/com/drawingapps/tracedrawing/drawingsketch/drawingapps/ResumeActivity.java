@@ -1,6 +1,5 @@
-package com.amazicadslibrary;
+package com.drawingapps.tracedrawing.drawingsketch.drawingapps;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -11,7 +10,7 @@ import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.manager.open_app.OpenAppBuilder;
 import com.amazic.ads.util.manager.open_app.OpenAppCallback;
 import com.amazic.ads.util.manager.open_app.AdOpenAppManager;
-import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.ardrawing.tracedrawing.drawingsketch.drawingapps.R;
 
 public class ResumeActivity extends AppCompatActivity {
 

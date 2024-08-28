@@ -20,5 +20,19 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.amazic.ads.**{ *; }
+-keep class com.amazic.ads.billing.**{ *; }
+-keep class com.amazic.ads.callback.**{ *; }
+-keep class com.amazic.ads.dialog.**{ *; }
+-keep class com.amazic.ads.event.**{ *; }
+-keep class com.amazic.ads.iap.**{ *; }
+-keep class com.amazic.ads.service.**{ *; }
+-keep class com.amazic.ads.util.**{ *; }
+-keep class com.amazic.ads.organic.**{ *; }
+-keep class com.amazic.ads.organic.AdjustOutputModel.**{ *; }
+-keep class com.amazic.ads.organic.ApiServiceAdjust.**{ *; }
+-keep class com.amazic.ads.organic.RetrofitClientAdjust.**{ *; }
+-keep class com.amazic.ads.organic.Constant.**{ *; }
+-keep class com.amazic.ads.organic.TechManager {
+    public *;
+}
 -keep class retrofit2.**{ *; }
