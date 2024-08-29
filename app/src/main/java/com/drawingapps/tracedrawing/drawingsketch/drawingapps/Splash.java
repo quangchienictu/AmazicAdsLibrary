@@ -84,7 +84,7 @@ public class Splash extends AppCompatActivity {
 
         initBilling();
 
-        TechManager.getInstance().getResult(this,"", new TechManager.OnCheckResultCallback() {
+        TechManager.getInstance().getResult(true, this,"", new TechManager.OnCheckResultCallback() {
             @Override
             public void onResult(Boolean result) {
                 if (result){

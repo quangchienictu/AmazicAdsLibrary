@@ -2159,6 +2159,9 @@ public class Admob {
             }
 
             public void onAdShowed() {
+                if (dialogLoadingLoadAndShowReward != null && dialogLoadingLoadAndShowReward.isShowing()) {
+                    dialogLoadingLoadAndShowReward.dismiss();
+                }
                 callback.onAdShowed();
             }
 
