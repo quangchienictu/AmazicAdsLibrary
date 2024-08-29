@@ -75,7 +75,6 @@
                         android:ellipsize="end"
                         android:gravity="bottom"
                         android:maxLines="2"
-                        android:text="@string/app_name"
                         android:textColor="#797C80"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -107,7 +106,6 @@
                     android:ellipsize="end"
                     android:lines="2"
                     android:maxLines="2"
-                    android:text="@string/app_name"
                     android:textColor="#626262"
                     android:textSize="12sp" />
 
