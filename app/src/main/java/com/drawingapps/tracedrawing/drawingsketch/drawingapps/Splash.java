@@ -19,7 +19,7 @@ import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.AdsSplash;
 import com.amazic.ads.util.AppOpenManager;
-import com.amazicadslibrary.R;
+import com.ardrawing.tracedrawing.drawingsketch.drawingapps.R;
 
 import java.util.ArrayList;
 
@@ -67,7 +67,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onNextAction() {
                 super.onNextAction();
-                startActivity(new Intent(Splash.this, MainManagerActivity.class));
+                startActivity(new Intent(Splash.this, MainActivity.class));
                 finish();
             }
         };
@@ -75,7 +75,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onNextAction() {
                 super.onNextAction();
-                startActivity(new Intent(Splash.this, MainManagerActivity.class));
+                startActivity(new Intent(Splash.this, MainActivity.class));
                 finish();
             }
         };

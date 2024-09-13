@@ -46,7 +46,6 @@ import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.amazic.ads.event.AdType;
 import com.amazic.ads.event.FirebaseUtil;
 import com.amazic.ads.util.detect_test_ad.DetectTestAd;
-import com.amazic.ads.util.reward.InterRewardAdCallback;
 import com.amazic.ads.util.reward.InterRewardAdModel;
 import com.amazic.ads.util.reward.RewardAdCallback;
 import com.amazic.ads.util.reward.RewardAdModel;
@@ -2260,7 +2259,7 @@ public class Admob {
 
     private final List<InterRewardAdModel> listInterReward = new ArrayList<>();
 
-    public void loadInterReward(Context context, String listAdIDName, InterRewardAdCallback callback) {
+    public void loadInterReward(Context context, String listAdIDName, RewardAdCallback callback) {
         if (!isShowAllAds || !AdsConsentManager.getConsentResult(context)) {
             callback.onAdLoaded(false);
             return;
@@ -2290,7 +2289,7 @@ public class Admob {
         });
     }
 
-    public void showInterReward(Context context, String listAdIDName, InterRewardAdCallback callback) {
+    public void showInterReward(Context context, String listAdIDName, RewardAdCallback callback) {
         if (!isShowAllAds || !AdsConsentManager.getConsentResult(context)) {
             callback.onNextAction();
             return;
@@ -2345,7 +2344,7 @@ public class Admob {
         });
     }
 
-    public void loadAndShowInterReward(Context context, String listAdIDName, InterRewardAdCallback callback) {
+    public void loadAndShowInterReward(Context context, String listAdIDName, RewardAdCallback callback) {
         if (!isShowAllAds || !AdsConsentManager.getConsentResult(context)) {
             callback.onNextAction();
             return;

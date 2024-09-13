@@ -1,10 +1,11 @@
-package com.amazicadslibrary;
+package com.drawingapps.tracedrawing.drawingsketch.drawingapps;
 
 import androidx.annotation.NonNull;
 
 import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.util.AdsApplication;
 import com.amazic.ads.util.AppOpenManager;
+import com.drawingapps.tracedrawing.drawingsketch.drawingapps.Splash;
 
 import java.util.ArrayList;
 import java.util.List;

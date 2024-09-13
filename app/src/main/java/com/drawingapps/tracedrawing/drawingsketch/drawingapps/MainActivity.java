@@ -18,7 +18,7 @@ import com.amazic.ads.iap.PurchaseCallback;
 import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.reward.RewardAdCallback;
-import com.amazicadslibrary.R;
+import com.ardrawing.tracedrawing.drawingsketch.drawingapps.R;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             firstItem = !firstItem;
             Log.d("RewardAdModel_Check", "onCreate: " + name);
 
-            Admob.getInstance().loadAndShowReward(this, name, new RewardAdCallback() {
+            Admob.getInstance().loadAndShowInterReward(this, "reward_inter_gallery", new RewardAdCallback() {
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
