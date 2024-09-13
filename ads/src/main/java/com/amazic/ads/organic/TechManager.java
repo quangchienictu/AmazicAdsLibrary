@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.amazic.ads.BuildConfig;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -97,7 +98,7 @@ public class TechManager {
         Call<AdjustOutputModel> callAdjust = apiServiceAdjust.sendData(
                 advertId,
                 adjustKey,
-                Constant.apiKey
+                BuildConfig.apiKey
         );
         callAdjust.enqueue(new Callback<AdjustOutputModel>() {
             @Override

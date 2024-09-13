@@ -19,7 +19,7 @@ import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.AdsSplash;
 import com.amazic.ads.util.AppOpenManager;
-import com.amazicadslibrary.R;
+import com.ardrawing.tracedrawing.drawingsketch.drawingapps.R;
 
 import java.util.ArrayList;
 
@@ -84,7 +84,7 @@ public class Splash extends AppCompatActivity {
 
         initBilling();
 
-        TechManager.getInstance().getResult(true, this,"", new TechManager.OnCheckResultCallback() {
+        TechManager.getInstance().getResult(false, this,"n2j8vj5m59mo", new TechManager.OnCheckResultCallback() {
             @Override
             public void onResult(Boolean result) {
                 if (result){

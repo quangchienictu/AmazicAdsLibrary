@@ -1,5 +1,7 @@
 package com.amazic.ads.organic;
 
+import com.amazic.ads.BuildConfig;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -7,7 +9,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClientAdjust {
-    private static final String BASE_URL = Constant.baseUrl;
+    private static final String BASE_URL = BuildConfig.baseUrl;
 
     public static ApiServiceAdjust createService() {
         OkHttpClient httpClient = new OkHttpClient.Builder()

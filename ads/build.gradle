@@ -19,11 +19,15 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            buildConfigField "String", "apiKey", "\"Bearer mpBYiG4WNndUpojp7pez\""
+            buildConfigField "String", "baseUrl", "\"https://api.adjust.com/device_service/api/v1/\""
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled false
+            buildConfigField "String", "apiKey", "\"Bearer mpBYiG4WNndUpojp7pez\""
+            buildConfigField "String", "baseUrl", "\"https://api.adjust.com/device_service/api/v1/\""
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
