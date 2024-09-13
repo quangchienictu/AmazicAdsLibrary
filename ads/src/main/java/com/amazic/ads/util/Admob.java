@@ -46,6 +46,8 @@ import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.amazic.ads.event.AdType;
 import com.amazic.ads.event.FirebaseUtil;
 import com.amazic.ads.util.detect_test_ad.DetectTestAd;
+import com.amazic.ads.util.reward.InterRewardAdCallback;
+import com.amazic.ads.util.reward.InterRewardAdModel;
 import com.amazic.ads.util.reward.RewardAdCallback;
 import com.amazic.ads.util.reward.RewardAdModel;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -2199,6 +2201,165 @@ public class Admob {
         if (rewardAdModel == null) {
             rewardAdModel = new RewardAdModel(listAdIDName);
             listReward.add(rewardAdModel);
+        }
+        dialogLoadingLoadAndShowReward = new LoadingAdsDialog(context);
+        dialogLoadingLoadAndShowReward.setCancelable(false);
+        dialogLoadingLoadAndShowReward.show();
+        rewardAdModel.loadAndShowReward(context, new RewardAdCallback() {
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                callback.onAdFailedToLoad(loadAdError);
+                AppOpenManager.getInstance().enableAppResume();
+            }
+
+            public void onAdLoaded(Boolean isSuccessful) {
+                if (!isSuccessful) {
+                    if (dialogLoadingLoadAndShowReward.isShowing())
+                        dialogLoadingLoadAndShowReward.dismiss();
+                }
+                callback.onAdLoaded(isSuccessful);
+            }
+
+            public void onAdDismissed() {
+                if (dialogLoadingLoadAndShowReward.isShowing())
+                    dialogLoadingLoadAndShowReward.dismiss();
+                callback.onAdDismissed();
+                AppOpenManager.getInstance().enableAppResume();
+            }
+
+            public void onAdFailedToShow(@NonNull AdError adError) {
+                if (dialogLoadingLoadAndShowReward.isShowing())
+                    dialogLoadingLoadAndShowReward.dismiss();
+                callback.onAdFailedToShow(adError);
+            }
+
+            public void onAdShowed() {
+                callback.onAdShowed();
+            }
+
+            public void onAdClicked() {
+                callback.onAdClicked();
+            }
+
+            public void onNextAction() {
+                callback.onNextAction();
+            }
+
+            public void onAdImpression() {
+                callback.onAdImpression();
+            }
+
+            public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                callback.onUserEarnedReward(rewardItem);
+            }
+        });
+    }
+
+    /* =============================  End New Rewarded Ads ==========================================*/
+
+    /* =============================  Start Inter Rewarded Ads ==========================================*/
+
+    private final List<InterRewardAdModel> listInterReward = new ArrayList<>();
+
+    public void loadInterReward(Context context, String listAdIDName, InterRewardAdCallback callback) {
+        if (!isShowAllAds || !AdsConsentManager.getConsentResult(context)) {
+            callback.onAdLoaded(false);
+            return;
+        }
+        InterRewardAdModel rewardAdModel = null;
+        for (InterRewardAdModel item : listInterReward) {
+            if (item.getListAdIDName().equals(listAdIDName)) {
+                rewardAdModel = item;
+            }
+        }
+        if (rewardAdModel == null) {
+            rewardAdModel = new InterRewardAdModel(listAdIDName);
+            listInterReward.add(rewardAdModel);
+        }
+        dialogLoadingLoadAndShowReward = new LoadingAdsDialog(context);
+        dialogLoadingLoadAndShowReward.show();
+        rewardAdModel.loadReward(context, new RewardAdCallback() {
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                callback.onAdFailedToLoad(loadAdError);
+            }
+
+            public void onAdLoaded(Boolean isSuccessful) {
+                if (dialogLoadingLoadAndShowReward.isShowing())
+                    dialogLoadingLoadAndShowReward.dismiss();
+                callback.onAdLoaded(isSuccessful);
+            }
+        });
+    }
+
+    public void showInterReward(Context context, String listAdIDName, InterRewardAdCallback callback) {
+        if (!isShowAllAds || !AdsConsentManager.getConsentResult(context)) {
+            callback.onNextAction();
+            return;
+        }
+        AppOpenManager.getInstance().disableAppResume();
+        InterRewardAdModel rewardAdModel = null;
+        for (InterRewardAdModel item : listInterReward) {
+            if (item.getListAdIDName().equals(listAdIDName)) {
+                rewardAdModel = item;
+            }
+        }
+        if (rewardAdModel == null) {
+            rewardAdModel = new InterRewardAdModel(listAdIDName);
+            listInterReward.add(rewardAdModel);
+        }
+        dialogLoadingLoadAndShowReward = new LoadingAdsDialog(context);
+        dialogLoadingLoadAndShowReward.show();
+        rewardAdModel.showReward(context, new RewardAdCallback() {
+            public void onAdDismissed() {
+                callback.onAdDismissed();
+                AppOpenManager.getInstance().enableAppResume();
+            }
+
+            public void onAdFailedToShow(@NonNull AdError adError) {
+                callback.onAdFailedToShow(adError);
+                AppOpenManager.getInstance().enableAppResume();
+            }
+
+            public void onAdShowed() {
+                if (dialogLoadingLoadAndShowReward != null && dialogLoadingLoadAndShowReward.isShowing()) {
+                    dialogLoadingLoadAndShowReward.dismiss();
+                }
+                callback.onAdShowed();
+            }
+
+            public void onAdClicked() {
+                callback.onAdClicked();
+            }
+
+            public void onNextAction() {
+                callback.onNextAction();
+            }
+
+            public void onAdImpression() {
+                callback.onAdImpression();
+            }
+
+            public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                callback.onUserEarnedReward(rewardItem);
+
+            }
+        });
+    }
+
+    public void loadAndShowInterReward(Context context, String listAdIDName, InterRewardAdCallback callback) {
+        if (!isShowAllAds || !AdsConsentManager.getConsentResult(context)) {
+            callback.onNextAction();
+            return;
+        }
+        AppOpenManager.getInstance().disableAppResume();
+        InterRewardAdModel rewardAdModel = null;
+        for (InterRewardAdModel item : listInterReward) {
+            if (item.getListAdIDName().equals(listAdIDName)) {
+                rewardAdModel = item;
+            }
+        }
+        if (rewardAdModel == null) {
+            rewardAdModel = new InterRewardAdModel(listAdIDName);
+            listInterReward.add(rewardAdModel);
         }
         dialogLoadingLoadAndShowReward = new LoadingAdsDialog(context);
         dialogLoadingLoadAndShowReward.setCancelable(false);
