@@ -113,6 +113,7 @@ public class Splash extends AppCompatActivity {
 //                RemoteConfig.getInstance().onRemoteConfigFetched(Splash.this, () -> {
                 Admob.getInstance().setOpenActivityAfterShowInterAds(true);
                 //AppOpenManager.getInstance().initApi(getApplication());
+                AppOpenManager.getInstance().initWelcomeBackActivity(getApplication(), ResumeActivity.class, true);
                 AdsSplash adsSplash = AdsSplash.init(true, false, "30_70");
                 adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);
             }

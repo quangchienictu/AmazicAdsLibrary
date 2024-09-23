@@ -20,7 +20,6 @@ public class MyApplication extends AdsApplication {
         List<String> listSubsId = new ArrayList<>();
         listSubsId.add(PRODUCT_ID_MONTH);
         AppPurchase.getInstance().initBilling(this, listINAPId, listSubsId);
-        AppOpenManager.getInstance().initWelcomeBackActivity(this, ResumeActivity.class, true);
     }
 
     @NonNull

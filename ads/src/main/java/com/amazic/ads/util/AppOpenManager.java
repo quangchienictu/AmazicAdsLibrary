@@ -145,7 +145,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     }
 
     public void initWelcomeBackActivity(Application application, Class welcomeBackClass, boolean isShowWelcomeAfterAdsResume) {
-        isUsingApi = false;
+        isUsingApi = true;
         isInitialized = true;
         disableAdResumeByClickAction = false;
         this.myApplication = application;
@@ -153,6 +153,8 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         this.isShowWelcomeAfterAdsResume = isShowWelcomeAfterAdsResume;
         this.myApplication.registerActivityLifecycleCallbacks(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+        this.listAppResumeID.clear();
+        this.listAppResumeID.addAll(AdmobApi.getInstance().getListIDAppOpenResume());
 //        if (!Purchase.getInstance().isPurchased(application.getApplicationContext()) &&
 //                !isAdAvailable(false) && appOpenAdId != null) {
 //            fetchAd(false);
@@ -490,7 +492,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
             Log.d(TAG, "Will show ad isSplash:" + isSplash);
             if (isSplash) {
                 showAdsWithLoading();
-            } else if (welcomeBackClass == null) {
+            } else if (welcomeBackClass == null || isShowWelcomeAfterAdsResume) {
                 showResumeAds();
             }
 
