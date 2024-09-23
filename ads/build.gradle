@@ -21,13 +21,13 @@ android {
         release {
             buildConfigField "String", "apiKey", "\"Bearer mpBYiG4WNndUpojp7pez\""
             buildConfigField "String", "baseUrl", "\"https://api.adjust.com/device_service/api/v1/\""
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
             buildConfigField "String", "apiKey", "\"Bearer mpBYiG4WNndUpojp7pez\""
             buildConfigField "String", "baseUrl", "\"https://api.adjust.com/device_service/api/v1/\""
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -83,6 +83,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-config'
 
     //billing
-    implementation "com.android.billingclient:billing:7.0.0"
+    implementation "com.android.billingclient:billing:7.1.0"
     implementation 'com.google.guava:guava:31.1-jre'
 }
