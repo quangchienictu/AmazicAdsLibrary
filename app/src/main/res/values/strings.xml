@@ -8,5 +8,6 @@
     <string name="admod_app_open_ad_id">ca-app-pub-3940256099942544/3419835294</string>
     <string name="admod_app_reward_id">ca-app-pub-3940256099942544/5224354917</string>
     <string name="linkServer">http://language-master.top</string>
-    <string name="app_id">ca-app-pub-4973559944609228~2346710864</string>
+    <!--<string name="app_id">ca-app-pub-4973559944609228~2346710864</string>-->
+    <string name="app_id">ca-app-pub-3940256099942544~3347511713</string>
 </resources>

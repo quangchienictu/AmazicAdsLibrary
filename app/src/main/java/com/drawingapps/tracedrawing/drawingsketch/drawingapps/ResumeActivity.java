@@ -20,7 +20,7 @@ public class ResumeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_resume);
         Button button = findViewById(R.id.tv_next_screen);
 
-        OpenAppBuilder builder = new OpenAppBuilder(this)
+        /*OpenAppBuilder builder = new OpenAppBuilder(this)
                 .setId(AdmobApi.getInstance().getListIDByName("appopen_resume"))
                 .setCallback(new OpenAppCallback(){
                     @Override
@@ -37,9 +37,10 @@ public class ResumeActivity extends AppCompatActivity {
                 });
         AdOpenAppManager adOpenAppManager = new AdOpenAppManager();
         adOpenAppManager.setBuilder(builder);
-        adOpenAppManager.loadAd();
+        adOpenAppManager.loadAd();*/
         button.setOnClickListener(v -> {
-            adOpenAppManager.showAd(this);
+            //adOpenAppManager.showAd(this);
+            finish();
         });
     }
 }

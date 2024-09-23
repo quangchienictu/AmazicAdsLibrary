@@ -35,7 +35,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4973559944609228~2346710863" />
+            android:value="ca-app-pub-3940256099942544~3347511713" />
         <meta-data
             android:name="applovin.sdk.key"
             android:value="VVIqwEtdXn9RkPMcoBv0GOvmmCmvwb5aLGm6m0sqH9v8fT_Xtlz75dNvLvWWV4c7pBiUk6Z1cxfISWgVTgbzIo" />

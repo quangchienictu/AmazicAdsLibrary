@@ -75,6 +75,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     private Class welcomeBackClass = null;
     private boolean isTimeout = false;
     private static final int TIMEOUT_MSG = 11;
+    private boolean isShowWelcomeAfterAdsResume = false;
 
     private Handler timeoutHandler;
 
@@ -135,6 +136,21 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         disableAdResumeByClickAction = false;
         this.myApplication = application;
         this.welcomeBackClass = welcomeBackClass;
+        this.myApplication.registerActivityLifecycleCallbacks(this);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+//        if (!Purchase.getInstance().isPurchased(application.getApplicationContext()) &&
+//                !isAdAvailable(false) && appOpenAdId != null) {
+//            fetchAd(false);
+//        }
+    }
+
+    public void initWelcomeBackActivity(Application application, Class welcomeBackClass, boolean isShowWelcomeAfterAdsResume) {
+        isUsingApi = false;
+        isInitialized = true;
+        disableAdResumeByClickAction = false;
+        this.myApplication = application;
+        this.welcomeBackClass = welcomeBackClass;
+        this.isShowWelcomeAfterAdsResume = isShowWelcomeAfterAdsResume;
         this.myApplication.registerActivityLifecycleCallbacks(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
 //        if (!Purchase.getInstance().isPurchased(application.getApplicationContext()) &&
@@ -466,7 +482,9 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         }
         if (!isShowingAd && currentActivity.getClass() != welcomeBackClass && welcomeBackClass != null && currentActivity != null) {
             currentActivity.startActivity(new Intent(currentActivity, welcomeBackClass));
-            return;
+            if (!this.isShowWelcomeAfterAdsResume) {
+                return;
+            }
         }
         if (!isShowingAd && isAdAvailable(isSplash)) {
             Log.d(TAG, "Will show ad isSplash:" + isSplash);

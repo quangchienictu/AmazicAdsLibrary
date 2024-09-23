@@ -59,8 +59,8 @@ public class MainManagerActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        count++;
+        /*count++;
         if (count % 2 == 0)
-            startActivity(new Intent(this, ResumeActivity.class));
+            startActivity(new Intent(this, ResumeActivity.class));*/
     }
 }
