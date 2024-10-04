@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/gntRed"
+        android:text="@string/app_name"
+        android:visibility="visible" />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:layout_above="@id/rl_banner"
+        android:layout_below="@id/fr_ads"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,7 +39,17 @@
         android:id="@+id/fr_ads"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="150dp" />
+        android:minHeight="150dp"
+        android:visibility="gone" />
 
-    <include layout="@layout/layout_banner" />
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/rl_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <include
+            android:id="@+id/include"
+            layout="@layout/layout_banner" />
+    </RelativeLayout>
+</RelativeLayout>

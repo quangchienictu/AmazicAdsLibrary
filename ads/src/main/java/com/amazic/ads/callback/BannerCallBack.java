@@ -8,4 +8,5 @@ public class BannerCallBack {
     public void onAdLoadSuccess(){}
     public void onAdClicked(){}
     public void onAdImpression(){}
+    public void onAdOpened(){}
 }

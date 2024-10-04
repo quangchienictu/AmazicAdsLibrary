@@ -3,6 +3,9 @@
     package="com.ardrawing.tracedrawing.drawingsketch.drawingapps">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <application
         android:name="com.drawingapps.tracedrawing.drawingsketch.drawingapps.MyApplication"
@@ -13,6 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AmazicAdsLibrary"
         android:usesCleartextTraffic="true">
+        <service
+            android:name="com.drawingapps.tracedrawing.drawingsketch.drawingapps.OverlayService"
+            android:foregroundServiceType="specialUse" />
+
         <activity
             android:name="com.drawingapps.tracedrawing.drawingsketch.drawingapps.MainActivity4"
             android:exported="false" />

@@ -128,6 +128,9 @@ public class Admob {
     private AdView adView;
     private Dialog dialogLoadingLoadAndShowReward;
 
+    public static String COUNT_DOWN = "COUNT_DOWN";
+    public static String COUNT_CLICK = "COUNT_CLICK";
+
     public static Admob getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Admob();
@@ -515,6 +518,34 @@ public class Admob {
         }
     }
 
+    public AdView loadCollapsibleBannerFloorWithReload(final Activity mActivity, List<String> listID, String gravity, BannerCallBack bannerCallBack, String collapseTypeClose, long valueCountDownOrCountClick) {
+        final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
+        final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
+        if (!isShowAllAds || !isNetworkConnected() || !AdsConsentManager.getConsentResult(mActivity)) {
+            adContainer.setVisibility(View.GONE);
+            containerShimmer.setVisibility(View.GONE);
+            bannerCallBack.onAdFailedToLoad(null);
+        } else {
+            if (listID == null) {
+                adContainer.setVisibility(View.GONE);
+                containerShimmer.setVisibility(View.GONE);
+                return null;
+            }
+            if (listID.size() < 1) {
+                adContainer.setVisibility(View.GONE);
+                containerShimmer.setVisibility(View.GONE);
+                return null;
+            }
+            List idNew = new ArrayList();
+            for (String id : listID) {
+                idNew.add(id);
+            }
+            checkLoadBannerCollap = false;
+            return loadCollapsibleBannerFloor(mActivity, idNew, gravity, adContainer, containerShimmer, bannerCallBack, collapseTypeClose, valueCountDownOrCountClick);
+        }
+        return null;
+    }
+
     public AdView loadCollapsibleBannerFloorWithReload(final Activity mActivity, List<String> listID, String gravity, BannerCallBack bannerCallBack) {
         final FrameLayout adContainer = mActivity.findViewById(R.id.banner_container);
         final ShimmerFrameLayout containerShimmer = mActivity.findViewById(R.id.shimmer_container_banner);
@@ -888,6 +919,7 @@ public class Admob {
                 @Override
                 public void onAdClicked() {
                     super.onAdClicked();
+                    Log.d(TAG, "onAdClicked: banner");
                     //lỗi: chưa kiểm tra null
                     if (callback != null)
                         callback.onAdClicked();
@@ -903,6 +935,12 @@ public class Admob {
                     if (callback != null)
                         callback.onAdImpression();
                     //end log
+                }
+
+                @Override
+                public void onAdOpened() {
+                    super.onAdOpened();
+                    Log.d(TAG, "onAdOpened: banner");
                 }
             });
 
@@ -1089,6 +1127,7 @@ public class Admob {
                 @Override
                 public void onAdClicked() {
                     super.onAdClicked();
+                    Log.d(TAG, "onAdClicked: collapse banner");
                     bannerCallBack.onAdClicked();
                     if (disableAdResumeWhenClickAds)
                         AppOpenManager.getInstance().disableAdResumeByClickAction();
@@ -1098,8 +1137,117 @@ public class Admob {
                 @Override
                 public void onAdImpression() {
                     super.onAdImpression();
+                    Log.d(TAG, "onAdImpression: collapse banner");
                     if (bannerCallBack != null) {
                         bannerCallBack.onAdImpression();
+                    }
+                }
+
+                @Override
+                public void onAdOpened() {
+                    super.onAdOpened();
+                    Log.d(TAG, "onAdOpened: collapse banner");
+                    if (bannerCallBack != null) {
+                        bannerCallBack.onAdOpened();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return adView;
+    }
+
+    private AdView loadCollapsibleBannerFloor(final Activity mActivity, List<String> listId, String gravity, final FrameLayout adContainer, final ShimmerFrameLayout containerShimmer, BannerCallBack bannerCallBack, String collapseTypeClose, long valueCountDownOrCountClick) {
+        if (checkLoadBannerCollap) {
+            return null;
+        }
+        containerShimmer.setVisibility(View.VISIBLE);
+        containerShimmer.startShimmer();
+        try {
+            Log.e("Admob", "load collap banner ID : " + listId.get(0));
+            adView = new AdView(mActivity);
+            adView.setAdUnitId(listId.get(0));
+            adContainer.addView(adView);
+            AdSize adSize = getAdSize(mActivity, false, "");
+            containerShimmer.getLayoutParams().height = (int) (adSize.getHeight() * Resources.getSystem().getDisplayMetrics().density + 0.5f);
+            adView.setAdSize(adSize);
+            adView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            adView.loadAd(getAdRequestForCollapsibleBanner(gravity));
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    super.onAdFailedToLoad(loadAdError);
+                    Log.e("Admob", "load failed collap banner ID : " + listId.get(0));
+                    if (listId.size() > 0) {
+                        listId.remove(0);
+                        loadCollapsibleBannerFloor(mActivity, listId, gravity, adContainer, containerShimmer);
+                    } else {
+                        bannerCallBack.onAdFailedToLoad(loadAdError);
+                        containerShimmer.stopShimmer();
+                        adContainer.setVisibility(View.GONE);
+                        containerShimmer.setVisibility(View.GONE);
+                    }
+
+                }
+
+                @Override
+                public void onAdLoaded() {
+                    checkLoadBannerCollap = true;
+                    bannerCallBack.onAdLoadSuccess();
+                    Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
+                    containerShimmer.stopShimmer();
+                    containerShimmer.setVisibility(View.GONE);
+                    adContainer.setVisibility(View.VISIBLE);
+                    adView.setOnPaidEventListener(adValue -> {
+                        trackRevenue(adView.getResponseInfo().getLoadedAdapterResponseInfo(), adValue);
+                        Log.d(TAG, "OnPaidEvent banner:" + adValue.getValueMicros());
+
+                        FirebaseUtil.logPaidAdImpression(context,
+                                adValue,
+                                adView.getAdUnitId(), AdType.BANNER);
+                    });
+
+                }
+
+                @Override
+                public void onAdClicked() {
+                    super.onAdClicked();
+                    Log.d(TAG, "onAdClicked: collapse banner");
+                    bannerCallBack.onAdClicked();
+                    if (disableAdResumeWhenClickAds)
+                        AppOpenManager.getInstance().disableAdResumeByClickAction();
+                    FirebaseUtil.logClickAdsEvent(context, listId.get(0));
+                }
+
+                @Override
+                public void onAdImpression() {
+                    super.onAdImpression();
+                    Log.d(TAG, "onAdImpression: collapse banner");
+                    if (bannerCallBack != null) {
+                        bannerCallBack.onAdImpression();
+                    }
+                }
+
+                @Override
+                public void onAdOpened() {
+                    super.onAdOpened();
+                    Log.d(TAG, "onAdOpened: collapse banner");
+                    if (bannerCallBack != null) {
+                        bannerCallBack.onAdOpened();
+                    }
+                    Log.d("TAGvvv", "run: " + CollapseBannerHelper.getWindowManagerViews().size());
+                    for (int i = 0; i < CollapseBannerHelper.getWindowManagerViews().size(); i++) {
+                        Object object = CollapseBannerHelper.getWindowManagerViews().get(i);
+                        if (object instanceof ViewGroup && ((ViewGroup) object).getClass().getName().contains("android.widget.PopupWindow")) {
+                            Log.d("TAGvvv", "ViewGroup: " + object + "\n=================================================================");
+                            CollapseBannerHelper.listChildViews.clear();
+                            if (collapseTypeClose.equals(Admob.COUNT_DOWN)) {
+                                CollapseBannerHelper.getAllChildViews((ViewGroup) object, collapseTypeClose, valueCountDownOrCountClick);
+                            } else if (collapseTypeClose.equals(Admob.COUNT_CLICK)) {
+                                CollapseBannerHelper.getAllChildViews((ViewGroup) object, collapseTypeClose, valueCountDownOrCountClick);
+                            }
+                        }
                     }
                 }
             });
