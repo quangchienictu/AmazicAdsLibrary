@@ -1237,15 +1237,15 @@ public class Admob {
                         bannerCallBack.onAdOpened();
                     }
                     Log.d("TAGvvv", "run: " + CollapseBannerHelper.getWindowManagerViews().size());
+                    CollapseBannerHelper.listChildViews.clear();
                     for (int i = 0; i < CollapseBannerHelper.getWindowManagerViews().size(); i++) {
                         Object object = CollapseBannerHelper.getWindowManagerViews().get(i);
                         if (object instanceof ViewGroup && ((ViewGroup) object).getClass().getName().contains("android.widget.PopupWindow")) {
-                            Log.d("TAGvvv", "ViewGroup: " + object + "\n=================================================================");
-                            CollapseBannerHelper.listChildViews.clear();
+                            Log.d("CollapseBannerHelper", "ViewGroup: " + object + "\n=================================================================");
                             if (collapseTypeClose.equals(Admob.COUNT_DOWN)) {
-                                CollapseBannerHelper.getAllChildViews((ViewGroup) object, collapseTypeClose, valueCountDownOrCountClick);
+                                CollapseBannerHelper.getAllChildViews((ViewGroup) object, collapseTypeClose, valueCountDownOrCountClick, object);
                             } else if (collapseTypeClose.equals(Admob.COUNT_CLICK)) {
-                                CollapseBannerHelper.getAllChildViews((ViewGroup) object, collapseTypeClose, valueCountDownOrCountClick);
+                                CollapseBannerHelper.getAllChildViews((ViewGroup) object, collapseTypeClose, valueCountDownOrCountClick, object);
                             }
                         }
                     }

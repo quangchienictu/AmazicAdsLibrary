@@ -9,6 +9,9 @@
         android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@id/rl_banner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/_30sdp"
         android:background="@color/gntRed"
         android:text="@string/app_name"
         android:visibility="visible" />

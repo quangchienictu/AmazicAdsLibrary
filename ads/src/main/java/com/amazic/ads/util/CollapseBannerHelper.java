@@ -4,7 +4,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 public class CollapseBannerHelper {
     public static ArrayList<View> listChildViews = new ArrayList<>();
 
-    public static void getAllChildViews(ViewGroup viewGroup, String collapseTypeClose, long valueCountDownOrCountClick) {
+    public static void getAllChildViews(ViewGroup viewGroup, String collapseTypeClose, long valueCountDownOrCountClick, Object object) {
         int childCount = viewGroup.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View childView = viewGroup.getChildAt(i);
@@ -22,28 +21,18 @@ public class CollapseBannerHelper {
                 //Case count click to collapse the banner view
                 if (collapseTypeClose.equals(Admob.COUNT_CLICK)) {
                     Log.d("CollapseBannerHelper", "CASE COUNT_CLICK: " + valueCountDownOrCountClick);
-                    ((LinearLayout) childView).setTag(0);
-                    ((LinearLayout) childView).setOnClickListener(view -> {
-                        ((LinearLayout) childView).setTag((int) ((LinearLayout) childView).getTag() + 1);
-                        Log.d("CollapseBannerHelper", "COUNT_CLICK: " + (int) ((LinearLayout) childView).getTag());
+                    childView.setTag(0);
+                    childView.setOnClickListener(view -> {
+                        childView.setTag((int) childView.getTag() + 1);
+                        Log.d("CollapseBannerHelper", "COUNT_CLICK: " + (int) childView.getTag());
                         if (valueCountDownOrCountClick > 0) {
-                            if ((int) ((LinearLayout) childView).getTag() == valueCountDownOrCountClick) {
-                                for (View viewChild : listChildViews) {
-                                    if (viewChild.getClass().getName().equals("android.widget.RelativeLayout")) {
-                                        viewChild.setVisibility(View.GONE);
-                                        Log.d("CollapseBannerHelper", "CASE COUNT_DOWN setEnabled(true): " + valueCountDownOrCountClick);
-                                        break;
-                                    }
-                                }
+                            if ((int) childView.getTag() == valueCountDownOrCountClick) {
+                                ((ViewGroup) object).setVisibility(View.GONE);
+                                Log.d("CollapseBannerHelper", "CASE COUNT_DOWN setEnabled(true): " + valueCountDownOrCountClick);
                             }
                         } else {
-                            for (View viewChild : listChildViews) {
-                                if (viewChild.getClass().getName().equals("android.widget.RelativeLayout")) {
-                                    viewChild.setVisibility(View.GONE);
-                                    Log.d("CollapseBannerHelper", "CASE COUNT_DOWN setEnabled(true): " + valueCountDownOrCountClick);
-                                    break;
-                                }
-                            }
+                            ((ViewGroup) object).setVisibility(View.GONE);
+                            Log.d("CollapseBannerHelper", "CASE COUNT_DOWN setEnabled(true): " + valueCountDownOrCountClick);
                         }
                     });
                 } else if (collapseTypeClose.equals(Admob.COUNT_DOWN)) {
@@ -59,7 +48,7 @@ public class CollapseBannerHelper {
                 Log.d("CollapseBannerHelper", "View: " + childView.getClass().getName() + ", ID: " + viewIdString);
             }
             if (childView instanceof ViewGroup) {
-                getAllChildViews((ViewGroup) childView, collapseTypeClose, valueCountDownOrCountClick);
+                getAllChildViews((ViewGroup) childView, collapseTypeClose, valueCountDownOrCountClick, object);
             }
         }
         //Case count down to collapse the banner view
@@ -69,29 +58,29 @@ public class CollapseBannerHelper {
                 new Handler().postDelayed(() -> {
                     for (View view : listChildViews) {
                         view.setEnabled(true);
-                        Log.d("CollapseBannerHelper", "CASE COUNT_DOWN setEnabled(true): " + valueCountDownOrCountClick);
                     }
+                    Log.d("CollapseBannerHelper", "CASE COUNT_DOWN setEnabled(true): " + valueCountDownOrCountClick);
                 }, valueCountDownOrCountClick);
             } else {
                 for (View view : listChildViews) {
                     view.setEnabled(true);
-                    Log.d("CollapseBannerHelper", "CASE COUNT_DOWN setEnabled(true): " + valueCountDownOrCountClick);
                 }
+                Log.d("CollapseBannerHelper", "CASE COUNT_DOWN setEnabled(true): " + valueCountDownOrCountClick);
             }
         }
     }
 
     public static ArrayList<Object> getWindowManagerViews() {
         try {
-            // Lấy WindowManagerImpl class (có thể thay đổi tuỳ phiên bản Android)
+            // Get WindowManagerImpl class (can be different by Android version)
             Class<?> windowManagerImplClass = Class.forName("android.view.WindowManagerGlobal");
 
-            // Lấy instance của WindowManagerGlobal
+            // Get instance of WindowManagerGlobal
             Field sDefaultWindowManagerField = windowManagerImplClass.getDeclaredField("sDefaultWindowManager");
             sDefaultWindowManagerField.setAccessible(true);
             Object windowManager = sDefaultWindowManagerField.get(null);
 
-            // Lấy danh sách các view hiện tại trong WindowManager
+            // Get current view list in WindowManager
             Field mViewsField = windowManagerImplClass.getDeclaredField("mViews");
             mViewsField.setAccessible(true);
             ArrayList<Object> views = (ArrayList<Object>) mViewsField.get(windowManager);

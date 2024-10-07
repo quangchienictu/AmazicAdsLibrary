@@ -90,9 +90,9 @@ public class MainManagerActivity extends AppCompatActivity {
     }
 
     private void loadCollapse() {
-        if (adView != null) {
+        /*if (adView != null) {
             adView.destroy();
-        }
+        }*/
         adView = Admob.getInstance().loadCollapsibleBannerFloorWithReload(this, AdmobApi.getInstance().getListIDCollapseBannerAll(), "bottom", new BannerCallBack() {
             @Override
             public void onAdImpression() {
@@ -103,7 +103,7 @@ public class MainManagerActivity extends AppCompatActivity {
             public void onAdOpened() {
                 super.onAdOpened();
             }
-        }, Admob.COUNT_CLICK, 7);
+        }, Admob.COUNT_CLICK, 3);
     }
 
     @NonNull
