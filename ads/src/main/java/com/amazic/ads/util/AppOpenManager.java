@@ -144,7 +144,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 //        }
     }
 
-    public void initWelcomeBackActivity(Application application, Class welcomeBackClass, boolean isShowWelcomeAfterAdsResume) {
+    public void initWelcomeBackBelowResumeActivity(Application application, Class welcomeBackClass, boolean isShowWelcomeAfterAdsResume) {
         isUsingApi = true;
         isInitialized = true;
         disableAdResumeByClickAction = false;
@@ -482,7 +482,7 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
 
             return;
         }
-        if (!isShowingAd && currentActivity.getClass() != welcomeBackClass && welcomeBackClass != null && currentActivity != null) {
+        if (!isShowingAd && currentActivity.getClass() != welcomeBackClass && currentActivity.getClass() != AdActivity.class && welcomeBackClass != null && currentActivity != null) {
             currentActivity.startActivity(new Intent(currentActivity, welcomeBackClass));
             if (!this.isShowWelcomeAfterAdsResume) {
                 return;
