@@ -1,8 +1,10 @@
 package com.amazic.ads.util.manager.banner;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
@@ -17,7 +19,7 @@ public class BannerManager implements LifecycleEventObserver {
 
     private static final String TAG = "NativeManager";
     private final BannerBuilder builder;
-    private final Activity currentActivity;
+    private Activity currentActivity;
     private final LifecycleOwner lifecycleOwner;
     private boolean isReloadAds = false;
     private boolean isAlwaysReloadOnResume = false;
@@ -27,6 +29,10 @@ public class BannerManager implements LifecycleEventObserver {
     private boolean isStop = false;
     private CountDownTimer countDownTimer;
     private boolean isStopReload = false;
+    private Context context;
+    private int adWidth;
+    private FrameLayout frContainer;
+    private boolean isLoadBannerFragment = false;
 
     public void notReloadInNextResume() {
         isStopReload = true;
@@ -43,14 +49,29 @@ public class BannerManager implements LifecycleEventObserver {
 
             @Override
             public void onFinish() {
-                loadBanner();
+                if (isLoadBannerFragment) {
+                    loadBannerFragment();
+                } else {
+                    loadBanner();
+                }
             }
         };
     }
 
     public BannerManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, BannerBuilder builder) {
+        this.isLoadBannerFragment = false;
         this.builder = builder;
         this.currentActivity = currentActivity;
+        this.lifecycleOwner = lifecycleOwner;
+        this.lifecycleOwner.getLifecycle().addObserver(this);
+    }
+
+    public BannerManager(Context context, int adWidth, FrameLayout frContainer, LifecycleOwner lifecycleOwner, BannerBuilder builder) {
+        this.isLoadBannerFragment = true;
+        this.builder = builder;
+        this.context = context;
+        this.adWidth = adWidth;
+        this.frContainer = frContainer;
         this.lifecycleOwner = lifecycleOwner;
         this.lifecycleOwner.getLifecycle().addObserver(this);
     }
@@ -60,7 +81,11 @@ public class BannerManager implements LifecycleEventObserver {
         switch (event) {
             case ON_CREATE:
                 Log.d(TAG, "onStateChanged: ON_CREATE");
-                loadBanner();
+                if (isLoadBannerFragment) {
+                    loadBannerFragment();
+                } else {
+                    loadBanner();
+                }
                 break;
             case ON_RESUME:
                 if (countDownTimer != null && isStop) {
@@ -70,7 +95,11 @@ public class BannerManager implements LifecycleEventObserver {
                 Log.d(TAG, "onStateChanged: resume\n" + valueLog);
                 if (isStop && (isReloadAds || isAlwaysReloadOnResume) && !isStopReload) {
                     isReloadAds = false;
-                    loadBanner();
+                    if (isLoadBannerFragment) {
+                        loadBannerFragment();
+                    } else {
+                        loadBanner();
+                    }
                 }
                 isStopReload = false;
                 isStop = false;
@@ -98,13 +127,26 @@ public class BannerManager implements LifecycleEventObserver {
         }
     }
 
+    private void loadBannerFragment() {
+        Log.d(TAG, "loadBanner: " + builder.getListId());
+        if (Admob.isShowAllAds) {
+            Admob.getInstance().loadBannerFloor(context, adWidth, frContainer, builder.getListId());
+        } else {
+            Admob.getInstance().hideBanner(currentActivity);
+        }
+    }
+
 
     public void setReloadAds() {
         isReloadAds = true;
     }
 
     public void reloadAdNow() {
-        loadBanner();
+        if (isLoadBannerFragment) {
+            loadBannerFragment();
+        } else {
+            loadBanner();
+        }
     }
 
     public void setAlwaysReloadOnResume(boolean isAlwaysReloadOnResume) {

@@ -9,7 +9,7 @@
         android:id="@+id/tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/rl_banner"
+        android:layout_above="@id/fr_banner"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/_30sdp"
         android:background="@color/gntRed"
@@ -19,7 +19,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/rl_banner"
+        android:layout_above="@id/fr_banner"
         android:layout_below="@id/fr_ads"
         android:visibility="gone">
 
@@ -45,8 +45,8 @@
         android:minHeight="150dp"
         android:visibility="gone" />
 
-    <RelativeLayout
-        android:id="@+id/rl_banner"
+    <FrameLayout
+        android:id="@+id/fr_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
@@ -54,5 +54,5 @@
         <include
             android:id="@+id/include"
             layout="@layout/layout_banner" />
-    </RelativeLayout>
+    </FrameLayout>
 </RelativeLayout>

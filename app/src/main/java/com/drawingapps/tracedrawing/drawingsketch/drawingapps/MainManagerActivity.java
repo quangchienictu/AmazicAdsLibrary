@@ -5,13 +5,16 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -35,6 +38,7 @@ import java.util.ArrayList;
 
 public class MainManagerActivity extends AppCompatActivity {
     private AdView adView;
+    private BannerManager bannerManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +46,10 @@ public class MainManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_manager);
         //banner
         //BannerManager bannerManager = initBannerManager();
-        loadCollapse();
-        //Admob.getInstance().loadBannerFloor(this, AdmobApi.getInstance().getListIDBannerAll());
+        //loadCollapse();
+        //Admob.getInstance().loadBannerFloor(getBaseContext(), Admob.getInstance().getAdWidth(this), findViewById(R.id.fr_banner), AdmobApi.getInstance().getListIDBannerAll());
+        BannerBuilder bannerBuilder = new BannerBuilder().isIdApi();
+        bannerManager = new BannerManager(getBaseContext(), Admob.getInstance().getAdWidth(this), findViewById(R.id.fr_banner), this, bannerBuilder);
         //native
         //NativeManager nativeManager = initNativeManager();
         //
@@ -93,7 +99,16 @@ public class MainManagerActivity extends AppCompatActivity {
         /*if (adView != null) {
             adView.destroy();
         }*/
-        adView = Admob.getInstance().loadCollapsibleBannerFloorWithReload(this, AdmobApi.getInstance().getListIDCollapseBannerAll(), "bottom", new BannerCallBack() {
+        FrameLayout frAds = findViewById(R.id.fr_banner);
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+
+        float widthPixels = outMetrics.widthPixels;
+        float density = outMetrics.density;
+
+        int adWidth = (int) (widthPixels / density);
+        adView = Admob.getInstance().loadCollapsibleBannerFloorWithReload(getBaseContext(), adWidth, frAds, AdmobApi.getInstance().getListIDCollapseBannerAll(), "bottom", new BannerCallBack() {
             @Override
             public void onAdImpression() {
                 super.onAdImpression();
@@ -103,7 +118,7 @@ public class MainManagerActivity extends AppCompatActivity {
             public void onAdOpened() {
                 super.onAdOpened();
             }
-        }, Admob.COUNT_CLICK, 3);
+        });
     }
 
     @NonNull
@@ -133,7 +148,8 @@ public class MainManagerActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        loadCollapse();
+        //loadCollapse();
+        bannerManager.reloadAdNow();
         /*count++;
         if (count % 2 == 0)
             startActivity(new Intent(this, ResumeActivity.class));*/
