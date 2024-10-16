@@ -3,6 +3,7 @@ package com.drawingapps.tracedrawing.drawingsketch.drawingapps;
 import androidx.annotation.NonNull;
 
 import com.amazic.ads.billing.AppPurchase;
+import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsApplication;
 import com.amazic.ads.util.AppOpenManager;
 
@@ -14,6 +15,7 @@ public class MyApplication extends AdsApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        Admob.getInstance().setTokenEventAdjust("p3w75z");
         AppOpenManager.getInstance().disableAppResumeWithActivity(Splash.class);
         List<String> listINAPId = new ArrayList<>();
         listINAPId.add(PRODUCT_ID_MONTH);
@@ -25,7 +27,7 @@ public class MyApplication extends AdsApplication {
     @NonNull
     @Override
     public String getAppTokenAdjust() {
-        return "null";
+        return "n2j8vj5m59mo";
     }
 
     @NonNull

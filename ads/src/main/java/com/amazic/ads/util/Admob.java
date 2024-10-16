@@ -3361,11 +3361,12 @@ public class Admob {
         AdjustAdRevenue adRevenue = new AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB);
         adRevenue.setRevenue(valueMicros, adValue.getCurrencyCode());
         adRevenue.setAdRevenueNetwork(adName);
+        Log.d("AdjustRevenue", "trackRevenue: " + adValue.getCurrencyCode());
+        Adjust.trackAdRevenue(adRevenue);
         if (!tokenEventAdjust.isEmpty()) {
             AdjustEvent event = new AdjustEvent(tokenEventAdjust);
-            adRevenue.setRevenue(valueMicros, adValue.getCurrencyCode());
+            event.setRevenue(valueMicros, adValue.getCurrencyCode());
             Adjust.trackEvent(event);
         }
-        Adjust.trackAdRevenue(adRevenue);
     }
 }
