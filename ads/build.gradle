@@ -75,7 +75,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-basement:18.2.0'
     implementation 'com.android.installreferrer:installreferrer:2.2'
     //adjust
-    implementation 'com.adjust.sdk:adjust-android:4.38.0'
+    implementation 'com.adjust.sdk:adjust-android:4.38.5'
 
     //firebase
     implementation platform('com.google.firebase:firebase-bom:32.1.0')
@@ -83,6 +83,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-config'
 
     //billing
-    implementation "com.android.billingclient:billing:7.1.0"
+    implementation "com.android.billingclient:billing:7.1.1"
     implementation 'com.google.guava:guava:31.1-jre'
 }

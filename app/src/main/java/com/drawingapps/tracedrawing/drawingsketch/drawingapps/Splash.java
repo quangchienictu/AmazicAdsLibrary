@@ -88,8 +88,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void onResult(Boolean result) {
                 if (result){
-                    Admob.getInstance().setTimeInterval(45000L);
-                    //turnOffSomeRemoteConfigs();
+
                 }
                 //init AdmobApi
             }
