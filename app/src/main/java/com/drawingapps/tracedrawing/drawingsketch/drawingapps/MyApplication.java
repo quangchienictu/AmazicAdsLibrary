@@ -6,6 +6,7 @@ import com.amazic.ads.billing.AppPurchase;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsApplication;
 import com.amazic.ads.util.AppOpenManager;
+import com.drawingapps.tracedrawing.drawingsketch.drawingapps.Splash;
 
 import java.util.ArrayList;
 import java.util.List;

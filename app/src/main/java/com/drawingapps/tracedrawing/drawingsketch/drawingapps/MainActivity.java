@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             firstItem = !firstItem;
             Log.d("RewardAdModel_Check", "onCreate: " + name);
 
-            Admob.getInstance().loadAndShowReward(this, name, new RewardAdCallback() {
+            Admob.getInstance().loadAndShowInterReward(this, "reward_inter_gallery", new RewardAdCallback() {
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
