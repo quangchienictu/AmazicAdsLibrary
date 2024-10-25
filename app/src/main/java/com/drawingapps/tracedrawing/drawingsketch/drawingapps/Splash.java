@@ -37,31 +37,6 @@ public class Splash extends AppCompatActivity {
         Admob.getInstance().setDisableAdResumeWhenClickAds(true);
         Admob.getInstance().setOpenEventLoadTimeLoadAdsSplash(true);
         Admob.getInstance().setOpenEventLoadTimeShowAdsInter(true);
-        // Admob
-      /*  AppPurchase.getInstance().setBillingListener(new BillingListener() {
-            @Override
-            public void onInitBillingListener(int code) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Admob.getInstance().loadSplashInterAds(Splash.this,"ca-app-pub-3940256099942544/1033173712",25000,5000, new InterCallback(){
-                            @Override
-                            public void onAdClosed() {
-                                startActivity(new Intent(Splash.this,MainActivity.class));
-                                finish();
-                            }
-
-                            @Override
-                            public void onAdFailedToLoad(LoadAdError i) {
-                                super.onAdFailedToLoad(i);
-                                startActivity(new Intent(Splash.this,MainActivity.class));
-                                finish();
-                            }
-                        });
-                    }
-                });
-            }
-        }, 5000);*/
 
         adCallback = new AdCallback() {
             @Override
@@ -91,6 +66,7 @@ public class Splash extends AppCompatActivity {
 
                 }
                 //init AdmobApi
+                loadAndShowSplashAds();
             }
         });
     }
