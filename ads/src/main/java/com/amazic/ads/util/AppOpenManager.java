@@ -21,6 +21,7 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAdRevenue;
 import com.adjust.sdk.AdjustConfig;
+import com.adjust.sdk.AdjustEvent;
 import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.amazic.ads.dialog.ResumeLoadingDialog;
@@ -1101,6 +1102,11 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
         adRevenue.setRevenue(valueMicros, adValue.getCurrencyCode());
         adRevenue.setAdRevenueNetwork(adName);
         Adjust.trackAdRevenue(adRevenue);
+        if (!Admob.getInstance().getTokenEventAdjust().isEmpty()) {
+            AdjustEvent event = new AdjustEvent(Admob.getInstance().getTokenEventAdjust());
+            event.setRevenue(valueMicros, adValue.getCurrencyCode());
+            Adjust.trackEvent(event);
+        }
     }
 }
 

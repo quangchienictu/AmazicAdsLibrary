@@ -22,20 +22,20 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RewardAdModel {
+public class InterRewardAdModel {
     private static final String TAG = "RewardAdModel";
     @Status
     private int status = Status.IDLE;
-    private RewardedAd mRewardedAd = null;
+    private RewardedInterstitialAd mRewardedAd = null;
     private final String listAdIDName;
 
-    public RewardAdModel(String listAdIDName) {
+    public InterRewardAdModel(String listAdIDName) {
         this.listAdIDName = listAdIDName;
     }
 
@@ -171,7 +171,7 @@ public class RewardAdModel {
         }
         Log.d(TAG, "loadWithListID: \nname: " + listAdIDName + " - id: " + listID.get(0));
         AdRequest adRequest = new AdRequest.Builder().build();
-        RewardedAd.load(context, listID.get(0), adRequest, new RewardedAdLoadCallback() {
+        RewardedInterstitialAd.load(context, listID.get(0), adRequest, new RewardedInterstitialAdLoadCallback() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 super.onAdFailedToLoad(loadAdError);
@@ -188,7 +188,7 @@ public class RewardAdModel {
             }
 
             @Override
-            public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+            public void onAdLoaded(@NonNull RewardedInterstitialAd rewardedAd) {
                 super.onAdLoaded(rewardedAd);
                 status = Status.ON_LOADED;
                 mRewardedAd = rewardedAd;

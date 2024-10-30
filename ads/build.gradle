@@ -23,6 +23,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+    buildTypes {
+        release {
+            buildConfigField "String", "apiKey", "\"Bearer mpBYiG4WNndUpojp7pez\""
+            buildConfigField "String", "baseUrl", "\"https://api.adjust.com/device_service/api/v1/\""
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField "String", "apiKey", "\"Bearer mpBYiG4WNndUpojp7pez\""
+            buildConfigField "String", "baseUrl", "\"https://api.adjust.com/device_service/api/v1/\""
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
     repositories {
         mavenCentral()
     }

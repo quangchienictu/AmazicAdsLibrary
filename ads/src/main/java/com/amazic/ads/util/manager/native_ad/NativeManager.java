@@ -14,6 +14,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAdRevenue;
 import com.adjust.sdk.AdjustConfig;
+import com.adjust.sdk.AdjustEvent;
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
@@ -34,22 +35,25 @@ public class NativeManager implements LifecycleEventObserver {
     enum State {LOADING, LOADED}
 
     private static final String TAG = "NativeManager";
-    final NativeBuilder builder;
+    private final NativeBuilder builder;
     private final Activity currentActivity;
     private final LifecycleOwner lifecycleOwner;
     private boolean isReloadAds = false;
     private boolean isAlwaysReloadOnResume = false;
     private boolean isShowLoadingNative = true;
-    State state = State.LOADED;
-    private FrameLayout flAd = null;
-    private int idLayoutShimmer = 0;
-    private int idLayoutNative = 0;
-    private int intervalReloadNative = 0;
+    private State state = State.LOADED;
+    private long intervalReloadNative = 0;
     private boolean isStop = false;
     private CountDownTimer countDownTimer;
+    private boolean isStopReload = false;
 
-    public void setIntervalReloadNative(int intervalReloadNative) {
-        this.intervalReloadNative = intervalReloadNative;
+    public void notReloadInNextResume() {
+        isStopReload = true;
+    }
+
+    public void setIntervalReloadNative(long intervalReloadNative) {
+        if (intervalReloadNative > 0)
+            this.intervalReloadNative = intervalReloadNative;
         countDownTimer = new CountDownTimer(this.intervalReloadNative, 1000) {
             @Override
             public void onTick(long l) {
@@ -70,16 +74,6 @@ public class NativeManager implements LifecycleEventObserver {
         this.lifecycleOwner.getLifecycle().addObserver(this);
     }
 
-    public NativeManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, NativeBuilder builder, FrameLayout flAd, int idLayoutShimmer, int idLayoutNative) {
-        this.builder = builder;
-        this.currentActivity = currentActivity;
-        this.lifecycleOwner = lifecycleOwner;
-        this.lifecycleOwner.getLifecycle().addObserver(this);
-        this.flAd = flAd;
-        this.idLayoutShimmer = idLayoutShimmer;
-        this.idLayoutNative = idLayoutNative;
-    }
-
     @Override
     public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
         switch (event) {
@@ -91,20 +85,24 @@ public class NativeManager implements LifecycleEventObserver {
                 if (countDownTimer != null && isStop) {
                     countDownTimer.start();
                 }
-                if (isStop && (isReloadAds || isAlwaysReloadOnResume)) {
-                    Log.d(TAG, "onStateChanged: resume");
+                String valueLog = isStop + " && " + (isReloadAds || isAlwaysReloadOnResume) + " && " + !isStopReload;
+                Log.d(TAG, "onStateChanged: resume\n" + valueLog);
+                if (isStop && (isReloadAds || isAlwaysReloadOnResume) && !isStopReload) {
                     isReloadAds = false;
                     loadNative(isShowLoadingNative);
                 }
+                isStopReload = false;
                 isStop = false;
                 break;
-            case ON_STOP:
+            case ON_PAUSE:
+                Log.d(TAG, "onStateChanged: ON_PAUSE");
                 isStop = true;
                 if (countDownTimer != null) {
                     countDownTimer.cancel();
                 }
                 break;
             case ON_DESTROY:
+                Log.d(TAG, "onStateChanged: ON_DESTROY");
                 this.lifecycleOwner.getLifecycle().removeObserver(this);
                 break;
         }
@@ -137,22 +135,17 @@ public class NativeManager implements LifecycleEventObserver {
                         trackRevenue(nativeAd.getResponseInfo().getLoadedAdapterResponseInfo(), adValue);
                 });
                 callback.onNativeAdLoaded(nativeAd);
-                Log.d("TAG", "loadNativeFloor1: " + nativeAd.getResponseInfo().getMediationAdapterClassName());
-                Log.d("TAG", "loadNativeFloor2: " + nativeAd.getResponseInfo().getAdapterResponses());
-                Log.d("TAG", "loadNativeFloor3: " + nativeAd.getResponseInfo().getLoadedAdapterResponseInfo().getAdSourceName());
-                Log.d("TAG", "loadNativeFloor4: " + nativeAd.getResponseInfo().getLoadedAdapterResponseInfo().getAdapterClassName());
-                Log.d("TAG", "loadNativeFloor5: " + nativeAd.getResponseInfo().getLoadedAdapterResponseInfo().getAdapterClassName());
-                if (nativeAd.getResponseInfo().getMediationAdapterClassName().toString().toLowerCase().contains("facebook") && this.flAd != null && this.idLayoutShimmer != 0 && this.idLayoutNative != 0) {
-                    this.builder.setLayoutAdsMeta(currentActivity, flAd, idLayoutShimmer, idLayoutNative);
-                    Log.d(TAG, "loadNativeFloor: case mediation facebook");
+                if (nativeAd.getResponseInfo().getMediationAdapterClassName().toString().toLowerCase().contains("facebook")) {
+                    this.builder.showAdMeta();
+                    Admob.getInstance().pushAdsToViewCustom(nativeAd, this.builder.nativeMetaAdView);
+                } else {
+                    this.builder.showAd();
+                    Admob.getInstance().pushAdsToViewCustom(nativeAd, this.builder.nativeAdView);
                 }
-                this.builder.showAd();
-                Admob.getInstance().pushAdsToViewCustom(nativeAd, this.builder.nativeAdView);
             }).withAdListener(new AdListener() {
                 public void onAdFailedToLoad(@NonNull LoadAdError adError) {
                     listID.remove(0);
                     Log.d(TAG, "onAdFailedToLoad: " + adError.getMessage());
-                    Log.d(TAG, "listID: " + listID);
                     if (!listID.isEmpty()) {
                         NativeManager.this.loadNativeFloor(listID);
                     } else {
@@ -220,5 +213,10 @@ public class NativeManager implements LifecycleEventObserver {
         adRevenue.setRevenue(valueMicros, adValue.getCurrencyCode());
         adRevenue.setAdRevenueNetwork(adName);
         Adjust.trackAdRevenue(adRevenue);
+        if (!Admob.getInstance().getTokenEventAdjust().isEmpty()) {
+            AdjustEvent event = new AdjustEvent(Admob.getInstance().getTokenEventAdjust());
+            event.setRevenue(valueMicros, adValue.getCurrencyCode());
+            Adjust.trackEvent(event);
+        }
     }
 }
