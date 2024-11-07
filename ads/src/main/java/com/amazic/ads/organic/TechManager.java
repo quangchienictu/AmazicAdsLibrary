@@ -7,7 +7,6 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.amazic.ads.BuildConfig;
-import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.NetworkUtil;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -62,6 +61,7 @@ public class TechManager {
 
     public void getResult(boolean isDebug, Context context, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
         if (isDebug) {
+            detectedTech(context, false);
             onCheckResultCallback.onResult(false);
         } else {
             if (isTech(context)) {
