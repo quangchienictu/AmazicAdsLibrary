@@ -44,6 +44,7 @@ public class AdmobApi {
     private InterstitialAd interAll = null;
 
     LinkedHashMap<String, List<String>> listAds = new LinkedHashMap<>();
+    public List<AdsModel> allId = new ArrayList<>();
 
     public List<String> getListIDOpenSplash() {
         return getListIDByName("open_splash");
@@ -174,6 +175,8 @@ public class AdmobApi {
     }
 
     public void pushIDAd(List<AdsModel> listId) {
+        allId.clear();
+        allId.addAll(listId);
         for (AdsModel ads : listId) {
             List<String> listIDAds = null;
             if (listAds.containsKey(ads.getName())) {
