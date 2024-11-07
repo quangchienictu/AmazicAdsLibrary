@@ -6,18 +6,22 @@ import android.util.Log;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAdRevenue;
 import com.adjust.sdk.AdjustConfig;
+import com.adjust.sdk.AdjustEvent;
 import com.amazic.ads.event.AdType;
 import com.amazic.ads.event.FirebaseUtil;
 import com.amazic.ads.service.AdmobApi;
+import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.Constant;
 import com.amazic.ads.util.NetworkUtil;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdValue;
+import com.google.android.gms.ads.AdapterResponseInfo;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.rewarded.RewardedAd;
@@ -213,7 +217,13 @@ public class RewardAdModel {
         AdjustAdRevenue adRevenue = new AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB);
         adRevenue.setRevenue(valueMicros, adValue.getCurrencyCode());
         adRevenue.setAdRevenueNetwork(adName);
+        Log.d("AdjustRevenue", "trackRevenue: " + adValue.getCurrencyCode());
         Adjust.trackAdRevenue(adRevenue);
+        if (!Admob.getInstance().tokenEventAdjust.isEmpty()) {
+            AdjustEvent event = new AdjustEvent(Admob.getInstance().tokenEventAdjust);
+            event.setRevenue(valueMicros, adValue.getCurrencyCode());
+            Adjust.trackEvent(event);
+        }
     }
 
     @IntDef({Status.IDLE, Status.ON_LOADING, Status.ON_LOADED, Status.ON_STARTING_SHOW, Status.ON_SHOWING, Status.ON_DISMISS})

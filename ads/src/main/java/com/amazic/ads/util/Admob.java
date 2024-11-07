@@ -1588,7 +1588,7 @@ public class Admob {
 
     }
 
-    public int getAdWidth(Activity activity){
+    public int getAdWidth(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
@@ -2260,7 +2260,6 @@ public class Admob {
                     mInterstitialAd.show((Activity) context);
 
                 }, 800);
-
             }
             currentClicked = 0;
         } else if (callback != null) {
@@ -3344,7 +3343,7 @@ public class Admob {
         this.timeInterval = timeInterval;
     }
 
-    private String tokenEventAdjust = "";
+    public String tokenEventAdjust = "";
 
     public void setTokenEventAdjust(String tokenEventAdjust) {
         this.tokenEventAdjust = tokenEventAdjust;

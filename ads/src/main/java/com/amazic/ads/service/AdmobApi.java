@@ -118,6 +118,9 @@ public class AdmobApi {
                     && (linkServerRelease.contains("http://")
                     || linkServerRelease.contains("https://"))) {
                 this.linkServer = linkServerRelease.trim();
+                if (linkServer.endsWith("/")) {
+                    linkServer = linkServer.substring(0, linkServer.length() - 1);
+                }
                 this.appIDRelease = AppID.trim();
             }
         }
@@ -154,17 +157,7 @@ public class AdmobApi {
                         new Handler().postDelayed(() -> callBack.onReady(), 2000);
                         return;
                     }
-                    for (AdsModel ads : response.body()) {
-                        List<String> listIDAds = null;
-                        if (listAds.containsKey(ads.getName())) {
-                            listIDAds = listAds.get(ads.getName());
-                        }
-                        if (listIDAds == null) {
-                            listIDAds = new ArrayList<>();
-                        }
-                        listIDAds.add(ads.getAds_id());
-                        listAds.put(ads.getName().toLowerCase().trim(), listIDAds);
-                    }
+                    pushIDAd(response.body());
                     callBack.onReady();
                 }
 
@@ -180,6 +173,20 @@ public class AdmobApi {
         }
     }
 
+    public void pushIDAd(List<AdsModel> listId) {
+        for (AdsModel ads : listId) {
+            List<String> listIDAds = null;
+            if (listAds.containsKey(ads.getName())) {
+                listIDAds = listAds.get(ads.getName());
+            }
+            if (listIDAds == null) {
+                listIDAds = new ArrayList<>();
+            }
+            listIDAds.add(ads.getAds_id());
+            listAds.put(ads.getName().toLowerCase().trim(), listIDAds);
+        }
+    }
+
     public void setListIDOther(String nameIDOther) {
         this.nameIDOther = nameIDOther;
     }
@@ -192,6 +199,7 @@ public class AdmobApi {
     public void loadBanner(final Activity activity) {
         Admob.getInstance().loadBannerFloor(activity, getListIDBannerAll());
     }
+
     public void loadBanner(Context context, FrameLayout frContainer, int adWidth) {
         Admob.getInstance().loadBannerFloor(context, adWidth, frContainer, getListIDBannerAll());
     }

@@ -4,9 +4,18 @@ import android.app.Activity;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import com.adjust.sdk.Adjust;
+import com.adjust.sdk.AdjustAdRevenue;
+import com.adjust.sdk.AdjustConfig;
+import com.adjust.sdk.AdjustEvent;
+import com.amazic.ads.util.Admob;
+import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.NetworkUtil;
 import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdValue;
+import com.google.android.gms.ads.AdapterResponseInfo;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.appopen.AppOpenAd;
@@ -127,6 +136,9 @@ public class AdOpenAppManager {
                 state = State.SHOWING;
                 Log.d(TAG, "onAdImpression: ");
                 builder.getCallback().onAdImpression();
+                myAppOpenAd.setOnPaidEventListener(adValue -> {
+                    trackRevenue(myAppOpenAd.getResponseInfo().getLoadedAdapterResponseInfo(), adValue);
+                });
             }
 
             @Override
@@ -138,5 +150,24 @@ public class AdOpenAppManager {
             }
         });
         myAppOpenAd.show(activity);
+    }
+
+    private void trackRevenue(@Nullable AdapterResponseInfo loadedAdapterResponseInfo, AdValue adValue) {
+        String adName = "";
+        if (loadedAdapterResponseInfo != null)
+            adName = loadedAdapterResponseInfo.getAdSourceName();
+        double valueMicros = adValue.getValueMicros() / 1000000d;
+        Log.d("AdjustRevenue", "adName: " + adName + " - valueMicros: " + valueMicros);
+        // send ad revenue info to Adjust
+        AdjustAdRevenue adRevenue = new AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB);
+        adRevenue.setRevenue(valueMicros, adValue.getCurrencyCode());
+        adRevenue.setAdRevenueNetwork(adName);
+        Log.d("AdjustRevenue", "trackRevenue: " + adValue.getCurrencyCode());
+        Adjust.trackAdRevenue(adRevenue);
+        if (!Admob.getInstance().tokenEventAdjust.isEmpty()) {
+            AdjustEvent event = new AdjustEvent(Admob.getInstance().tokenEventAdjust);
+            event.setRevenue(valueMicros, adValue.getCurrencyCode());
+            Adjust.trackEvent(event);
+        }
     }
 }

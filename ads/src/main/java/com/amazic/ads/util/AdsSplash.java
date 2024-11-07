@@ -4,8 +4,6 @@ import static com.amazic.ads.util.AdsSplash.STATE.INTER;
 import static com.amazic.ads.util.AdsSplash.STATE.NO_ADS;
 import static com.amazic.ads.util.AdsSplash.STATE.OPEN;
 
-import android.app.Activity;
-import android.os.Handler;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.InterCallback;
 import com.amazic.ads.service.AdmobApi;
-import com.google.android.gms.common.api.internal.LifecycleActivity;
 
 import java.util.Random;
 
@@ -21,7 +18,7 @@ public class AdsSplash {
     private static final String TAG = "AdsSplash";
     private STATE state = NO_ADS;
 
-    enum STATE {INTER, OPEN, NO_ADS}
+    public enum STATE {INTER, OPEN, NO_ADS}
 
     public static AdsSplash init(boolean showInter, boolean showOpen, String rate) {
         AdsSplash adsSplash = new AdsSplash();

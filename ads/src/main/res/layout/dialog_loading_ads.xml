@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     android:background="#FCFAF8">
 
-    <com.github.ybq.android.spinkit.SpinKitView
+    <ProgressBar
         android:layout_centerInParent="true"
         android:id="@+id/spin_kit"
-        style="@style/SpinKitView.Circle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

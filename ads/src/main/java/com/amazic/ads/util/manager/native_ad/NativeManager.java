@@ -13,6 +13,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAdRevenue;
 import com.adjust.sdk.AdjustConfig;
+import com.adjust.sdk.AdjustEvent;
 import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
@@ -210,6 +211,12 @@ public class NativeManager implements LifecycleEventObserver {
         AdjustAdRevenue adRevenue = new AdjustAdRevenue(AdjustConfig.AD_REVENUE_ADMOB);
         adRevenue.setRevenue(valueMicros, adValue.getCurrencyCode());
         adRevenue.setAdRevenueNetwork(adName);
+        Log.d("AdjustRevenue", "trackRevenue: " + adValue.getCurrencyCode());
         Adjust.trackAdRevenue(adRevenue);
+        if (!Admob.getInstance().tokenEventAdjust.isEmpty()) {
+            AdjustEvent event = new AdjustEvent(Admob.getInstance().tokenEventAdjust);
+            event.setRevenue(valueMicros, adValue.getCurrencyCode());
+            Adjust.trackEvent(event);
+        }
     }
 }
