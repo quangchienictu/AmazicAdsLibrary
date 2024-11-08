@@ -82,7 +82,7 @@ public class Splash extends AppCompatActivity {
         AdmobApi.getInstance().setListIDOther("native_home");
 //        AppOpenManager.getInstance().init(Splash.this.getApplication(), getString(R.string.ads_test_resume));
 
-        initBilling();
+        //initBilling();
 
         TechManager.getInstance().getResult(false, this,"n2j8vj5m59mo", new TechManager.OnCheckResultCallback() {
             @Override
