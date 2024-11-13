@@ -62,6 +62,7 @@ public class TechManager {
 
     public void getResult(boolean isDebug, Context context, String adjustKey, OnCheckResultCallback onCheckResultCallback) {
         if (isDebug) {
+            detectedTech(context, false);
             onCheckResultCallback.onResult(false);
         } else {
             if (isTech(context)) {
