@@ -10,8 +10,8 @@ import com.adjust.sdk.Adjust;
 import com.adjust.sdk.AdjustAdRevenue;
 import com.adjust.sdk.AdjustConfig;
 import com.adjust.sdk.AdjustEvent;
+import com.amazic.ads.event.FirebaseUtil;
 import com.amazic.ads.util.Admob;
-import com.amazic.ads.util.AppOpenManager;
 import com.amazic.ads.util.NetworkUtil;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdValue;
@@ -108,6 +108,7 @@ public class AdOpenAppManager {
                 super.onAdClicked();
                 Log.d(TAG, "onAdClicked: ");
                 builder.getCallback().onAdClicked();
+                FirebaseUtil.logClickAdsEvent(activity, myAppOpenAd.getAdUnitId());
             }
 
             @Override

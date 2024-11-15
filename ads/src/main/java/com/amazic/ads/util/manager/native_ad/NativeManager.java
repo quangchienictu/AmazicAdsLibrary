@@ -15,6 +15,7 @@ import com.adjust.sdk.AdjustAdRevenue;
 import com.adjust.sdk.AdjustConfig;
 import com.adjust.sdk.AdjustEvent;
 import com.amazic.ads.callback.NativeCallback;
+import com.amazic.ads.event.FirebaseUtil;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
 import com.amazic.ads.util.NetworkUtil;
@@ -159,6 +160,8 @@ public class NativeManager implements LifecycleEventObserver {
                 public void onAdClicked() {
                     super.onAdClicked();
                     callback.onAdClicked();
+
+                    FirebaseUtil.logClickAdsEvent(currentActivity, listID.get(0));
                 }
 
                 public void onAdImpression() {

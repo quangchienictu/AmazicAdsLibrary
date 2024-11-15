@@ -1732,6 +1732,10 @@ public class Admob {
                     if (disableAdResumeWhenClickAds)
                         AppOpenManager.getInstance().disableAdResumeByClickAction();
                     super.onAdClicked();
+
+                    if (adListener != null) {
+                        adListener.onAdClicked();
+                    }
                     if (timeLimitAds > 1000)
                         setTimeLimitInter();
                 }
@@ -1923,6 +1927,9 @@ public class Admob {
             @Override
             public void onAdClicked() {
                 super.onAdClicked();
+                if (adListener != null) {
+                    adListener.onAdClicked();
+                }
                 if (disableAdResumeWhenClickAds)
                     AppOpenManager.getInstance().disableAdResumeByClickAction();
                 if (timeLimitAds > 1000) {
@@ -2356,6 +2363,9 @@ public class Admob {
                             @Override
                             public void onAdClicked() {
                                 super.onAdClicked();
+                                if (callback != null) {
+                                    callback.onAdClicked();
+                                }
                                 if (disableAdResumeWhenClickAds)
                                     AppOpenManager.getInstance().disableAdResumeByClickAction();
                                 if (timeLimitAds > 1000) {
@@ -2455,6 +2465,9 @@ public class Admob {
 
             public void onAdClicked() {
                 super.onAdClicked();
+                if (adCallback != null) {
+                    adCallback.onAdClicked();
+                }
                 if (disableAdResumeWhenClickAds)
                     AppOpenManager.getInstance().disableAdResumeByClickAction();
                 FirebaseUtil.logClickAdsEvent(activity, rewardedAd.getAdUnitId());
@@ -2512,6 +2525,9 @@ public class Admob {
 
                 public void onAdClicked() {
                     super.onAdClicked();
+                    if (adCallback != null) {
+                        adCallback.onAdClicked();
+                    }
                     if (disableAdResumeWhenClickAds)
                         AppOpenManager.getInstance().disableAdResumeByClickAction();
                     FirebaseUtil.logClickAdsEvent(context, rewardedAd.getAdUnitId());
@@ -2633,6 +2649,7 @@ public class Admob {
 
             public void onAdClicked() {
                 callback.onAdClicked();
+                FirebaseUtil.logClickAdsEvent(context, rewardedAd.getAdUnitId());
             }
 
             public void onNextAction() {
@@ -2702,6 +2719,7 @@ public class Admob {
 
             public void onAdClicked() {
                 callback.onAdClicked();
+                FirebaseUtil.logClickAdsEvent(context, rewardedAd.getAdUnitId());
             }
 
             public void onNextAction() {

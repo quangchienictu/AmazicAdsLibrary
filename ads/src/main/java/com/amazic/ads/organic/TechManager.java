@@ -65,10 +65,10 @@ public class TechManager {
             onCheckResultCallback.onResult(false);
         } else {
             if (isTech(context)) {
-                Log.d(TAG, "getResult: isTech = " + isTech(context));
+                Log.d(TAG, "getResult1: isTech = " + isTech(context));
                 onCheckResultCallback.onResult(true);
             } else {
-                Log.d(TAG, "getResult: isTech = " + isTech(context));
+                Log.d(TAG, "getResult2: isTech = " + isTech(context));
                 if (isCalledApi(context)) {
                     onCheckResultCallback.onResult(false);
                 } else {
