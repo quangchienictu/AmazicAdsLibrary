@@ -84,10 +84,10 @@ public class Splash extends AppCompatActivity {
 
         //initBilling();
 
-        TechManager.getInstance().getResult(false, this,"n2j8vj5m59mo", new TechManager.OnCheckResultCallback() {
+        TechManager.getInstance().getResult(false, this, "n2j8vj5m59mo", new TechManager.OnCheckResultCallback() {
             @Override
             public void onResult(Boolean result) {
-                if (result){
+                if (result) {
 
                 }
                 //init AdmobApi
@@ -113,8 +113,8 @@ public class Splash extends AppCompatActivity {
                 Admob.getInstance().setOpenActivityAfterShowInterAds(true);
                 //AppOpenManager.getInstance().initApi(getApplication());
                 AppOpenManager.getInstance().initWelcomeBackActivity(getApplication(), ResumeActivity.class);
-                AdsSplash adsSplash = AdsSplash.init(true, false, "30_70");
-                adsSplash.showAdsSplashApi(Splash.this, adCallback, interCallback);
+                AdsSplash adsSplash = AdsSplash.init(Splash.this, true, false, "30_70");
+                adsSplash.showAdsSplashApi(adCallback, interCallback);
             }
         });
     }

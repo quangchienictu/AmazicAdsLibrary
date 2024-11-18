@@ -44,6 +44,7 @@ import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.callback.RewardCallback;
 import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.amazic.ads.event.AdType;
+import com.amazic.ads.event.AdmobEvent;
 import com.amazic.ads.event.FirebaseUtil;
 import com.amazic.ads.util.detect_test_ad.DetectTestAd;
 import com.amazic.ads.util.reward.RewardAdCallback;
@@ -1794,25 +1795,25 @@ public class Admob {
             timeStartSplash = System.currentTimeMillis();
             handlerTimeOutSplash = new Handler(Looper.getMainLooper());
             runnableTimeOutSplash = () -> {
-                Log.d(TAG, "handlerTimeOutSplash: timeout");
+                AdmobEvent.logEvent(context, "tim_out_splash", new Bundle());
                 callback.onAdClosed();
                 callback.onNextAction();
-                Log.d("loloadskfo", "loadSplashInterAds3: 1");
                 handlerTimeOutSplash = null;
             };
             handlerTimeOutSplash.postDelayed(runnableTimeOutSplash, timeOut);
         }
-        if (!isNetworkConnected() || idInter == null || idInter.size() == 0 || !AdsConsentManager.getConsentResult(context)) {
+        if (!isNetworkConnected() || idInter == null || idInter.isEmpty() || !AdsConsentManager.getConsentResult(context)) {
+            Bundle bundle = new Bundle();
+            bundle.putString("value_in_error", !isNetworkConnected() + "-" + (idInter == null) + "-" + (!AdsConsentManager.getConsentResult(context)));
+            AdmobEvent.logEvent(context, "not_load_splash", bundle);
             handlerTimeOutSplash.removeCallbacks(runnableTimeOutSplash);
             handlerTimeOutSplash.removeCallbacksAndMessages(null);
             handlerTimeOutSplash.postDelayed(() -> {
-                Log.d(TAG, "handlerTimeOutSplash: size 0");
                 callback.onNextAction();
-                Log.d("loloadskfo", "loadSplashInterAds3: 2");
                 handlerTimeOutSplash = null;
             }, timeDelay);
         } else {
-            Log.d(TAG, "loadSplashInterAds3: " + idInter.get(0));
+            AdmobEvent.logEvent(context, "load_splash", new Bundle());
             InterstitialAd.load(context, idInter.get(0), getAdRequest(),
                     new InterstitialAdLoadCallback() {
                         @Override
@@ -1832,15 +1833,13 @@ public class Admob {
                             super.onAdFailedToLoad(loadAdError);
                             mInterstitialSplash = null;
                             idInter.remove(0);
-                            if (idInter.size() == 0) {
+                            if (idInter.isEmpty()) {
                                 callback.onAdFailedToLoad(loadAdError);
                                 if (!isNextActionWhenFailedInter)
                                     return;
                             }
                             Log.d(TAG, "loadSplashInterAds3 - onAdFailedToLoad: ");
                             if (System.currentTimeMillis() - timeStartSplash < timeOut) {
-//                                new Handler().postDelayed(() -> loadSplashInterAds3(context, idInter, timeDelay, timeOut, callback, isNextAction), 5000);
-//                            }
                                 loadSplashInterAds3(context, idInter, timeDelay, timeOut, callback, isNextActionWhenFailedInter);
                             }
                         }
@@ -1854,7 +1853,6 @@ public class Admob {
             Log.d(TAG, "loadSplashInterAds3: ");
             AppOpenManager.getInstance().enableAppResume();
             adListener.onNextAction();
-            Log.d("loloadskfo", "loadSplashInterAds3: 10");
             return;
         }
         mInterstitialSplash.setOnPaidEventListener(adValue -> {

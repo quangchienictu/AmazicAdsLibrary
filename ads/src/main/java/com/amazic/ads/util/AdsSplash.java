@@ -4,12 +4,14 @@ import static com.amazic.ads.util.AdsSplash.STATE.INTER;
 import static com.amazic.ads.util.AdsSplash.STATE.NO_ADS;
 import static com.amazic.ads.util.AdsSplash.STATE.OPEN;
 
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.amazic.ads.callback.AdCallback;
 import com.amazic.ads.callback.InterCallback;
+import com.amazic.ads.event.AdmobEvent;
 import com.amazic.ads.service.AdmobApi;
 
 import java.util.Random;
@@ -17,10 +19,11 @@ import java.util.Random;
 public class AdsSplash {
     private static final String TAG = "AdsSplash";
     private STATE state = NO_ADS;
+    AppCompatActivity activity;
 
     public enum STATE {INTER, OPEN, NO_ADS}
 
-    public static AdsSplash init(boolean showInter, boolean showOpen, String rate) {
+    public static AdsSplash init(AppCompatActivity activity, boolean showInter, boolean showOpen, String rate) {
         AdsSplash adsSplash = new AdsSplash();
         Log.d(TAG, "init: ");
         if (!Admob.isShowAllAds) {
@@ -34,6 +37,10 @@ public class AdsSplash {
         } else {
             adsSplash.setState(NO_ADS);
         }
+        adsSplash.activity = activity;
+        Bundle bundle = new Bundle();
+        bundle.putString("ads_splash", showInter + "-" + showOpen + "-" + rate);
+        AdmobEvent.logEvent(activity, "tracking_ads_splash", bundle);
         return adsSplash;
     }
 
@@ -44,11 +51,9 @@ public class AdsSplash {
             rateInter = Integer.parseInt(rate.trim().split("_")[1].trim());
             rateOpen = Integer.parseInt(rate.trim().split("_")[0].trim());
         } catch (Exception e) {
-            Log.d(TAG, "checkShowInterOpenSplash: ");
             rateInter = 0;
             rateOpen = 0;
         }
-        Log.d(TAG, "rateInter: " + rateInter + " - rateOpen: " + rateOpen);
         Log.d(TAG, "rateInter: " + rateInter + " - rateOpen: " + rateOpen);
         if (rateInter >= 0 && rateOpen >= 0 && rateInter + rateOpen == 100) {
             boolean isShowOpenSplash = new Random().nextInt(100) + 1 < rateOpen;
@@ -67,7 +72,7 @@ public class AdsSplash {
         return state;
     }
 
-    public void showAdsSplashApi(AppCompatActivity activity, AdCallback openCallback, InterCallback interCallback) {
+    public void showAdsSplashApi(AdCallback openCallback, InterCallback interCallback) {
         Log.d(TAG, "state show: " + getState());
         if (getState() == OPEN)
             AdmobApi.getInstance().loadOpenAppAdSplashFloor(activity, openCallback);
@@ -78,7 +83,7 @@ public class AdsSplash {
         }
     }
 
-    public void onCheckShowSplashWhenFail(AppCompatActivity activity, AdCallback openCallback, InterCallback interCallback) {
+    public void onCheckShowSplashWhenFail(AdCallback openCallback, InterCallback interCallback) {
         if (getState() == OPEN)
             AppOpenManager.getInstance().onCheckShowSplashWhenFailNew(activity, openCallback, 1000);
         else if (getState() == INTER)

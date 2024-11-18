@@ -15,6 +15,7 @@ import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.manager.native_ad.NativeBuilder;
 import com.amazic.ads.util.manager.native_ad.NativeManager;
+import com.amazic.ads.util.reward.RewardAdCallback;
 import com.ardrawing.tracedrawing.drawingsketch.drawingapps.R;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
@@ -71,9 +72,11 @@ public class MainActivity4 extends AppCompatActivity {
             recreate();
         });
         findViewById(R.id.reward).setOnClickListener(v -> {
-            Admob.getInstance().showRewardAds(this, new RewardCallback() {
+            Admob.getInstance().showRewardAds(this, new RewardCallback(){
+
                 @Override
                 public void onEarnedReward(RewardItem rewardItem) {
+
                 }
 
                 @Override
@@ -88,6 +91,11 @@ public class MainActivity4 extends AppCompatActivity {
 
                 @Override
                 public void onAdImpression() {
+
+                }
+
+                @Override
+                public void onAdClicked() {
 
                 }
             });
