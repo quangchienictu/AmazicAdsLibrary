@@ -25,11 +25,12 @@ public class AdsSplash {
 
     public static AdsSplash init(AppCompatActivity activity, boolean showInter, boolean showOpen, String rate) {
         AdsSplash adsSplash = new AdsSplash();
+        Bundle bundle = new Bundle();
         Log.d(TAG, "init: ");
         if (!Admob.isShowAllAds) {
             adsSplash.setState(NO_ADS);
         } else if (showInter && showOpen) {
-            adsSplash.checkShowInterOpenSplash(rate);
+            bundle.putInt("random_value_rate_open", adsSplash.checkShowInterOpenSplash(rate));
         } else if (showInter) {
             adsSplash.setState(INTER);
         } else if (showOpen) {
@@ -38,14 +39,13 @@ public class AdsSplash {
             adsSplash.setState(NO_ADS);
         }
         adsSplash.activity = activity;
-        Bundle bundle = new Bundle();
         bundle.putString("ads_splash", showInter + "-" + showOpen + "-" + rate);
         bundle.putString("ads_splash_state", adsSplash.state.toString());
         AdmobEvent.logEvent(activity, "tracking_ads_splash", bundle);
         return adsSplash;
     }
 
-    private void checkShowInterOpenSplash(String rate) {
+    private int checkShowInterOpenSplash(String rate) {
         int rateInter;
         int rateOpen;
         try {
@@ -56,12 +56,15 @@ public class AdsSplash {
             rateOpen = 0;
         }
         Log.d(TAG, "rateInter: " + rateInter + " - rateOpen: " + rateOpen);
+        int randomValueRateOpen = new Random().nextInt(100) + 1;
         if (rateInter >= 0 && rateOpen >= 0 && rateInter + rateOpen == 100) {
-            boolean isShowOpenSplash = new Random().nextInt(100) + 1 < rateOpen;
+            boolean isShowOpenSplash = randomValueRateOpen < rateOpen;
             setState(isShowOpenSplash ? OPEN : INTER);
         } else {
+            randomValueRateOpen = -1;
             setState(NO_ADS);
         }
+        return randomValueRateOpen;
     }
 
 
