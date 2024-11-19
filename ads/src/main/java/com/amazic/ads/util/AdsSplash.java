@@ -40,6 +40,7 @@ public class AdsSplash {
         adsSplash.activity = activity;
         Bundle bundle = new Bundle();
         bundle.putString("ads_splash", showInter + "-" + showOpen + "-" + rate);
+        bundle.putString("ads_splash_state", adsSplash.state.toString());
         AdmobEvent.logEvent(activity, "tracking_ads_splash", bundle);
         return adsSplash;
     }
@@ -74,11 +75,11 @@ public class AdsSplash {
 
     public void showAdsSplashApi(AdCallback openCallback, InterCallback interCallback) {
         Log.d(TAG, "state show: " + getState());
-        if (getState() == OPEN)
+        if (getState() == OPEN) {
             AdmobApi.getInstance().loadOpenAppAdSplashFloor(activity, openCallback);
-        else if (getState() == INTER)
+        } else if (getState() == INTER) {
             AdmobApi.getInstance().loadInterAdSplashFloor(activity, 3000, 20000, interCallback, true);
-        else {
+        } else {
             interCallback.onNextAction();
         }
     }

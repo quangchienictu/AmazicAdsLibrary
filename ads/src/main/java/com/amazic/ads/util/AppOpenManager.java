@@ -1037,21 +1037,13 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                 adCallback.onNextAction();
                 return;
             }
-            if (listIDResume.size() > 0) {
-                Log.e("AppOpenManager", "load ID :" + listIDResume.get(0));
-            }
-            if (listIDResume.size() < 1) {
-                adCallback.onAdFailedToLoad(null);
-                adCallback.onNextAction();
-                return;
-            }
             AdRequest adRequest = getAdRequest();
             AppOpenAd.AppOpenAdLoadCallback appOpenAdLoadCallback = new AppOpenAd.AppOpenAdLoadCallback() {
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
                     listIDResume.remove(0);
-                    if (listIDResume.size() == 0) {
+                    if (listIDResume.isEmpty()) {
                         adCallback.onAdFailedToLoad(loadAdError);
                         adCallback.onNextAction();
                     } else {

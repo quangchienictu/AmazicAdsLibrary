@@ -1795,7 +1795,7 @@ public class Admob {
             timeStartSplash = System.currentTimeMillis();
             handlerTimeOutSplash = new Handler(Looper.getMainLooper());
             runnableTimeOutSplash = () -> {
-                AdmobEvent.logEvent(context, "tim_out_splash", new Bundle());
+                AdmobEvent.logEvent(context, "time_out_splash", new Bundle());
                 callback.onAdClosed();
                 callback.onNextAction();
                 handlerTimeOutSplash = null;
@@ -1834,9 +1834,14 @@ public class Admob {
                             mInterstitialSplash = null;
                             idInter.remove(0);
                             if (idInter.isEmpty()) {
+                                Bundle bundle = new Bundle();
+                                bundle.putString("value_in_error", loadAdError.getCause().getMessage());
+                                AdmobEvent.logEvent(context, "loaded_failed_inter_splash", bundle);
                                 callback.onAdFailedToLoad(loadAdError);
-                                if (!isNextActionWhenFailedInter)
-                                    return;
+                                if (isNextActionWhenFailedInter) {
+                                    callback.onNextAction();
+                                }
+                                return;
                             }
                             Log.d(TAG, "loadSplashInterAds3 - onAdFailedToLoad: ");
                             if (System.currentTimeMillis() - timeStartSplash < timeOut) {
