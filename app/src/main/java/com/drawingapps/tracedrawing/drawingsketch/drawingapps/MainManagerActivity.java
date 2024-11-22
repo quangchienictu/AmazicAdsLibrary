@@ -1,24 +1,17 @@
 package com.drawingapps.tracedrawing.drawingsketch.drawingapps;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,13 +21,12 @@ import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.manager.banner.BannerBuilder;
 import com.amazic.ads.util.manager.banner.BannerManager;
+import com.amazic.ads.util.manager.collapse_banner_ads.CollapseBannerBuilder;
+import com.amazic.ads.util.manager.collapse_banner_ads.CollapseBannerManager;
 import com.amazic.ads.util.manager.native_ad.NativeBuilder;
 import com.amazic.ads.util.manager.native_ad.NativeManager;
 import com.ardrawing.tracedrawing.drawingsketch.drawingapps.R;
 import com.google.android.gms.ads.AdView;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 
 public class MainManagerActivity extends AppCompatActivity {
     private AdView adView;
@@ -48,8 +40,12 @@ public class MainManagerActivity extends AppCompatActivity {
         //BannerManager bannerManager = initBannerManager();
         //loadCollapse();
         //Admob.getInstance().loadBannerFloor(getBaseContext(), Admob.getInstance().getAdWidth(this), findViewById(R.id.fr_banner), AdmobApi.getInstance().getListIDBannerAll());
-        BannerBuilder bannerBuilder = new BannerBuilder().isIdApi();
-        bannerManager = new BannerManager(getBaseContext(), Admob.getInstance().getAdWidth(this), findViewById(R.id.fr_banner), this, bannerBuilder);
+        //BannerBuilder bannerBuilder = new BannerBuilder().isIdApi();
+        //bannerManager = new BannerManager(getBaseContext(), Admob.getInstance().getAdWidth(this), findViewById(R.id.fr_banner), this, bannerBuilder);
+        CollapseBannerBuilder collapseBannerBuilder = new CollapseBannerBuilder().isIdApi();
+        CollapseBannerManager collapseBannerManager = new CollapseBannerManager(this, findViewById(R.id.fr_banner), this, collapseBannerBuilder);
+        collapseBannerManager.setIntervalReloadBanner(5000);
+        collapseBannerManager.setAlwaysReloadOnResume(true);
         //native
         //NativeManager nativeManager = initNativeManager();
         //
@@ -149,7 +145,8 @@ public class MainManagerActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         //loadCollapse();
-        bannerManager.reloadAdNow();
+        if (bannerManager != null)
+            bannerManager.reloadAdNow();
         /*count++;
         if (count % 2 == 0)
             startActivity(new Intent(this, ResumeActivity.class));*/

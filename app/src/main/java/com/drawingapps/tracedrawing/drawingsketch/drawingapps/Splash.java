@@ -83,6 +83,7 @@ public class Splash extends AppCompatActivity {
 //        AppOpenManager.getInstance().init(Splash.this.getApplication(), getString(R.string.ads_test_resume));
 
         //initBilling();
+        loadAndShowSplashAds();
 
         TechManager.getInstance().getResult(false, this, "n2j8vj5m59mo", new TechManager.OnCheckResultCallback() {
             @Override
@@ -114,7 +115,8 @@ public class Splash extends AppCompatActivity {
                 //AppOpenManager.getInstance().initApi(getApplication());
                 AppOpenManager.getInstance().initWelcomeBackActivity(getApplication(), ResumeActivity.class);
                 AdsSplash adsSplash = AdsSplash.init(Splash.this, true, false, "30_70");
-                adsSplash.showAdsSplashApi(adCallback, interCallback);
+                //adsSplash.showAdsSplashApi(adCallback, interCallback);
+                interCallback.onNextAction();
             }
         });
     }

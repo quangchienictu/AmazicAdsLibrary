@@ -14,7 +14,7 @@
         android:layout_marginBottom="@dimen/_30sdp"
         android:background="@color/gntRed"
         android:text="@string/app_name"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
