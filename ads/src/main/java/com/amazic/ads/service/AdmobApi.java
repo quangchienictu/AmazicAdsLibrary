@@ -112,7 +112,6 @@ public class AdmobApi {
 
     public void init(Context context, String linkServerRelease, String AppID, ApiCallBack callBack) {
         this.context = context;
-        listAds.clear();
         this.packageName = context.getPackageName();
         if (linkServerRelease != null && AppID != null) {
             if (!linkServerRelease.trim().equals("")
@@ -137,7 +136,7 @@ public class AdmobApi {
         if (isNetworkConnected()) {
             fetchData(callBack);
         } else {
-            new Handler().postDelayed(() -> callBack.onReady(), 2000);
+            new Handler().postDelayed(callBack::onReady, 2000);
         }
 
     }
@@ -150,12 +149,14 @@ public class AdmobApi {
             apiService.callAds(appID_package).enqueue(new Callback<List<AdsModel>>() {
                 @Override
                 public void onResponse(Call<List<AdsModel>> call, Response<List<AdsModel>> response) {
+                    listAds.clear();
+                    allId.clear();
                     if (response.body() == null) {
-                        new Handler().postDelayed(() -> callBack.onReady(), 2000);
+                        callBack.onReady();
                         return;
                     }
-                    if (response.body().size() == 0) {
-                        new Handler().postDelayed(() -> callBack.onReady(), 2000);
+                    if (response.body().isEmpty()) {
+                        callBack.onReady();
                         return;
                     }
                     pushIDAd(response.body());
@@ -165,17 +166,16 @@ public class AdmobApi {
                 @Override
                 public void onFailure(Call<List<AdsModel>> call, Throwable t) {
                     Log.e(TAG, "onFailure: " + t.toString());
-                    new Handler().postDelayed(() -> callBack.onReady(), 2000);
+                    new Handler().postDelayed(callBack::onReady, 2000);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
-            new Handler().postDelayed(() -> callBack.onReady(), 2000);
+            new Handler().postDelayed(callBack::onReady, 2000);
         }
     }
 
     public void pushIDAd(List<AdsModel> listId) {
-        allId.clear();
         allId.addAll(listId);
         for (AdsModel ads : listId) {
             List<String> listIDAds = null;
