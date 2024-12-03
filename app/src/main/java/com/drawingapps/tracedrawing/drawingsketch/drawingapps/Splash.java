@@ -106,7 +106,7 @@ public class Splash extends AppCompatActivity {
 
     private void loadAndShowSplashAds() {
         Admob.getInstance().initAdmod(this);
-        AdmobApi.getInstance().setTimeOutCallApi(1);
+        AdmobApi.getInstance().setTimeOutCallApi(4000);
         AdmobApi.getInstance().setJsonIdAdsDefault("[{\"id\":14,\"package_name\":null,\"app name\":\"Api test\",\"app_id\":\"ca-app-pub-4973559944609228~2346710863\",\"name\":\"inter_splash\",\"ads_id\":\"ca-app-pub-3940256099942544\\/3419835294\"}]");
         AdmobApi.getInstance().init(this, null, getString(R.string.app_id), new ApiCallBack() {
             @Override
