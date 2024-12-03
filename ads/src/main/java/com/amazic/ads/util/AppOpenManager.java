@@ -28,6 +28,7 @@ import com.amazic.ads.dialog.ResumeLoadingDialog;
 import com.amazic.ads.event.AdType;
 import com.amazic.ads.event.AdmobEvent;
 import com.amazic.ads.event.FirebaseUtil;
+import com.amazic.ads.organic.TechManager;
 import com.amazic.ads.service.AdmobApi;
 import com.google.android.gms.ads.AdActivity;
 import com.google.android.gms.ads.AdError;
@@ -1018,6 +1019,19 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
     }
 
     public void loadOpenAppAdSplashFloor(Context context, List<String> listIDResume, boolean isShowAdIfReady, AdCallback adCallback) {
+        //Log event
+        Bundle bundleEvent = new Bundle();
+        boolean idCheck = AdmobApi.getInstance().getListAdsSize() > 0;
+        bundleEvent.putString(EventTrackingHelper.splash_detail, AdsConsentManager.getConsentResult(context) + "_" + TechManager.getInstance().isTech(context) + "_" + NetworkUtil.isNetworkActive(context) + "_" + Admob.isShowAllAds + "_" + idCheck + "_" + RemoteConfigHelper.getInstance().get_config(context, EventTrackingHelper.inter_splash) + "_" + RemoteConfigHelper.getInstance().get_config_string(context, EventTrackingHelper.rate_aoa_inter_splash));
+        bundleEvent.putString(EventTrackingHelper.ump, String.valueOf(AdsConsentManager.getConsentResult(context)));
+        bundleEvent.putString(EventTrackingHelper.organic, String.valueOf(TechManager.getInstance().isTech(context)));
+        bundleEvent.putString(EventTrackingHelper.haveinternet, String.valueOf(NetworkUtil.isNetworkActive(context)));
+        bundleEvent.putString(EventTrackingHelper.showallad, String.valueOf(Admob.isShowAllAds));
+        bundleEvent.putString(EventTrackingHelper.idcheck, String.valueOf(idCheck));
+        bundleEvent.putString(EventTrackingHelper.interremote + "_" + EventTrackingHelper.openremote + "_" + EventTrackingHelper.aoavalue, RemoteConfigHelper.getInstance().get_config(context, EventTrackingHelper.inter_splash) + "_" + RemoteConfigHelper.getInstance().get_config(context, EventTrackingHelper.open_splash) + "_" + RemoteConfigHelper.getInstance().get_config_string(context, EventTrackingHelper.rate_aoa_inter_splash));
+        EventTrackingHelper.logEventWithMultipleParams(context, EventTrackingHelper.inter_splash_tracking, bundleEvent);
+        //end log event
+
         if (!isNetworkConnected(context) || !Admob.isShowAllAds || !AdsConsentManager.getConsentResult(context)) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1037,6 +1051,11 @@ public class AppOpenManager implements Application.ActivityLifecycleCallbacks, L
                 adCallback.onNextAction();
                 return;
             }
+
+            //log event can request
+            EventTrackingHelper.logEvent(context, EventTrackingHelper.inter_splash_true);
+            //end log event can request
+
             AdRequest adRequest = getAdRequest();
             AppOpenAd.AppOpenAdLoadCallback appOpenAdLoadCallback = new AppOpenAd.AppOpenAdLoadCallback() {
                 @Override

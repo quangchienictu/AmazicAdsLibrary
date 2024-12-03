@@ -46,6 +46,8 @@ import com.amazic.ads.dialog.LoadingAdsDialog;
 import com.amazic.ads.event.AdType;
 import com.amazic.ads.event.AdmobEvent;
 import com.amazic.ads.event.FirebaseUtil;
+import com.amazic.ads.organic.TechManager;
+import com.amazic.ads.service.AdmobApi;
 import com.amazic.ads.util.detect_test_ad.DetectTestAd;
 import com.amazic.ads.util.reward.IOnAdsImpression;
 import com.amazic.ads.util.reward.RewardAdCallback;
@@ -2031,6 +2033,7 @@ public class Admob {
             timeStartSplash = System.currentTimeMillis();
             handlerTimeOutSplash = new Handler(Looper.getMainLooper());
             runnableTimeOutSplash = () -> {
+                EventTrackingHelper.logEvent(context, EventTrackingHelper.inter_splash_id_timeout);
                 AdmobEvent.logEvent(context, "time_out_splash", new Bundle());
                 callback.onAdClosed();
                 callback.onNextAction();
@@ -2038,6 +2041,20 @@ public class Admob {
             };
             handlerTimeOutSplash.postDelayed(runnableTimeOutSplash, timeOut);
         }
+
+        //Log event
+        Bundle bundleEvent = new Bundle();
+        boolean idCheck = AdmobApi.getInstance().getListAdsSize() > 0;
+        bundleEvent.putString(EventTrackingHelper.splash_detail, AdsConsentManager.getConsentResult(context) + "_" + TechManager.getInstance().isTech(context) + "_" + NetworkUtil.isNetworkActive(context) + "_" + isShowAllAds + "_" + idCheck + "_" + RemoteConfigHelper.getInstance().get_config(context, EventTrackingHelper.inter_splash) + "_" + RemoteConfigHelper.getInstance().get_config_string(context, EventTrackingHelper.rate_aoa_inter_splash));
+        bundleEvent.putString(EventTrackingHelper.ump, String.valueOf(AdsConsentManager.getConsentResult(context)));
+        bundleEvent.putString(EventTrackingHelper.organic, String.valueOf(TechManager.getInstance().isTech(context)));
+        bundleEvent.putString(EventTrackingHelper.haveinternet, String.valueOf(NetworkUtil.isNetworkActive(context)));
+        bundleEvent.putString(EventTrackingHelper.showallad, String.valueOf(isShowAllAds));
+        bundleEvent.putString(EventTrackingHelper.idcheck, String.valueOf(idCheck));
+        bundleEvent.putString(EventTrackingHelper.interremote + "_" + EventTrackingHelper.openremote + "_" + EventTrackingHelper.aoavalue, RemoteConfigHelper.getInstance().get_config(context, EventTrackingHelper.inter_splash) + "_" + RemoteConfigHelper.getInstance().get_config(context, EventTrackingHelper.open_splash) + "_" + RemoteConfigHelper.getInstance().get_config_string(context, EventTrackingHelper.rate_aoa_inter_splash));
+        EventTrackingHelper.logEventWithMultipleParams(context, EventTrackingHelper.inter_splash_tracking, bundleEvent);
+        //end log event
+
         if (!isNetworkConnected() || idInter == null || idInter.isEmpty() || !AdsConsentManager.getConsentResult(context)) {
             Bundle bundle = new Bundle();
             bundle.putString("value_in_error", !isNetworkConnected() + "-" + (idInter == null) + "-" + (!AdsConsentManager.getConsentResult(context)));
@@ -2050,6 +2067,11 @@ public class Admob {
             }, timeDelay);
         } else {
             AdmobEvent.logEvent(context, "load_splash", new Bundle());
+
+            //log event can request
+            EventTrackingHelper.logEvent(context, EventTrackingHelper.inter_splash_true);
+            //end log event can request
+
             InterstitialAd.load(context, idInter.get(0), getAdRequest(),
                     new InterstitialAdLoadCallback() {
                         @Override
