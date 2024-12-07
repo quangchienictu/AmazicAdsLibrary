@@ -18,6 +18,7 @@ import com.amazic.ads.callback.NativeCallback;
 import com.amazic.ads.event.FirebaseUtil;
 import com.amazic.ads.util.Admob;
 import com.amazic.ads.util.AdsConsentManager;
+import com.amazic.ads.util.EventTrackingHelper;
 import com.amazic.ads.util.NetworkUtil;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
@@ -50,6 +51,7 @@ public class NativeManager implements LifecycleEventObserver {
     public void notReloadInNextResume() {
         isStopReload = true;
     }
+    private String adsKey = "";
 
     public void setIntervalReloadNative(long intervalReloadNative) {
         if (intervalReloadNative > 0)
@@ -67,9 +69,10 @@ public class NativeManager implements LifecycleEventObserver {
         };
     }
 
-    public NativeManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, NativeBuilder builder) {
+    public NativeManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, NativeBuilder builder, String adsKey) {
         this.builder = builder;
         this.currentActivity = currentActivity;
+        this.adsKey = adsKey;
         this.lifecycleOwner = lifecycleOwner;
         this.lifecycleOwner.getLifecycle().addObserver(this);
     }
@@ -159,6 +162,7 @@ public class NativeManager implements LifecycleEventObserver {
                 @Override
                 public void onAdClicked() {
                     super.onAdClicked();
+                    EventTrackingHelper.logEvent(currentActivity, adsKey + "_click");
                     callback.onAdClicked();
 
                     FirebaseUtil.logClickAdsEvent(currentActivity, listID.get(0));
@@ -166,6 +170,7 @@ public class NativeManager implements LifecycleEventObserver {
 
                 public void onAdImpression() {
                     super.onAdImpression();
+                    EventTrackingHelper.logEvent(currentActivity, adsKey + "_view");
                     NativeManager.this.state = State.LOADED;
                     Log.d(TAG, "onAdImpression: ");
                     if (countDownTimer != null) {

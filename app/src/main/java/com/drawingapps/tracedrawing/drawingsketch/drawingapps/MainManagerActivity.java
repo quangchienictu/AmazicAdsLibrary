@@ -43,7 +43,7 @@ public class MainManagerActivity extends AppCompatActivity {
         //BannerBuilder bannerBuilder = new BannerBuilder().isIdApi();
         //bannerManager = new BannerManager(getBaseContext(), Admob.getInstance().getAdWidth(this), findViewById(R.id.fr_banner), this, bannerBuilder);
         CollapseBannerBuilder collapseBannerBuilder = new CollapseBannerBuilder().isIdApi();
-        CollapseBannerManager collapseBannerManager = new CollapseBannerManager(this, findViewById(R.id.fr_banner), this, collapseBannerBuilder);
+        CollapseBannerManager collapseBannerManager = new CollapseBannerManager(this, findViewById(R.id.fr_banner), this, collapseBannerBuilder, "collapse_banner");
         collapseBannerManager.setIntervalReloadBanner(5000);
         collapseBannerManager.setAlwaysReloadOnResume(true);
         //native
@@ -114,14 +114,14 @@ public class MainManagerActivity extends AppCompatActivity {
             public void onAdOpened() {
                 super.onAdOpened();
             }
-        });
+        }, "collapse_banner");
     }
 
     @NonNull
     private BannerManager initBannerManager() {
         BannerBuilder bannerBuilder = new BannerBuilder()
                 .isIdApi();
-        BannerManager bannerManager = new BannerManager(this, this, bannerBuilder);
+        BannerManager bannerManager = new BannerManager(this, this, bannerBuilder, "banner_all");
         bannerManager.setAlwaysReloadOnResume(true);
         return bannerManager;
     }
@@ -135,7 +135,7 @@ public class MainManagerActivity extends AppCompatActivity {
                 R.layout.ads_native,
                 R.layout.ads_native);
         nativeBuilder.setListIdAd(AdmobApi.getInstance().getListIDNativePermission());
-        NativeManager nativeManager = new NativeManager(this, this, nativeBuilder);
+        NativeManager nativeManager = new NativeManager(this, this, nativeBuilder, "native_permission");
         return nativeManager;
     }
 

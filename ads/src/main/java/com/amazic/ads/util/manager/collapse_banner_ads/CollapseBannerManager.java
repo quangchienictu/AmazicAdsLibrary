@@ -30,6 +30,7 @@ public class CollapseBannerManager implements LifecycleEventObserver {
     private FrameLayout frContainer;
     private boolean isLoadBannerFragment = false;
     private AdView adView;
+    private String adsKey = "";
 
     public void setIntervalReloadBanner(long intervalReloadBanner) {
         if (intervalReloadBanner > 0) {
@@ -52,21 +53,23 @@ public class CollapseBannerManager implements LifecycleEventObserver {
         }
     }
 
-    public CollapseBannerManager(@NonNull Activity currentActivity, FrameLayout frContainer, LifecycleOwner lifecycleOwner, CollapseBannerBuilder builder) {
+    public CollapseBannerManager(@NonNull Activity currentActivity, FrameLayout frContainer, LifecycleOwner lifecycleOwner, CollapseBannerBuilder builder, String adsKey) {
         this.isLoadBannerFragment = false;
         this.builder = builder;
         this.currentActivity = currentActivity;
         this.frContainer = frContainer;
+        this.adsKey = adsKey;
         this.lifecycleOwner = lifecycleOwner;
         this.lifecycleOwner.getLifecycle().addObserver(this);
     }
 
-    public CollapseBannerManager(Context context, int adWidth, FrameLayout frContainer, LifecycleOwner lifecycleOwner, CollapseBannerBuilder builder) {
+    public CollapseBannerManager(Context context, int adWidth, FrameLayout frContainer, LifecycleOwner lifecycleOwner, CollapseBannerBuilder builder, String adsKey) {
         this.isLoadBannerFragment = true;
         this.builder = builder;
         this.context = context;
         this.adWidth = adWidth;
         this.frContainer = frContainer;
+        this.adsKey = adsKey;
         this.lifecycleOwner = lifecycleOwner;
         this.lifecycleOwner.getLifecycle().addObserver(this);
     }
@@ -124,7 +127,7 @@ public class CollapseBannerManager implements LifecycleEventObserver {
                     countDownTimer.cancel();
                     countDownTimer.start();
                 }
-            });
+            }, adsKey);
         } else {
             frContainer.setVisibility(View.GONE);
         }
@@ -141,7 +144,7 @@ public class CollapseBannerManager implements LifecycleEventObserver {
                     countDownTimer.cancel();
                     countDownTimer.start();
                 }
-            });
+            }, adsKey);
         } else {
             frContainer.setVisibility(View.GONE);
         }

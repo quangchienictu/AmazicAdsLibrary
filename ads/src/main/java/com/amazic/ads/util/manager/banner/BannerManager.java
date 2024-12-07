@@ -37,6 +37,7 @@ public class BannerManager implements LifecycleEventObserver {
     public void notReloadInNextResume() {
         isStopReload = true;
     }
+    private String adsKey = "";
 
     public void setIntervalReloadBanner(long intervalReloadBanner) {
         if (intervalReloadBanner > 0)
@@ -58,20 +59,22 @@ public class BannerManager implements LifecycleEventObserver {
         };
     }
 
-    public BannerManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, BannerBuilder builder) {
+    public BannerManager(@NonNull Activity currentActivity, LifecycleOwner lifecycleOwner, BannerBuilder builder, String adsKey) {
         this.isLoadBannerFragment = false;
         this.builder = builder;
         this.currentActivity = currentActivity;
+        this.adsKey = adsKey;
         this.lifecycleOwner = lifecycleOwner;
         this.lifecycleOwner.getLifecycle().addObserver(this);
     }
 
-    public BannerManager(Context context, int adWidth, FrameLayout frContainer, LifecycleOwner lifecycleOwner, BannerBuilder builder) {
+    public BannerManager(Context context, int adWidth, FrameLayout frContainer, LifecycleOwner lifecycleOwner, BannerBuilder builder, String adsKey) {
         this.isLoadBannerFragment = true;
         this.builder = builder;
         this.context = context;
         this.adWidth = adWidth;
         this.frContainer = frContainer;
+        this.adsKey = adsKey;
         this.lifecycleOwner = lifecycleOwner;
         this.lifecycleOwner.getLifecycle().addObserver(this);
     }
@@ -121,7 +124,7 @@ public class BannerManager implements LifecycleEventObserver {
     private void loadBanner() {
         Log.d(TAG, "loadBanner: " + builder.getListId());
         if (Admob.isShowAllAds) {
-            Admob.getInstance().loadBannerFloor(currentActivity, builder.getListId());
+            Admob.getInstance().loadBannerFloor(currentActivity, builder.getListId(), adsKey);
         } else {
             Admob.getInstance().hideBanner(currentActivity);
         }
@@ -130,7 +133,7 @@ public class BannerManager implements LifecycleEventObserver {
     private void loadBannerFragment() {
         Log.d(TAG, "loadBanner: " + builder.getListId());
         if (Admob.isShowAllAds) {
-            Admob.getInstance().loadBannerFloor(context, adWidth, frContainer, builder.getListId());
+            Admob.getInstance().loadBannerFloor(context, adWidth, frContainer, builder.getListId(), adsKey);
         } else {
             Admob.getInstance().hideBanner(currentActivity);
         }

@@ -295,28 +295,28 @@ public class AdmobApi {
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
-    public void loadBanner(final Activity activity) {
-        Admob.getInstance().loadBannerFloor(activity, getListIDBannerAll());
+    public void loadBanner(final Activity activity, String adsKey) {
+        Admob.getInstance().loadBannerFloor(activity, getListIDBannerAll(), adsKey);
     }
 
-    public void loadBanner(Context context, FrameLayout frContainer, int adWidth) {
-        Admob.getInstance().loadBannerFloor(context, adWidth, frContainer, getListIDBannerAll());
+    public void loadBanner(Context context, FrameLayout frContainer, int adWidth, String adsKey) {
+        Admob.getInstance().loadBannerFloor(context, adWidth, frContainer, getListIDBannerAll(), adsKey);
     }
 
-    public void loadBanner(final Activity activity, BannerCallBack bannerCallBack) {
-        Admob.getInstance().loadBannerFloor(activity, getListIDBannerAll(), bannerCallBack);
+    public void loadBanner(final Activity activity, BannerCallBack bannerCallBack, String adsKey) {
+        Admob.getInstance().loadBannerFloor(activity, getListIDBannerAll(), bannerCallBack, adsKey);
     }
 
-    public void loadCollapsibleBanner(final Activity activity) {
-        Admob.getInstance().loadCollapsibleBannerFloor(activity, getListIDCollapseBannerAll(), "bottom");
+    public void loadCollapsibleBanner(final Activity activity, String adsKey) {
+        Admob.getInstance().loadCollapsibleBannerFloor(activity, getListIDCollapseBannerAll(), "bottom", adsKey);
     }
 
-    public void loadCollapsibleBanner(final Activity activity, BannerCallBack bannerCallBack) {
-        Admob.getInstance().loadCollapsibleBannerFloor(activity, getListIDCollapseBannerAll(), "bottom", bannerCallBack);
+    public void loadCollapsibleBanner(final Activity activity, BannerCallBack bannerCallBack, String adsKey) {
+        Admob.getInstance().loadCollapsibleBannerFloor(activity, getListIDCollapseBannerAll(), "bottom", bannerCallBack, adsKey);
     }
 
-    public AdView loadCollapsibleBannerFloorWithReload(final Activity activity, BannerCallBack bannerCallBack) {
-        return Admob.getInstance().loadCollapsibleBannerFloorWithReload(activity, getListIDCollapseBannerAll(), "bottom", bannerCallBack);
+    public AdView loadCollapsibleBannerFloorWithReload(final Activity activity, BannerCallBack bannerCallBack, String adsKey) {
+        return Admob.getInstance().loadCollapsibleBannerFloorWithReload(activity, getListIDCollapseBannerAll(), "bottom", bannerCallBack, adsKey);
     }
 
     public void loadInterAll(final Activity activity) {
@@ -387,7 +387,7 @@ public class AdmobApi {
                 super.onInterDismiss();
                 interCallback.onInterDismiss();
             }
-        });
+        }, "inter_all");
     }
 
     public void loadOpenAppAdSplashFloor(final Activity activity, AdCallback adCallback) {
@@ -398,15 +398,15 @@ public class AdmobApi {
         Admob.getInstance().loadSplashInterAds3(activity, getListIDInterSplash(), timeDelay, timeOut, callback, isNextActionWhenFailedInter);
     }
 
-    public void loadNativeIntro(final Activity activity, FrameLayout frameLayout, int layoutNative) {
-        Admob.getInstance().loadNativeAdFloor(activity, getListIDNativeIntro(), frameLayout, layoutNative);
+    public void loadNativeIntro(final Activity activity, FrameLayout frameLayout, int layoutNative, String adsKey) {
+        Admob.getInstance().loadNativeAdFloor(activity, getListIDNativeIntro(), frameLayout, layoutNative, adsKey);
     }
 
-    public void loadNativeLanguage(final Activity activity, FrameLayout frameLayout, int layoutNative) {
-        Admob.getInstance().loadNativeAdFloor(activity, getListIDNativeLanguage(), frameLayout, layoutNative);
+    public void loadNativeLanguage(final Activity activity, FrameLayout frameLayout, int layoutNative, String adsKey) {
+        Admob.getInstance().loadNativeAdFloor(activity, getListIDNativeLanguage(), frameLayout, layoutNative, adsKey);
     }
 
-    public void loadNativePermission(final Activity activity, FrameLayout frameLayout, int layoutNative) {
-        Admob.getInstance().loadNativeAdFloor(activity, getListIDNativePermission(), frameLayout, layoutNative);
+    public void loadNativePermission(final Activity activity, FrameLayout frameLayout, int layoutNative, String adsKey) {
+        Admob.getInstance().loadNativeAdFloor(activity, getListIDNativePermission(), frameLayout, layoutNative, adsKey);
     }
 }

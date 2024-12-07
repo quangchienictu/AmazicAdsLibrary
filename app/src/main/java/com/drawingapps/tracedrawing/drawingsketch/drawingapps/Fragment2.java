@@ -34,7 +34,7 @@ public class Fragment2 extends Fragment {
                 public void onAdFailedToLoad() {
                     fr_ads1.removeAllViews();
                 }
-            });
+            }, "native_all");
         } catch (Exception e) {
             e.printStackTrace();
             fr_ads1.removeAllViews();

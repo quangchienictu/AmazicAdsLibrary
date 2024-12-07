@@ -26,7 +26,7 @@ public class MainActivity3 extends AppCompatActivity {
         listID.add("getString(R.string.ads_test_inter)");
         listID.add(getString(com.amazic.ads.R.string.ads_test_banner));
         listID.add("getString(R.string.admod_banner_collap_id)");
-        Admob.getInstance().loadBannerFloor(this, listID);
+        Admob.getInstance().loadBannerFloor(this, listID, "banner_all");
         Admob.getInstance().loadNativeAd(this, getString(R.string.admod_native_id), new NativeCallback(){
             @Override
             public void onNativeAdLoaded(NativeAd nativeAd) {
@@ -40,7 +40,7 @@ public class MainActivity3 extends AppCompatActivity {
             public void onAdFailedToLoad() {
                 fr_ads.removeAllViews();
             }
-        });
+        }, "native_all");
 
     }
 }

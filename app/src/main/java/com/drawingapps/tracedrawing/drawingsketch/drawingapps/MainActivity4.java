@@ -44,7 +44,7 @@ public class MainActivity4 extends AppCompatActivity {
                 super.onAdImpression();
                 Log.d("TAG", "onAdImpressionxxx: ");
             }
-        });
+        }, "collapse_banner");
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MainActivity4 extends AppCompatActivity {
                 super.onAdImpression();
                 Log.d("TAG", "onAdImpressionxxx: ");
             }
-        });
+        }, "collapse_banner");
         AdmobApi.getInstance().loadInterAll(this);
         Admob.getInstance().initRewardAds(this, "ca-app-pub-3940256099942544/5224354917");
         Admob.getInstance().loadInterAds(this, "ca-app-pub-3940256099942544/8691691433", new InterCallback() {
@@ -113,7 +113,7 @@ public class MainActivity4 extends AppCompatActivity {
                         }
                     });
                 }
-            });
+            }, "inter_all");
         });
         findViewById(R.id.interFloor).setOnClickListener(v -> {
             AdmobApi.getInstance().showInterAll(this, new InterCallback());
@@ -132,7 +132,7 @@ public class MainActivity4 extends AppCompatActivity {
         NativeBuilder builder = new NativeBuilder(this, fl_native,
                 com.amazic.ads.R.layout.ads_native_shimer_small, com.amazic.ads.R.layout.ads_native_small, com.amazic.ads.R.layout.ads_native_small);
         builder.setListIdAd(AdmobApi.getInstance().getListIDNativeAll());
-        NativeManager manager = new NativeManager(this, this, builder);
+        NativeManager manager = new NativeManager(this, this, builder, "native_all");
     }
 
     private void loadNativeFloor() {
@@ -150,7 +150,7 @@ public class MainActivity4 extends AppCompatActivity {
             public void onAdFailedToLoad() {
                 fl_native.removeAllViews();
             }
-        });
+        }, "native_all");
     }
 
     private void loadNative() {
@@ -168,6 +168,6 @@ public class MainActivity4 extends AppCompatActivity {
             public void onAdFailedToLoad() {
                 fl_native.removeAllViews();
             }
-        });
+        }, "native_all");
     }
 }

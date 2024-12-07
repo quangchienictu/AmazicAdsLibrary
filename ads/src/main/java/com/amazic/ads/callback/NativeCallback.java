@@ -7,4 +7,5 @@ public class NativeCallback {
     public void onAdFailedToLoad(){};
     public void onEarnRevenue(Double Revenue){}
     public void onAdClicked(){}
+    public void onAdImpression(){}
 }

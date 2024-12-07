@@ -20,4 +20,15 @@
         android:layout_below="@+id/icon"
         android:layout_centerInParent="true"
         android:layout_marginTop="20dp" />
+
+    <FrameLayout
+        android:id="@+id/fr_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <include
+            android:id="@+id/include"
+            layout="@layout/layout_banner" />
+    </FrameLayout>
 </RelativeLayout>

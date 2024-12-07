@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         native_ads = findViewById(R.id.native_ads);
         listID = new ArrayList<>();
         listID.add(getString(R.string.admod_banner_collap_id));
-        AdmobApi.getInstance().loadBanner(this);
+        AdmobApi.getInstance().loadBanner(this, "banner_all");
         Admob.getInstance().initRewardAds(this, getString(R.string.admod_app_reward_id));
         loadAdInter();
         loadAdsNative();

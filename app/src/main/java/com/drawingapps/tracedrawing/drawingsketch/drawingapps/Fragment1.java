@@ -21,7 +21,7 @@ public class Fragment1 extends Fragment {
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment1,container,false);
-        Admob.getInstance().loadCollapsibleBannerFragmentFloor(requireActivity(), MainActivity.listID,view, BannerGravity.bottom);
+        Admob.getInstance().loadCollapsibleBannerFragmentFloor(requireActivity(), MainActivity.listID,view, BannerGravity.bottom, "collapse_banner");
         return view;
 
     }
@@ -52,7 +52,7 @@ public class Fragment1 extends Fragment {
                         super.onAdFailedToLoad(i);
                         ((MainActivity2)getActivity()).showFragment(new Fragment2(),"BlankFragment2");
                     }
-                });
+                }, "inter_all");
             }
         });
 
