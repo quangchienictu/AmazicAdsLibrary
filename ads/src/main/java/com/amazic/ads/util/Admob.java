@@ -1015,7 +1015,6 @@ public class Admob {
                 public void onAdLoaded() {
                     checkLoadBanner = true;
                     //lỗi: chưa kiểm tra null
-                    DetectTestAd.getInstance().detectedTestAd(detectTestAd(adView), context);
                     if (callback != null)
                         callback.onAdLoadSuccess();
                     Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
@@ -1048,6 +1047,7 @@ public class Admob {
                 @Override
                 public void onAdImpression() {
                     super.onAdImpression();
+                    DetectTestAd.getInstance().detectedTestAd(detectTestAd(adView));
                     EventTrackingHelper.logEvent(context, adsKey + "_view");
                     //lỗi: chưa kiểm tra null
                     if (callback != null)
@@ -1122,7 +1122,6 @@ public class Admob {
                 public void onAdLoaded() {
                     checkLoadBanner = true;
                     //lỗi: chưa kiểm tra null
-                    DetectTestAd.getInstance().detectedTestAd(detectTestAd(adView), mActivity);
                     if (callback != null)
                         callback.onAdLoadSuccess();
                     Log.d(TAG, "Banner adapter class name: " + adView.getResponseInfo().getMediationAdapterClassName());
@@ -1155,6 +1154,7 @@ public class Admob {
                 @Override
                 public void onAdImpression() {
                     super.onAdImpression();
+                    DetectTestAd.getInstance().detectedTestAd(detectTestAd(adView));
                     EventTrackingHelper.logEvent(context, adsKey + "_view");
                     //lỗi: chưa kiểm tra null
                     if (callback != null)
