@@ -6,8 +6,8 @@ public class DetectTestAd {
     private boolean showAds = false;
     private boolean isTestAd = false;
 
-    public void setShowAds() {
-        this.showAds = true;
+    public void setShowAds(boolean showAds) {
+        this.showAds = showAds;
     }
 
     public static DetectTestAd getInstance() {
