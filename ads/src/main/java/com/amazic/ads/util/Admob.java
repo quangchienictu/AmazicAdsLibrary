@@ -1047,7 +1047,9 @@ public class Admob {
                 @Override
                 public void onAdImpression() {
                     super.onAdImpression();
-                    DetectTestAd.getInstance().detectedTestAd(detectTestAd(adView));
+                    if (adsKey.toLowerCase().trim().equals("banner_splash")) {
+                        DetectTestAd.getInstance().detectedTestAd(detectTestAd(adView));
+                    }
                     EventTrackingHelper.logEvent(context, adsKey + "_view");
                     //lỗi: chưa kiểm tra null
                     if (callback != null)
@@ -1154,7 +1156,9 @@ public class Admob {
                 @Override
                 public void onAdImpression() {
                     super.onAdImpression();
-                    DetectTestAd.getInstance().detectedTestAd(detectTestAd(adView));
+                    if (adsKey.toLowerCase().trim().equals("banner_splash")) {
+                        DetectTestAd.getInstance().detectedTestAd(detectTestAd(adView));
+                    }
                     EventTrackingHelper.logEvent(context, adsKey + "_view");
                     //lỗi: chưa kiểm tra null
                     if (callback != null)
